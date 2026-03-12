@@ -1,14 +1,9 @@
 pages:
   stage: deploy
+  tags:
+    - runner3
   script:
-    - echo "----------------------------------------"
-    - echo "Build du generateur de CV"
-    - echo "Le site sera disponible à l'adresse : $CI_PAGES_URL"
-    - echo "----------------------------------------"
-    - mkdir public
-    - cp -r * public
+    - echo "Site vitrine >>> $CI_PAGES_URL"
   artifacts:
     paths:
       - public
-  only:
-    - main

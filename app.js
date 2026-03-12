@@ -1,3 +1,28 @@
+/* ===== LOGO HELPERS ===== */
+function renderLogoHtml(logo) {
+    if (!logo) return '';
+    const s = logo.trim();
+    if (s.startsWith('<svg')) return `<span class="m-logo">${s}</span>`;
+    return `<span class="m-logo"><img src="${s}" alt="logo"></span>`;
+}
+
+async function compressImage(file, maxW = 120, maxH = 40, quality = 0.85) {
+    return new Promise(resolve => {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        img.onload = () => {
+            const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight, 1);
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(img.naturalWidth * scale);
+            canvas.height = Math.round(img.naturalHeight * scale);
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            URL.revokeObjectURL(url);
+            resolve(canvas.toDataURL('image/png', quality));
+        };
+        img.src = url;
+    });
+}
+
 /* ===== WEB COMPONENTS ===== */
 function defaultVisibility() {
     return { about: true, skills: true, timeline: true, education: true, teaching: true, languages: true, hobbies: true, missions: true };
@@ -10,7 +35,10 @@ class CvMission extends HTMLElement {
         this.innerHTML = `
             <div class="mission">
                 <div class="m-dates" ${ce('dates')}>${m.dates}</div>
-                <div class="m-client" ${ce('client')}>${m.client}</div>
+                <div class="m-client">
+                    <span class="m-logo-area${m.logo ? ' has-logo' : ''}" ${p !== null ? `onclick="openLogoPopover(${idx}, this)"` : ''}>${renderLogoHtml(m.logo)}</span>
+                    <span ${ce('client')}>${m.client}</span>
+                </div>
                 <div class="m-role" ${ce('role')}>${m.role}</div>
                 <p class="m-summary" ${ce('summary')}>${m.summary}</p>
                 <ul class="m-tasks">
@@ -173,7 +201,7 @@ customElements.define('cv-page1', CvPage1);
 let CV_DATA = {
     "personal": { "name": "Samy Bacha", "role": "Technical Leader" },
     "about": {
-        "intro": "Technical Leader avec plus de <strong>12 ans d'expérience</strong> en développement et en architecture logicielle.<br>J'ai évolué de développeur backend à Tech Lead puis architect Technique, dans des contextes exigeants (banque, transport, industrie, secteur public international).",
+        "intro": "Technical Leader avec plus de <strong>12 ans d'expérience</strong> en développement et en architecture logicielle.<br>J'ai évolué de développeur backend à Tech Lead puis architecte Technique, dans des contextes exigeants (banque, transport, industrie, secteur public international).",
         "expertise": [
             "Architecture distribuée &amp; microservices",
             "Domain Driven Design &amp; Software Craftsmanship",
@@ -191,10 +219,10 @@ let CV_DATA = {
         { "label": "Outils", "items": "Git, Maven, Gradle, Sonar" }
     ],
     "timeline": [
-        { "year": "2010", "label": "Master MIAGE", "alt": false, "current": false },
+        { "year": "2013", "label": "Master MIAGE", "alt": false, "current": false },
         { "year": "2013", "label": "Dev SNCF", "alt": true, "current": false },
-        { "year": "2019", "label": "Lead Transdev", "alt": false, "current": false },
-        { "year": "2021", "label": "Lead Bforbank", "alt": true, "current": false },
+        { "year": "2019", "label": "Lead Tech Transdev", "alt": false, "current": false },
+        { "year": "2021", "label": "Lead Tech Bforbank", "alt": true, "current": false },
         { "year": "2025", "label": "Mission IA pour Dubaï Police", "alt": false, "current": false },
         { "year": "Auj.", "label": "Tech Leader Lab'IA Proxym", "alt": true, "current": true }
     ],
@@ -591,6 +619,21 @@ function renderMissionsBody() {
                     `).join('')}
                     <button class="btn-add" onclick="addTask(${i})">+ Ajouter une tâche</button>
                 </div>
+                <div class="e-field">
+                    <label class="e-label">Logo client</label>
+                    <div class="e-logo-ed">
+                        <div class="e-logo-preview">${m.logo ? renderLogoHtml(m.logo) : '<span class="e-logo-empty">Aucun</span>'}</div>
+                        <div class="e-logo-btns">
+                            <button class="btn-sm" onclick="edLogoUpload(${i})">📁 Image</button>
+                            <button class="btn-sm" onclick="edLogoSvg(${i})">✏ SVG</button>
+                            ${m.logo ? `<button class="btn-sm btn-sm-del" onclick="edLogoRemove(${i})">✕</button>` : ''}
+                        </div>
+                    </div>
+                    <div class="e-logo-svg-wrap" id="e-logo-svg-wrap-${i}" style="display:none">
+                        <textarea class="e-logo-svg-area" id="e-logo-svg-area-${i}" placeholder="Coller le code SVG ici…"></textarea>
+                        <button class="btn-add" onclick="edLogoApplySvg(${i})">Appliquer</button>
+                    </div>
+                </div>
                 <div class="e-field" style="margin-bottom:0">
                     <label class="e-label">Stack</label>
                     ${mkWysiwyg(`missions.${i}.stack`, false)}
@@ -801,6 +844,121 @@ function saveToLocalStorage() {
     setTimeout(() => { btn.textContent = '💾 Sauvegarder'; }, 1500);
 }
 
+/* ===== LOGO POPOVER (viewer) ===== */
+let _lpMissionIdx = null;
+
+function openLogoPopover(idx, anchor) {
+    _lpMissionIdx = idx;
+    const pop = document.getElementById('logo-popover');
+    if (!pop) return;
+    const logo = CV_DATA.missions[idx]?.logo || '';
+    document.getElementById('lp-preview').innerHTML = logo ? renderLogoHtml(logo) : '<span class="lp-empty">Aucun logo</span>';
+    document.getElementById('lp-del').style.display = logo ? '' : 'none';
+    document.getElementById('lp-svg-area').style.display = 'none';
+    document.getElementById('lp-svg-input').value = logo.trim().startsWith('<svg') ? logo : '';
+    const rect = anchor.getBoundingClientRect();
+    pop.style.left = Math.max(4, Math.min(rect.left, window.innerWidth - 290)) + 'px';
+    pop.style.top = (rect.bottom + 6) + 'px';
+    pop.classList.add('visible');
+}
+
+function lpToggleSvg() {
+    const area = document.getElementById('lp-svg-area');
+    area.style.display = area.style.display === 'none' ? '' : 'none';
+}
+
+function lpApplySvg() {
+    const val = document.getElementById('lp-svg-input').value.trim();
+    if (val.startsWith('<svg')) lpApplyLogo(val);
+}
+
+function lpApplyLogo(logo) {
+    if (_lpMissionIdx === null) return;
+    CV_DATA.missions[_lpMissionIdx].logo = logo;
+    if (editData.missions[_lpMissionIdx]) editData.missions[_lpMissionIdx].logo = logo;
+    const nodes = document.querySelectorAll('#viewer-panel cv-mission');
+    if (nodes[_lpMissionIdx]) nodes[_lpMissionIdx].render(CV_DATA.missions[_lpMissionIdx], _lpMissionIdx);
+    bindViewerInputs();
+    document.getElementById('lp-preview').innerHTML = logo ? renderLogoHtml(logo) : '<span class="lp-empty">Aucun logo</span>';
+    document.getElementById('lp-del').style.display = logo ? '' : 'none';
+}
+
+function lpRemove() { lpApplyLogo(''); }
+
+/* ===== LOGO ÉDITEUR ===== */
+let _edLogoIdx = null;
+
+function edLogoUpload(i) {
+    _edLogoIdx = i;
+    document.getElementById('ed-logo-file-input').click();
+}
+
+function edLogoSvg(i) {
+    const wrap = document.getElementById('e-logo-svg-wrap-' + i);
+    if (wrap) wrap.style.display = wrap.style.display === 'none' ? '' : 'none';
+}
+
+function edLogoApplySvg(i) {
+    const val = (document.getElementById('e-logo-svg-area-' + i)?.value || '').trim();
+    if (!val.startsWith('<svg')) return;
+    editData.missions[i].logo = val;
+    rebuildSection('e-missions', renderMissionsBody);
+}
+
+function edLogoRemove(i) {
+    editData.missions[i].logo = '';
+    rebuildSection('e-missions', renderMissionsBody);
+}
+
+function initLogoHandlers() {
+    // Input fichier partagé pour le viewer (popover)
+    const lpFile = document.createElement('input');
+    lpFile.type = 'file'; lpFile.accept = 'image/*'; lpFile.id = 'lp-file-input'; lpFile.style.display = 'none';
+
+    // Input fichier partagé pour l'éditeur
+    const edFile = document.createElement('input');
+    edFile.type = 'file'; edFile.accept = 'image/*'; edFile.id = 'ed-logo-file-input'; edFile.style.display = 'none';
+
+    document.body.append(lpFile, edFile);
+
+    lpFile.addEventListener('change', async () => {
+        if (!lpFile.files[0]) return;
+        lpApplyLogo(await compressImage(lpFile.files[0]));
+        lpFile.value = '';
+    });
+
+    edFile.addEventListener('change', async () => {
+        if (!edFile.files[0] || _edLogoIdx === null) return;
+        editData.missions[_edLogoIdx].logo = await compressImage(edFile.files[0]);
+        rebuildSection('e-missions', renderMissionsBody);
+        edFile.value = '';
+    });
+
+    // Popover viewer
+    const pop = document.createElement('div');
+    pop.id = 'logo-popover';
+    pop.innerHTML = `
+        <div class="lp-preview" id="lp-preview"></div>
+        <div class="lp-actions">
+            <button class="lp-btn" onclick="document.getElementById('lp-file-input').click()">📁 Image</button>
+            <button class="lp-btn" onclick="lpToggleSvg()">✏ SVG</button>
+            <button class="lp-btn lp-btn-del" id="lp-del" onclick="lpRemove()">✕</button>
+        </div>
+        <div id="lp-svg-area" style="display:none">
+            <textarea id="lp-svg-input" placeholder="Coller le code SVG ici…" rows="4"></textarea>
+            <button class="lp-btn" style="margin-top:4px" onclick="lpApplySvg()">Appliquer</button>
+        </div>
+    `;
+    document.body.appendChild(pop);
+
+    // Fermer sur clic extérieur
+    document.addEventListener('mousedown', e => {
+        if (!pop.contains(e.target) && !e.target.closest('.m-logo-area')) {
+            pop.classList.remove('visible');
+        }
+    });
+}
+
 function initViewerToolbar() {
     const toolbar = document.createElement('div');
     toolbar.id = 'viewer-toolbar';
@@ -854,5 +1012,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initSectionsPanel();
     cloneLogos();
     bindViewerInputs();
+    initLogoHandlers();
     initViewerToolbar();
 });

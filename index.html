@@ -711,6 +711,46 @@
             background: #f0f0f0;
             margin: 10px 0;
         }
+
+        /* ===== BOUTON IMPRESSION ===== */
+        .print-btn {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            background: #5C4EC9;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 13px 20px 10px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(92, 78, 201, .45);
+            transition: background .15s, transform .15s, box-shadow .15s;
+        }
+
+        .print-btn:hover {
+            background: #4a3db5;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(92, 78, 201, .55);
+        }
+
+        .print-btn:active {
+            transform: translateY(0);
+        }
+
+        .print-btn .tip {
+            font-size: 10px;
+            font-weight: 400;
+            opacity: .75;
+            letter-spacing: .2px;
+        }
     </style>
 
     <script type="application/json" id="cv-data">
@@ -987,7 +1027,7 @@ let CV_DATA = JSON.parse(document.getElementById('cv-data').textContent);
 
 /* ===== ÉDITEUR ===== */
 let editData;
-let currentMode = 'editor';
+let currentMode = 'viewer';
 
 function deepCopy(obj) {
     return JSON.parse(JSON.stringify(obj));
@@ -1388,6 +1428,8 @@ function switchToEdit() {
     currentMode = 'editor';
 }
 
+const LS_KEY = 'proxym-cv-data';
+
 function exportJSON() {
     const blob = new Blob([JSON.stringify(editData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -1400,9 +1442,56 @@ function exportJSON() {
     URL.revokeObjectURL(url);
 }
 
+function importJSON() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                CV_DATA = parsed;
+                editData = deepCopy(CV_DATA);
+                if (currentMode === 'viewer') {
+                    ['cv-page1', 'cv-page2'].forEach(tag => {
+                        const el = document.querySelector('#viewer-panel ' + tag);
+                        if (el) { el.innerHTML = ''; el.connectedCallback(); }
+                    });
+                    cloneLogos();
+                } else {
+                    buildEditor();
+                }
+            } catch {
+                alert('Fichier JSON invalide.');
+            }
+        };
+        reader.readAsText(file);
+    });
+    input.click();
+}
+
+function saveToLocalStorage() {
+    localStorage.setItem(LS_KEY, JSON.stringify(editData));
+    const btn = document.getElementById('btn-save');
+    btn.textContent = '✓ Sauvegardé';
+    setTimeout(() => { btn.textContent = '💾 Sauvegarder'; }, 1500);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    const stored = localStorage.getItem(LS_KEY);
+    if (stored) {
+        try {
+            CV_DATA = JSON.parse(stored);
+            ['cv-page1', 'cv-page2'].forEach(tag => {
+                const el = document.querySelector('#viewer-panel ' + tag);
+                if (el) { el.innerHTML = ''; el.connectedCallback(); }
+            });
+        } catch { /* fallback sur données embarquées */ }
+    }
     editData = deepCopy(CV_DATA);
-    buildEditor();
     cloneLogos();
 });
     </script>
@@ -1416,17 +1505,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <div class="toolbar">
     <div class="toolbar-modes">
-        <button id="btn-edit" class="toolbar-btn active" onclick="switchToEdit()">✏ Édition</button>
-        <button id="btn-view" class="toolbar-btn" onclick="switchToView()">Visualisation</button>
+        <button id="btn-edit" class="toolbar-btn" onclick="switchToEdit()">✏ Édition</button>
+        <button id="btn-view" class="toolbar-btn active" onclick="switchToView()">Visualisation</button>
     </div>
-    <button class="toolbar-btn" onclick="exportJSON()">↓ Exporter JSON</button>
+    <div style="display:flex; gap:8px">
+        <button class="toolbar-btn" onclick="importJSON()">↑ Importer JSON</button>
+        <button class="toolbar-btn" onclick="exportJSON()">↓ Exporter JSON</button>
+        <button id="btn-save" class="toolbar-btn" onclick="saveToLocalStorage()">💾 Sauvegarder</button>
+    </div>
 </div>
 
-<div id="editor-panel">
+<div id="editor-panel" style="display:none">
     <div id="editor-content"></div>
 </div>
 
-<div id="viewer-panel" style="display:none">
+<div id="viewer-panel">
     <cv-page1 class="page page1"></cv-page1>
     <cv-page2 class="page page2"></cv-page2>
 </div>

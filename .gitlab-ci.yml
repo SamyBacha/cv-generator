@@ -1,0 +1,14 @@
+pages:
+  stage: deploy
+  script:
+    - echo "----------------------------------------"
+    - echo "Build du generateur de CV"
+    - echo "Le site sera disponible à l'adresse : $CI_PAGES_URL"
+    - echo "----------------------------------------"
+    - mkdir public
+    - cp -r * public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

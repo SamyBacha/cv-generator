@@ -11,7 +11,7 @@ export function applyStyles(element) {
 }
 
 export function defaultVisibility() {
-    return { about: true, skills: true, timeline: true, education: true, teaching: true, languages: true, hobbies: true, missions: true };
+    return { about: true, skills: true, timeline: true, education: true, teaching: true, languages: true, hobbies: true, missions: true, personal_projects: true };
 }
 
 export function renderLogoHtml(logo) {

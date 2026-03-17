@@ -13,7 +13,27 @@
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string", "minLength": 1 },
-        "role": { "type": "string", "minLength": 1 }
+        "role": { "type": "string", "minLength": 1 },
+        "contacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "email": { "type": "string" },
+            "phone": { "type": "string" }
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["link"],
+            "additionalProperties": false,
+            "properties": {
+              "link": { "type": "string", "minLength": 1 },
+              "ico":  { "type": "string" }
+            }
+          }
+        }
       }
     },
     "about": {
@@ -74,6 +94,10 @@
         "$ref": "#/$defs/mission"
       }
     },
+    "personal_projects": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
     "visibility": {
       "type": "object",
       "additionalProperties": false,
@@ -84,8 +108,9 @@
         "education": { "type": "boolean" },
         "teaching":  { "type": "boolean" },
         "languages": { "type": "boolean" },
-        "hobbies":   { "type": "boolean" },
-        "missions":  { "type": "boolean" }
+        "hobbies":            { "type": "boolean" },
+        "missions":           { "type": "boolean" },
+        "personal_projects":  { "type": "boolean" }
       }
     }
   },

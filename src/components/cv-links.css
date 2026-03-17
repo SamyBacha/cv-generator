@@ -1,0 +1,38 @@
+.links-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 8px;
+}
+
+.cv-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    color: var(--purple);
+    text-decoration: none;
+}
+
+.cv-link:hover {
+    text-decoration: underline;
+}
+
+.link-ico-img {
+    height: 11px;
+    width: auto;
+    display: block;
+}
+
+.link-ico {
+    font-size: 11px;
+    line-height: 1;
+}
+
+@media print {
+    .cv-link {
+        color: var(--dark);
+    }
+}

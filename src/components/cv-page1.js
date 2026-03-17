@@ -5,6 +5,7 @@ import './cv-simple-list.js';
 import './cv-about.js';
 import './cv-skills.js';
 import './cv-timeline.js';
+import './cv-links.js';
 
 export class CvPage1 extends HTMLElement {
     set data(d) {
@@ -18,16 +19,30 @@ export class CvPage1 extends HTMLElement {
         if (!d) return;
         const vis = d.visibility || defaultVisibility();
 
+        const hasContacts = d.personal.contacts?.email || d.personal.contacts?.phone;
+        const hasLinks    = d.personal.links?.length;
+        const hasProjects = d.personal_projects?.length;
+
         this.innerHTML = `
             <div class="col-left">
                 <div class="profile-block">
                     <div class="cv-name" contenteditable="true" data-path="personal.name">${d.personal.name}</div>
                     <div class="cv-post" contenteditable="true" data-path="personal.role">${d.personal.role}</div>
+                    ${hasContacts ? `
+                        <div class="cv-contacts">
+                            ${d.personal.contacts.email ? `<div class="cv-contact"><span class="cv-contact-ico">✉</span><span>${d.personal.contacts.email}</span></div>` : ''}
+                            ${d.personal.contacts.phone ? `<div class="cv-contact"><span class="cv-contact-ico">☎</span><span>${d.personal.contacts.phone}</span></div>` : ''}
+                        </div>
+                    ` : ''}
+                    ${hasLinks ? `<cv-links data-for="links"></cv-links>` : ''}
                 </div>
                 <cv-section label="EDUCATION"    vis-key="education" visible="${vis.education}"><cv-entry-list  data-for="education"></cv-entry-list></cv-section>
                 <cv-section label="ENSEIGNEMENT" vis-key="teaching"   visible="${vis.teaching}"> <cv-entry-list  data-for="teaching"></cv-entry-list></cv-section>
                 <cv-section label="LANGUAGES"    vis-key="languages"  visible="${vis.languages}"><cv-simple-list data-for="languages"></cv-simple-list></cv-section>
                 <cv-section label="HOBBIES"      vis-key="hobbies"    visible="${vis.hobbies}">  <cv-simple-list data-for="hobbies"></cv-simple-list></cv-section>
+                ${hasProjects ? `
+                    <cv-section label="PROJETS PERSO" vis-key="personal_projects" visible="${vis.personal_projects !== false}"><cv-simple-list data-for="personal_projects"></cv-simple-list></cv-section>
+                ` : ''}
             </div>
 
             <div class="col-right">
@@ -45,6 +60,9 @@ export class CvPage1 extends HTMLElement {
         this.querySelector('cv-about').data    = d.about;
         this.querySelector('cv-skills').data   = d.skills;
         this.querySelector('cv-timeline').data = d.timeline;
+
+        if (hasLinks)    this.querySelector('cv-links[data-for="links"]').data = d.personal.links;
+        if (hasProjects) this.querySelector('cv-simple-list[data-for="personal_projects"]').data = { items: d.personal_projects, pathPrefix: 'personal_projects' };
 
         const tpl = document.getElementById('proxym-logo-tpl');
         if (tpl) this.querySelector('.proxym-logo').appendChild(tpl.content.cloneNode(true));

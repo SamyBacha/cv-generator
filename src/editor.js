@@ -116,6 +116,7 @@ function mkSection(id, icon, title, bodyHtml, visKey = null) {
 
 /* --- Section: Identité --- */
 function renderPersonalBody() {
+    const links = editData.personal.links || [];
     return `
         <div class="e-field">
             <label class="e-label">Nom</label>
@@ -125,10 +126,44 @@ function renderPersonalBody() {
             <label class="e-label">Rôle</label>
             ${mkWysiwyg('personal.role', false)}
         </div>
+        <div class="e-grid-2">
+            <div class="e-field">
+                <label class="e-label">Email</label>
+                <input class="e-input" data-path="personal.contacts.email" placeholder="email@example.com">
+            </div>
+            <div class="e-field">
+                <label class="e-label">Téléphone</label>
+                <input class="e-input" data-path="personal.contacts.phone" placeholder="+33...">
+            </div>
+        </div>
+        <div class="e-field">
+            <label class="e-label">Liens</label>
+            ${links.map((l, i) => `
+                <div class="e-row" style="margin-bottom:6px">
+                    <input class="e-input e-flex" data-path="personal.links.${i}.link" placeholder="https://...">
+                    <input class="e-input" style="width:100px;flex-shrink:0" data-path="personal.links.${i}.ico" placeholder="emoji ou URL">
+                    <button class="btn-remove" onclick="removePersonalLink(${i})">−</button>
+                </div>
+            `).join('')}
+            <button class="btn-add" onclick="addPersonalLink()">+ Ajouter un lien</button>
+        </div>
     `;
 }
 function renderPersonal() {
     return mkSection('e-personal', '👤', 'Identité', renderPersonalBody());
+}
+
+/* --- Section: Projets personnels --- */
+function renderPersonalProjectsBody() {
+    return (editData.personal_projects || []).map((p, i) => `
+        <div class="e-row">
+            ${mkWysiwyg(`personal_projects.${i}`, false, 'e-flex')}
+            <button class="btn-remove" onclick="removePersonalProject(${i})">−</button>
+        </div>
+    `).join('') + `<button class="btn-add" onclick="addPersonalProject()">+ Ajouter un projet</button>`;
+}
+function renderPersonalProjects() {
+    return mkSection('e-personal-projects', '🔧', 'Projets personnels', renderPersonalProjectsBody(), 'personal_projects');
 }
 
 /* --- Section: À propos --- */
@@ -377,6 +412,7 @@ function buildEditor() {
         renderTeaching(),
         renderLanguages(),
         renderHobbies(),
+        renderPersonalProjects(),
         renderMissions()
     ].join('');
     bindInputs(content);
@@ -409,6 +445,12 @@ function removeMission(i)    { editData.missions.splice(i, 1); rebuildSection('e
 
 function addTask(mi)         { editData.missions[mi].tasks.push({ label: '' }); rebuildSection('e-missions', renderMissionsBody); }
 function removeTask(mi, ti)  { editData.missions[mi].tasks.splice(ti, 1); rebuildSection('e-missions', renderMissionsBody); }
+
+function addPersonalLink()       { if (!editData.personal.links) editData.personal.links = []; editData.personal.links.push({ link: '', ico: '' }); rebuildSection('e-personal', renderPersonalBody); }
+function removePersonalLink(i)   { editData.personal.links.splice(i, 1); rebuildSection('e-personal', renderPersonalBody); }
+
+function addPersonalProject()    { if (!editData.personal_projects) editData.personal_projects = []; editData.personal_projects.push(''); rebuildSection('e-personal-projects', renderPersonalProjectsBody); }
+function removePersonalProject(i){ editData.personal_projects.splice(i, 1); rebuildSection('e-personal-projects', renderPersonalProjectsBody); }
 
 /* ===== MODE SWITCH ===== */
 function cloneLogos() {
@@ -731,6 +773,9 @@ function initViewerToolbar() {
 /* ===== INIT ===== */
 export function initApp(data) {
     CV_DATA = data;
+    if (!CV_DATA.personal.contacts)  CV_DATA.personal.contacts  = {};
+    if (!CV_DATA.personal.links)     CV_DATA.personal.links     = [];
+    if (!CV_DATA.personal_projects)  CV_DATA.personal_projects  = [];
     editData = deepCopy(CV_DATA);
 
     ['cv-page1', 'cv-page2'].forEach(tag => {
@@ -781,4 +826,8 @@ window.addMission           = addMission;
 window.removeMission        = removeMission;
 window.addTask              = addTask;
 window.removeTask           = removeTask;
+window.addPersonalLink      = addPersonalLink;
+window.removePersonalLink   = removePersonalLink;
+window.addPersonalProject   = addPersonalProject;
+window.removePersonalProject= removePersonalProject;
 window.loadBlank            = loadBlank;

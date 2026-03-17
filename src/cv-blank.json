@@ -1,0 +1,42 @@
+{
+  "personal": { "name": "Prénom Nom", "role": "Titre / Poste" },
+  "about": {
+    "intro": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "expertise": [
+      "Domaine d'expertise 1",
+      "Domaine d'expertise 2",
+      "Domaine d'expertise 3"
+    ],
+    "conclusion": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+  },
+  "skills": [
+    { "label": "Catégorie 1", "items": "Compétence A, Compétence B, Compétence C" },
+    { "label": "Catégorie 2", "items": "Compétence D, Compétence E, Compétence F" }
+  ],
+  "timeline": [
+    { "year": "2015", "label": "Début de carrière", "alt": false, "current": false },
+    { "year": "2018", "label": "Poste intermédiaire", "alt": true, "current": false },
+    { "year": "Auj.", "label": "Poste actuel", "alt": false, "current": true }
+  ],
+  "education": [
+    { "years": "2012 – 2015", "degree": "Diplôme", "org": "Établissement — Ville" }
+  ],
+  "teaching": [
+    { "years": "Année", "degree": "Intitulé", "org": "Établissement — Ville" }
+  ],
+  "languages": ["Français : natif", "Anglais : courant"],
+  "hobbies": ["Loisir 1", "Loisir 2"],
+  "missions": [
+    {
+      "dates": "Mois AAAA – Mois AAAA",
+      "client": "Nom du client — Description courte",
+      "role": "Rôle — Contexte équipe",
+      "summary": "Description de la mission et du contexte projet.",
+      "tasks": [
+        { "label": "Tâche ou réalisation principale" },
+        { "label": "Deuxième tâche ou réalisation" }
+      ],
+      "stack": "Technologie A, Technologie B, Technologie C"
+    }
+  ]
+}

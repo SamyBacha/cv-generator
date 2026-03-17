@@ -1,4 +1,4 @@
-        /* ===== CSS CV (identique à bacha_cv_proxym.html) ===== */
+        /* ===== CSS global, éditeur, impression ===== */
         :root {
             --dark: #2c3e50;
             --purple: #5C4EC9;
@@ -6,12 +6,6 @@
             --yellow: #facc2a;
             --orange: #E8620A;
             --text: #2d2d2d;
-        }
-
-        .proxym-logo {
-            position: absolute;
-            top: 18px;
-            right: 22px;
         }
 
         * {
@@ -38,376 +32,41 @@
             position: relative;
         }
 
-        .page1 {
-            display: grid;
-            grid-template-columns: 35% 65%;
-        }
-
-        .col-left {
-            background: white;
-            color: var(--text);
-            padding: 35px 22px 40px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-block {
-            padding-bottom: 20px;
-            margin-bottom: 4px;
-            border-bottom: 1px solid rgba(44, 62, 80, .12);
-        }
-
-        .profile-block .cv-name {
-            font-size: 26px;
-            font-weight: 800;
-            line-height: 1.15;
-            color: var(--purple);
-            margin-bottom: 6px;
-        }
-
-        .profile-block .cv-post {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--dark);
-            text-transform: uppercase;
-            letter-spacing: .6px;
-        }
-
-        .lb {
-            display: inline-block;
-            align-self: flex-start;
-            font-size: 11.5px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .9px;
-            color: var(--purple);
-            background: linear-gradient(transparent 45%, var(--yellow) 45%);
-            background-size: 30% 100%;
-            background-repeat: no-repeat;
-            padding: 0 6px;
-            border-radius: 3px;
-            margin: 20px 0 10px;
-        }
-
-        .cv-sect-hdr {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .cv-sect-hdr .lb,
-        .cv-sect-hdr .rb {
-            margin: 0;
-        }
-
-        .cv-sect {
-            margin-top: 20px;
-        }
-
-        .cv-sect-body {
-            margin-top: 10px;
-        }
-
-        .sect-eye {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 0;
-            line-height: 1;
-            color: var(--purple-light);
-            opacity: 0.55;
-            transition: opacity .15s;
-        }
-
-        .sect-eye:hover {
-            opacity: 1;
-        }
-
-        .cv-sect-hidden .cv-sect-body {
+        .logo-fixed {
             display: none;
         }
 
-        .cv-sect-hidden .lb,
-        .cv-sect-hidden .rb {
-            opacity: 0.35;
-            text-decoration: line-through;
-        }
-
-        .cv-sect-hidden .sect-eye {
-            opacity: 0.8;
-        }
-
-        .entry {
-            margin-bottom: 13px;
-        }
-
-        .entry .yr {
-            font-size: 10.5px;
-            color: #999;
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .entry .deg {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--dark);
-            line-height: 1.3;
-        }
-
-        .entry .org {
-            font-size: 11px;
-            font-style: italic;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .ll {
-            list-style: none;
-            padding: 0;
-        }
-
-        .ll li {
-            font-size: 12px;
-            color: var(--text);
-            padding: 2px 0;
-        }
-
-        .ll li::before {
-            content: '+ ';
-            color: var(--orange);
-            font-weight: bold;
-        }
-
-        .col-right {
-            padding: 35px 28px 30px;
-            position: relative;
-        }
-
-        .logo-wrap {
-            position: absolute;
-            top: 18px;
-            right: 22px;
-        }
-
-        .rb {
-            display: inline-block;
-            font-size: 12.5px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .7px;
-            color: var(--purple);
-            background: linear-gradient(transparent 45%, var(--yellow) 45%);
-            padding: 0 6px;
-            border-radius: 3px;
-            margin: 22px 0 10px;
-        }
-
-        #cv-sect-about {
-            margin-top: 50px;
-        }
-
-        .about p {
-            font-size: 12.5px;
-            color: #444;
-            line-height: 1.65;
-        }
-
-        .about p + p {
-            margin-top: 8px;
-        }
-
-        .skills-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .skills-list li {
-            font-size: 12px;
-            color: #333;
-            padding: 3px 0;
-            line-height: 1.5;
-        }
-
-        .skills-list li::before {
-            content: '+ ';
-            color: var(--purple);
-            font-weight: bold;
-        }
-
-        .tl {
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            height: 68px;
-            margin-top: 12px;
-        }
-
-        .tl::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, var(--dark), var(--purple));
-            transform: translateY(-50%);
-        }
-
-        .tl-ev {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 52px;
-            z-index: 1;
-        }
-
-        .tl-dot {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--purple);
-        }
-
-        .tl-dot.cur {
-            background: var(--purple);
-            width: 13px;
-            height: 13px;
-        }
-
-        .tl-yr {
-            position: absolute;
-            top: 4px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--dark);
-            white-space: nowrap;
-        }
-
-        .tl-lbl {
-            position: absolute;
-            bottom: 4px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: #666;
-            text-align: center;
-            width: 62px;
-            line-height: 1.2;
-        }
-
-        .tl-ev.alt .tl-yr {
-            top: auto;
-            bottom: 4px;
-        }
-
-        .tl-ev.alt .tl-lbl {
-            bottom: auto;
-            top: 4px;
-        }
-
-        .page2 {
-            padding: 30px 40px 40px;
-            position: relative;
-        }
-
-        .page2 .logo-wrap {
-            top: 18px;
-            right: 30px;
-        }
-
-        .projects-hdr {
-            display: inline-block;
-            width: fit-content;
-            font-size: 15px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .6px;
-            color: var(--purple);
-            background: linear-gradient(transparent 45%, var(--yellow) 45%);
-            background-size: 30% 100%;
-            background-repeat: no-repeat;
-            padding: 0 6px;
-            border-radius: 3px;
-            margin: 48px 0 22px;
-        }
-
-        .mission {
-            margin-bottom: 26px;
-            padding-bottom: 22px;
-            border-bottom: 1px solid #ececec;
-        }
-
-        .mission:last-child {
-            border-bottom: none;
-        }
-
-        .m-dates {
-            font-size: 10.5px;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: .3px;
-            margin-bottom: 3px;
-        }
-
-        .m-client {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14.5px;
-            font-weight: 800;
-            color: var(--text);
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 3px;
-            margin-bottom: 3px;
-        }
-
-        .m-logo-area {
-            display: inline-flex;
-            align-items: center;
-            flex-shrink: 0;
-            border-radius: 3px;
-        }
-
-        .m-logo img,
-        .m-logo svg {
-            height: 18px;
-            width: auto;
-            max-width: 56px;
-            display: block;
-            vertical-align: middle;
-        }
-
-        @media screen {
-            .m-logo-area {
-                cursor: pointer;
-                min-width: 18px;
-                min-height: 18px;
-                transition: opacity .15s;
-            }
-            .m-logo-area:not(.has-logo)::after {
-                content: '⊕';
-                font-size: 13px;
-                color: rgba(92, 78, 201, 0.25);
-                transition: color .15s;
-            }
-            .m-logo-area:not(.has-logo):hover::after {
-                color: rgba(92, 78, 201, 0.65);
-            }
-            .m-logo-area.has-logo:hover { opacity: 0.6; }
-        }
-
         @media print {
-            .m-logo-area:not(.has-logo) { display: none; }
+            @page {
+                margin: 0;
+                size: A4;
+            }
+
+            *, *::before, *::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                forced-color-adjust: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+
+            .toolbar, #editor-panel, .print-btn, #sections-panel {
+                display: none !important;
+            }
+
+            .logo-fixed {
+                display: block;
+                position: fixed;
+                top: 18px;
+                right: 22px;
+            }
         }
 
         /* ===== Logo popover (viewer) ===== */
@@ -540,153 +199,6 @@
             resize: vertical;
             min-height: 80px;
             background: #fafaff;
-        }
-
-        .m-role {
-            font-size: 12.5px;
-            font-style: italic;
-            color: var(--purple);
-            margin-bottom: 8px;
-        }
-
-        .m-summary {
-            font-size: 12px;
-            color: var(--purple);
-            margin: 0 0 7px 14px;
-            line-height: 1.55;
-        }
-
-        .m-tasks {
-            list-style: none;
-            padding: 0;
-            margin-left: 14px;
-        }
-
-        .m-tasks li {
-            font-size: 12px;
-            color: #333;
-            padding: 2px 0;
-        }
-
-        .m-tasks li::before {
-            content: '+ ';
-            color: var(--orange);
-            font-weight: bold;
-        }
-
-        .m-stack {
-            font-size: 11px;
-            color: #666;
-            margin-top: 8px;
-            margin-left: 14px;
-        }
-
-        .m-stack b {
-            color: var(--dark);
-        }
-
-        .poc-desc {
-            display: block;
-            font-size: 10.5px;
-            color: #666;
-            font-style: italic;
-            line-height: 1.4;
-            margin-top: 2px;
-            padding-left: 12px;
-        }
-
-        .logo-fixed {
-            display: none;
-        }
-
-        @media print {
-            @page {
-                margin: 0;
-                size: A4;
-            }
-
-            *, *::before, *::after {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                forced-color-adjust: none !important;
-            }
-
-            body {
-                background: white;
-            }
-
-            .page {
-                margin: 0;
-                box-shadow: none;
-            }
-
-            .page1 {
-                page-break-after: always;
-                break-after: page;
-            }
-
-            .toolbar, #editor-panel, .print-btn, #sections-panel, .sect-eye {
-                display: none !important;
-            }
-
-            .cv-sect-hidden {
-                display: none !important;
-            }
-
-            .lb, .rb, .projects-hdr {
-                position: relative;
-                background: none !important;
-                isolation: isolate;
-                overflow: hidden;
-            }
-
-            .lb::after, .rb::after, .projects-hdr::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                height: 55%;
-                background-color: #facc2a !important;
-                z-index: -1;
-            }
-
-            .rb::after {
-                right: 0;
-            }
-
-            .lb::after,
-            .projects-hdr::after {
-                width: 30%;
-            }
-
-            .mission {
-                break-inside: avoid;
-                page-break-inside: avoid;
-                padding-top: 14px;
-                margin-bottom: 12px;
-            }
-
-            .entry {
-                break-inside: avoid;
-                page-break-inside: avoid;
-            }
-
-            .tl {
-                break-inside: avoid;
-                page-break-inside: avoid;
-            }
-
-            .logo-fixed {
-                display: block;
-                position: fixed;
-                top: 18px;
-                right: 22px;
-            }
-
-            .proxym-logo,
-            .logo-wrap {
-                display: none;
-            }
         }
 
         /* ===== WYSIWYG ===== */
@@ -1061,21 +573,6 @@
             height: 14px;
             cursor: pointer;
             flex-shrink: 0;
-        }
-
-        /* ===== Stack vide (missions) ===== */
-        @media screen {
-            .m-stack span[contenteditable="true"]:empty::before {
-                content: '+ stack technique…';
-                color: #ccc;
-                font-style: italic;
-            }
-        }
-
-        @media print {
-            .m-stack.m-stack-empty {
-                display: none;
-            }
         }
 
         /* ===== Édition inline visualiseur ===== */

@@ -6,7 +6,7 @@
     <title>CV Éditeur — Samy BACHA</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="app.js"></script>
+    <script type="module" src="src/main.js"></script>
 </head>
 <body>
 
@@ -34,6 +34,7 @@
     <div class="sect-item"><label><input type="checkbox" data-key="missions" onchange="toggleCvSection('missions')"> Missions</label></div>
         </div>
     </div>
+    <button class="toolbar-btn" onclick="loadBlank()">+ Nouveau CV vierge</button>
     <button class="toolbar-btn" onclick="importJSON()">↑ Importer JSON</button>
     <button class="toolbar-btn" onclick="exportJSON()">↓ Exporter JSON</button>
     <button id="btn-save" class="toolbar-btn" onclick="saveToLocalStorage()">💾 Sauvegarder</button>

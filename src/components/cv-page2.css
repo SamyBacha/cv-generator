@@ -1,0 +1,45 @@
+.page2 {
+    padding: 30px 40px 40px;
+    position: relative;
+}
+
+.page2 .logo-wrap {
+    top: 18px;
+    right: 30px;
+}
+
+.projects-hdr {
+    display: inline-block;
+    width: fit-content;
+    font-size: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--purple);
+    background: linear-gradient(transparent 45%, var(--yellow) 45%);
+    background-size: 30% 100%;
+    background-repeat: no-repeat;
+    padding: 0 6px;
+    border-radius: 3px;
+    margin: 48px 0 22px;
+}
+
+@media print {
+    .projects-hdr {
+        position: relative;
+        background: none !important;
+        isolation: isolate;
+        overflow: hidden;
+    }
+
+    .projects-hdr::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 55%;
+        width: 30%;
+        background-color: #facc2a !important;
+        z-index: -1;
+    }
+}

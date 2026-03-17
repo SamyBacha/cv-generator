@@ -1,296 +1,16 @@
-/* ===== LOGO HELPERS ===== */
-function renderLogoHtml(logo) {
-    if (!logo) return '';
-    const s = logo.trim();
-    if (s.startsWith('<svg')) return `<span class="m-logo">${s}</span>`;
-    return `<span class="m-logo"><img src="${s}" alt="logo"></span>`;
-}
+import { renderLogoHtml, compressImage, defaultVisibility } from './components/tools.js';
 
-async function compressImage(file, maxW = 120, maxH = 40, quality = 0.85) {
-    return new Promise(resolve => {
-        const img = new Image();
-        const url = URL.createObjectURL(file);
-        img.onload = () => {
-            const scale = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight, 1);
-            const canvas = document.createElement('canvas');
-            canvas.width = Math.round(img.naturalWidth * scale);
-            canvas.height = Math.round(img.naturalHeight * scale);
-            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-            URL.revokeObjectURL(url);
-            resolve(canvas.toDataURL('image/png', quality));
-        };
-        img.src = url;
-    });
-}
-
-/* ===== WEB COMPONENTS ===== */
-function defaultVisibility() {
-    return { about: true, skills: true, timeline: true, education: true, teaching: true, languages: true, hobbies: true, missions: true };
-}
-
-class CvMission extends HTMLElement {
-    render(m, idx) {
-        const p = idx !== undefined ? `missions.${idx}` : null;
-        const ce = (path) => p ? `contenteditable="true" data-path="${p}.${path}"` : '';
-        this.innerHTML = `
-            <div class="mission">
-                <div class="m-dates" ${ce('dates')}>${m.dates}</div>
-                <div class="m-client">
-                    <span class="m-logo-area${m.logo ? ' has-logo' : ''}" ${p !== null ? `onclick="openLogoPopover(${idx}, this)"` : ''}>${renderLogoHtml(m.logo)}</span>
-                    <span ${ce('client')}>${m.client}</span>
-                </div>
-                <div class="m-role" ${ce('role')}>${m.role}</div>
-                <p class="m-summary" ${ce('summary')}>${m.summary}</p>
-                <ul class="m-tasks">
-                    ${m.tasks.map((t, j) => `
-                        <li><span ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.label"` : ''}>${t.label}</span>${t.desc ? `<span class="poc-desc" ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.desc"` : ''}>${t.desc}</span>` : ''}</li>
-                    `).join('')}
-                </ul>
-                <div class="m-stack${m.stack ? '' : ' m-stack-empty'}"><b>Stack :</b> <span ${ce('stack')}>${m.stack || ''}</span></div>
-            </div>
-        `;
-    }
-}
-customElements.define('cv-mission', CvMission);
-
-class CvPage2 extends HTMLElement {
-    connectedCallback() {
-        const d = CV_DATA;
-        const vis = d.visibility || defaultVisibility();
-        this.style.display = vis.missions ? '' : 'none';
-        this.innerHTML = `
-            <div class="logo-wrap logo-clone"></div>
-            <div class="projects-hdr">PROJECTS REFERENCES</div>
-            ${d.missions.map(() => '<cv-mission></cv-mission>').join('')}
-        `;
-        const nodes = this.querySelectorAll('cv-mission');
-        d.missions.forEach((m, i) => nodes[i].render(m, i));
-    }
-}
-customElements.define('cv-page2', CvPage2);
-
-class CvPage1 extends HTMLElement {
-    connectedCallback() {
-        const d = CV_DATA;
-        const vis = d.visibility || defaultVisibility();
-        this.innerHTML = `
-            <div class="col-left">
-                <div class="profile-block">
-                    <div class="cv-name" contenteditable="true" data-path="personal.name">${d.personal.name}</div>
-                    <div class="cv-post" contenteditable="true" data-path="personal.role">${d.personal.role}</div>
-                </div>
-
-                <div id="cv-sect-education" class="cv-sect${vis.education ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="lb">EDUCATION</div>
-                        <button class="sect-eye" onclick="toggleCvSection('education')">${vis.education ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        ${d.education.map((e, i) => `
-                            <div class="entry">
-                                <span class="yr" contenteditable="true" data-path="education.${i}.years">${e.years}</span>
-                                <div class="deg" contenteditable="true" data-path="education.${i}.degree">${e.degree}</div>
-                                <div class="org" contenteditable="true" data-path="education.${i}.org">${e.org}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div id="cv-sect-teaching" class="cv-sect${vis.teaching ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="lb">ENSEIGNEMENT</div>
-                        <button class="sect-eye" onclick="toggleCvSection('teaching')">${vis.teaching ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        ${d.teaching.map((t, i) => `
-                            <div class="entry">
-                                <span class="yr" contenteditable="true" data-path="teaching.${i}.years">${t.years}</span>
-                                <div class="deg" contenteditable="true" data-path="teaching.${i}.degree">${t.degree}</div>
-                                <div class="org" contenteditable="true" data-path="teaching.${i}.org">${t.org}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-
-                <div id="cv-sect-languages" class="cv-sect${vis.languages ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="lb">LANGUAGES</div>
-                        <button class="sect-eye" onclick="toggleCvSection('languages')">${vis.languages ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        <ul class="ll">
-                            ${d.languages.map((l, i) => `<li contenteditable="true" data-path="languages.${i}">${l}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-
-                <div id="cv-sect-hobbies" class="cv-sect${vis.hobbies ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="lb">HOBBIES</div>
-                        <button class="sect-eye" onclick="toggleCvSection('hobbies')">${vis.hobbies ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        <ul class="ll">
-                            ${d.hobbies.map((h, i) => `<li contenteditable="true" data-path="hobbies.${i}">${h}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-right">
-                <div class="proxym-logo"></div>
-
-                <div id="cv-sect-about" class="cv-sect${vis.about ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="rb">ABOUT</div>
-                        <button class="sect-eye" onclick="toggleCvSection('about')">${vis.about ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        <div class="about">
-                            <p contenteditable="true" data-path="about.intro">${d.about.intro}</p>
-                            <p>Expertise forte en
-                                <ul style="padding-left: 40px;">
-                                    ${d.about.expertise.map((e, i) => `<li contenteditable="true" data-path="about.expertise.${i}">${e}</li>`).join('')}
-                                </ul>
-                            </p>
-                            <p contenteditable="true" data-path="about.conclusion">${d.about.conclusion}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="cv-sect-skills" class="cv-sect${vis.skills ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="rb">SKILLS</div>
-                        <button class="sect-eye" onclick="toggleCvSection('skills')">${vis.skills ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        <ul class="skills-list">
-                            ${d.skills.map((s, i) => `<li><strong contenteditable="true" data-path="skills.${i}.label">${s.label.replace(/\s*:\s*$/, '')} :</strong> <span contenteditable="true" data-path="skills.${i}.items">${s.items}</span></li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-
-                <div id="cv-sect-timeline" class="cv-sect${vis.timeline ? '' : ' cv-sect-hidden'}">
-                    <div class="cv-sect-hdr">
-                        <div class="rb">TIMELINE</div>
-                        <button class="sect-eye" onclick="toggleCvSection('timeline')">${vis.timeline ? '⊙' : '⊘'}</button>
-                    </div>
-                    <div class="cv-sect-body">
-                        <div class="tl">
-                            ${d.timeline.map((t, i) => `
-                                <div class="tl-ev${t.alt ? ' alt' : ''}">
-                                    <div class="tl-yr" contenteditable="true" data-path="timeline.${i}.year">${t.year}</div>
-                                    <div class="tl-dot${t.current ? ' cur' : ''}"></div>
-                                    <div class="tl-lbl" contenteditable="true" data-path="timeline.${i}.label">${t.label}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        const tpl = document.getElementById('proxym-logo-tpl');
-        if (tpl) {
-            this.querySelector('.proxym-logo').appendChild(tpl.content.cloneNode(true));
-        }
-    }
-}
-customElements.define('cv-page1', CvPage1);
-
-let CV_DATA = {
-    "personal": { "name": "Samy Bacha", "role": "Technical Leader" },
-    "about": {
-        "intro": "Technical Leader avec plus de <strong>12 ans d'expérience</strong> en développement et en architecture logicielle.<br>J'ai évolué de développeur backend à Tech Lead puis architecte Technique, dans des contextes exigeants (banque, transport, industrie, secteur public international).",
-        "expertise": [
-            "Architecture distribuée &amp; microservices",
-            "Domain Driven Design &amp; Software Craftsmanship",
-            "Environnements Agile à l'échelle",
-            "<strong>Transformation technologique et intégration de l'IA en entreprise</strong>"
-        ],
-        "conclusion": "Aujourd'hui, j'interviens à la croisée des enjeux techniques, business et humains, avec une forte orientation innovation et <b>intelligence artificielle.</b>"
-    },
-    "skills": [
-        { "label": "IA &amp; NLP", "items": "Python, LangChain, Pydantic, Knowledge Graph, Agents &amp; MCP, RAG, Embeddings, N8N" },
-        { "label": "Langages &amp; Frameworks", "items": "Java, Python, JavaScript/TypeScript, Spring, NodeJs, NestJs, NextJs, React, Angular" },
-        { "label": "Architecture", "items": "Microservices, Hexagonale, DDD, TDD, BDD, SOLID, Design Patterns, Event-driven, Kafka" },
-        { "label": "Cloud &amp; DevOps", "items": "GCP, AWS, Azure, Docker, Kubernetes, ArgoCD, Helm, Terraform, CloudFormation, GitLab CI, Jenkins" },
-        { "label": "Databases", "items": "PostgreSQL, Oracle, SQL Server, MySQL, MongoDB, Neo4j, PGVector, Redis, ehCache" },
-        { "label": "Outils", "items": "Git, Maven, Gradle, Sonar" }
-    ],
-    "timeline": [
-        { "year": "2013", "label": "Master MIAGE", "alt": false, "current": false },
-        { "year": "2013", "label": "Dev SNCF", "alt": true, "current": false },
-        { "year": "2019", "label": "Lead Tech Transdev", "alt": false, "current": false },
-        { "year": "2021", "label": "Lead Tech Bforbank", "alt": true, "current": false },
-        { "year": "2025", "label": "Mission IA pour Dubaï Police", "alt": false, "current": false },
-        { "year": "Auj.", "label": "Tech Leader Lab'IA Proxym", "alt": true, "current": true }
-    ],
-    "education": [
-        { "years": "Sept 2010 – Sept 2013", "degree": "Master MIAGE", "org": "ESIAG, Paris 12 — Alternance L3, M1, M2" },
-        { "years": "2005 – 2006", "degree": "Baccalauréat Scientifique", "org": "Lycée Gaston Bachelard, Chelles" }
-    ],
-    "teaching": [
-        { "years": "Mai 2024 – Juin 2024", "degree": "Enseignant DevOps", "org": "ESGI — 2 classes Master Data Science, Paris" },
-        { "years": "2023", "degree": "Formateur Java", "org": "Institution Saint-Aspais — Certification Oracle Java SE 8 (L3)" }
-    ],
-    "languages": ["Français : natif", "Anglais : courant"],
-    "hobbies": ["Veille Technologique", "Dessin", "Ping-pong"],
-    "missions": [
-        {
-            "dates": "Aujourd'hui", "client": "Proxym — Mission interne stratégique", "role": "Technical Leader — Lab IA",
-            "summary": "Définir la stratégie technologique de Proxym.<br>Création et structuration du pôle IA : roadmap, POC métier, acculturation des équipes et accompagnement avant-vente.",
-            "tasks": [
-                { "label": "Définition de la roadmap IA &amp; veille technologique active (LLM, architectures agents)" },
-                { "label": "POC – Spec Agent : agent IA d'analyse documentaire &amp; code", "desc": "But : Croiser differentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB." },
-                { "label": "POC – Payroll Agent : pilotage IA de la masse salariale", "desc": "Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision." },
-                { "label": "Formation IA pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)" },
-                { "label": "Accompagnement avant-vente sur sujets IA" }
-            ], "stack": ""
-        },
-        {
-            "dates": "Mars 2025 – Juin 2025", "client": "Dubaï Police — Benchmarking stratégique de mesures preventives", "role": "Task Force Member — Proxym, 4 personnes",
-            "summary": "Conception d'une plateforme IA de benchmarking institutionnel permettant la comparaison de pratiques entre organismes et la génération de plans d'implémentation actionnables.",
-            "tasks": [
-                { "label": "Comparaison des pratiques internes avec celles d'autres institutions policières" },
-                { "label": "Identification d'experts et extraction de bonnes pratiques" },
-                { "label": "Génération de plans d'implémentation via agents IA" }
-            ], "stack": "Python, Django REST Framework, LangChain, Neo4j, PGVector, PostgreSQL, Docker, GitLab CI"
-        },
-        {
-            "dates": "Juin 2021 – Février 2025", "client": "Bforbank — Transformation néobanque", "role": "Lead Developer Backend — via Proxym, Squad 13 personnes",
-            "summary": "Transformation de Bforbank en néobanque.<br>Squad Customer Acquisition : Onboarding, KYC, screening AML, signature électronique.<br>Environnement microservices hautement disponible.",
-            "tasks": [
-                { "label": "Conception et développement de microservices d'onboarding client" },
-                { "label": "Intégration KYC &amp; screening AML" },
-                { "label": "Architecture event-driven (Kafka) et infrastructure GCP" }
-            ], "stack": "Java 17, Spring Boot 3, Kafka, GCP, Terraform, Kubernetes, BDD/TDD/DDD"
-        },
-        {
-            "dates": "Mai 2019 – Mai 2021", "client": "Transdev — Refonte système de gestion RH", "role": "Lead Tech — Devoteam Creative Tech, Squad 10 personnes",
-            "summary": "Refonte complète du système de gestion des employés pour Transdev.<br>Coordination inter-feature teams et promotion des bonnes pratiques DDD.",
-            "tasks": [
-                { "label": "Architecture orientée microservices" },
-                { "label": "Coordination inter-feature teams" },
-                { "label": "Promotion DDD &amp; bonnes pratiques engineering" }
-            ], "stack": "Java 11, Spring, Angular, AWS"
-        },
-        {
-            "dates": "Janvier 2013 – Décembre 2019", "client": "EGIS · Airbus · SNCF", "role": "Tech Lead — Sopra Steria puis Devoteam",
-            "summary": "Interventions sur projets critiques dans les secteurs Énergie, Aéronautique et Transport ferroviaire, via ESN (Sopra Steria puis Devoteam).",
-            "tasks": [
-                { "label": "Clients notables : Airbus, SNCF" },
-                { "label": "Secteurs : Énergie, Aéronautique, Transport ferroviaire" }
-            ], "stack": ""
-        }
-    ],
-    "visibility": { "about": true, "skills": true, "timeline": true, "education": true, "teaching": true, "languages": true, "hobbies": true, "missions": true }
-};
-
-/* ===== ÉDITEUR ===== */
-let editData;
+/* ===== ÉTAT ===== */
+let CV_DATA = null;
+let editData = null;
 let currentMode = 'viewer';
 
+export const LS_KEY = 'proxym-cv-data';
+
+export function getCvData() { return CV_DATA; }
+export function getEditData() { return editData; }
+
+/* ===== UTILITAIRES ===== */
 function deepCopy(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
@@ -352,7 +72,6 @@ function bindViewerInputs() {
             const v = el.innerHTML;
             setPath(CV_DATA, path, v);
             setPath(editData, path, v);
-            // Mise à jour dynamique de m-stack-empty
             const stack = el.closest('.m-stack');
             if (stack) stack.classList.toggle('m-stack-empty', !el.textContent.trim());
         });
@@ -733,7 +452,7 @@ function switchToView() {
     CV_DATA = deepCopy(editData);
     ['cv-page1', 'cv-page2'].forEach(tag => {
         const el = document.querySelector('#viewer-panel ' + tag);
-        if (el) { el.innerHTML = ''; el.connectedCallback(); }
+        if (el) el.data = CV_DATA;
     });
     cloneLogos();
     bindViewerInputs();
@@ -748,8 +467,6 @@ function switchToEdit() {
     togglePanels('editor');
     currentMode = 'editor';
 }
-
-const LS_KEY = 'proxym-cv-data';
 
 function toggleCvSection(key) {
     if (!CV_DATA.visibility) CV_DATA.visibility = defaultVisibility();
@@ -821,7 +538,7 @@ function importJSON() {
                 if (currentMode === 'viewer') {
                     ['cv-page1', 'cv-page2'].forEach(tag => {
                         const el = document.querySelector('#viewer-panel ' + tag);
-                        if (el) { el.innerHTML = ''; el.connectedCallback(); }
+                        if (el) el.data = CV_DATA;
                     });
                     cloneLogos();
                     bindViewerInputs();
@@ -835,6 +552,24 @@ function importJSON() {
         reader.readAsText(file);
     });
     input.click();
+}
+
+async function loadBlank() {
+    if (!confirm('Charger un CV vierge ? Les données non sauvegardées seront perdues.')) return;
+    const resp = await fetch(new URL('./cv-blank.json', import.meta.url));
+    const blank = await resp.json();
+    CV_DATA = blank;
+    editData = deepCopy(CV_DATA);
+    if (currentMode === 'viewer') {
+        ['cv-page1', 'cv-page2'].forEach(tag => {
+            const el = document.querySelector('#viewer-panel ' + tag);
+            if (el) el.data = CV_DATA;
+        });
+        cloneLogos();
+        bindViewerInputs();
+    } else {
+        buildEditor();
+    }
 }
 
 function saveToLocalStorage() {
@@ -911,11 +646,9 @@ function edLogoRemove(i) {
 }
 
 function initLogoHandlers() {
-    // Input fichier partagé pour le viewer (popover)
     const lpFile = document.createElement('input');
     lpFile.type = 'file'; lpFile.accept = 'image/*'; lpFile.id = 'lp-file-input'; lpFile.style.display = 'none';
 
-    // Input fichier partagé pour l'éditeur
     const edFile = document.createElement('input');
     edFile.type = 'file'; edFile.accept = 'image/*'; edFile.id = 'ed-logo-file-input'; edFile.style.display = 'none';
 
@@ -934,7 +667,6 @@ function initLogoHandlers() {
         edFile.value = '';
     });
 
-    // Popover viewer
     const pop = document.createElement('div');
     pop.id = 'logo-popover';
     pop.innerHTML = `
@@ -951,7 +683,6 @@ function initLogoHandlers() {
     `;
     document.body.appendChild(pop);
 
-    // Fermer sur clic extérieur
     document.addEventListener('mousedown', e => {
         if (!pop.contains(e.target) && !e.target.closest('.m-logo-area')) {
             pop.classList.remove('visible');
@@ -997,21 +728,57 @@ function initViewerToolbar() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const stored = localStorage.getItem(LS_KEY);
-    if (stored) {
-        try {
-            CV_DATA = JSON.parse(stored);
-            ['cv-page1', 'cv-page2'].forEach(tag => {
-                const el = document.querySelector('#viewer-panel ' + tag);
-                if (el) { el.innerHTML = ''; el.connectedCallback(); }
-            });
-        } catch { /* fallback sur données embarquées */ }
-    }
+/* ===== INIT ===== */
+export function initApp(data) {
+    CV_DATA = data;
     editData = deepCopy(CV_DATA);
+
+    ['cv-page1', 'cv-page2'].forEach(tag => {
+        const el = document.querySelector('#viewer-panel ' + tag);
+        if (el) el.data = CV_DATA;
+    });
+
     initSectionsPanel();
     cloneLogos();
     bindViewerInputs();
     initLogoHandlers();
     initViewerToolbar();
-});
+}
+
+/* ===== EXPOSITION GLOBALE (handlers inline HTML) ===== */
+window.switchToEdit         = switchToEdit;
+window.switchToView         = switchToView;
+window.toggleCvSection      = toggleCvSection;
+window.toggleSectionsPanel  = toggleSectionsPanel;
+window.exportJSON           = exportJSON;
+window.importJSON           = importJSON;
+window.saveToLocalStorage   = saveToLocalStorage;
+window.toggleSection        = toggleSection;
+window.toggleMission        = toggleMission;
+window.openLogoPopover      = openLogoPopover;
+window.lpToggleSvg          = lpToggleSvg;
+window.lpApplySvg           = lpApplySvg;
+window.lpRemove             = lpRemove;
+window.edLogoUpload         = edLogoUpload;
+window.edLogoSvg            = edLogoSvg;
+window.edLogoApplySvg       = edLogoApplySvg;
+window.edLogoRemove         = edLogoRemove;
+window.addExpertise         = addExpertise;
+window.removeExpertise      = removeExpertise;
+window.addSkill             = addSkill;
+window.removeSkill          = removeSkill;
+window.addTimeline          = addTimeline;
+window.removeTimeline       = removeTimeline;
+window.addEducation         = addEducation;
+window.removeEducation      = removeEducation;
+window.addTeaching          = addTeaching;
+window.removeTeaching       = removeTeaching;
+window.addLanguage          = addLanguage;
+window.removeLanguage       = removeLanguage;
+window.addHobby             = addHobby;
+window.removeHobby          = removeHobby;
+window.addMission           = addMission;
+window.removeMission        = removeMission;
+window.addTask              = addTask;
+window.removeTask           = removeTask;
+window.loadBlank            = loadBlank;

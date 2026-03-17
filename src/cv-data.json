@@ -1,0 +1,112 @@
+{
+  "personal": { "name": "Samy Bacha", "role": "Technical Leader" },
+  "about": {
+    "intro": "Technical Leader avec plus de <strong>12 ans d'expérience</strong> en développement et en architecture logicielle.<br>J'ai évolué de développeur backend à Tech Lead puis architecte Technique, dans des contextes exigeants (banque, transport, industrie, secteur public international).",
+    "expertise": [
+      "Architecture distribuée &amp; microservices",
+      "Domain Driven Design &amp; Software Craftsmanship",
+      "Environnements Agile à l'échelle",
+      "<strong>Transformation technologique et intégration de l'IA en entreprise</strong>"
+    ],
+    "conclusion": "Aujourd'hui, j'interviens à la croisée des enjeux techniques, business et humains, avec une forte orientation innovation et <b>intelligence artificielle.</b>"
+  },
+  "skills": [
+    { "label": "IA &amp; NLP", "items": "Python, LangChain, Pydantic, Knowledge Graph, Agents &amp; MCP, RAG, Embeddings, N8N" },
+    { "label": "Langages &amp; Frameworks", "items": "Java, Python, JavaScript/TypeScript, Spring, NodeJs, NestJs, NextJs, React, Angular" },
+    { "label": "Architecture", "items": "Microservices, Hexagonale, DDD, TDD, BDD, SOLID, Design Patterns, Event-driven, Kafka" },
+    { "label": "Cloud &amp; DevOps", "items": "GCP, AWS, Azure, Docker, Kubernetes, ArgoCD, Helm, Terraform, CloudFormation, GitLab CI, Jenkins" },
+    { "label": "Databases", "items": "PostgreSQL, Oracle, SQL Server, MySQL, MongoDB, Neo4j, PGVector, Redis, ehCache" },
+    { "label": "Outils", "items": "Git, Maven, Gradle, Sonar" }
+  ],
+  "timeline": [
+    { "year": "2013", "label": "Master MIAGE", "alt": false, "current": false },
+    { "year": "2013", "label": "Dev SNCF", "alt": true, "current": false },
+    { "year": "2019", "label": "Lead Tech Transdev", "alt": false, "current": false },
+    { "year": "2021", "label": "Lead Tech Bforbank", "alt": true, "current": false },
+    { "year": "2025", "label": "Mission IA pour Dubaï Police", "alt": false, "current": false },
+    { "year": "Auj.", "label": "Tech Leader Lab'IA Proxym", "alt": true, "current": true }
+  ],
+  "education": [
+    { "years": "Sept 2010 – Sept 2013", "degree": "Master MIAGE", "org": "ESIAG, Paris 12 — Alternance L3, M1, M2" },
+    { "years": "2005 – 2006", "degree": "Baccalauréat Scientifique", "org": "Lycée Gaston Bachelard, Chelles" }
+  ],
+  "teaching": [
+    { "years": "Mai 2024 – Juin 2024", "degree": "Enseignant DevOps", "org": "ESGI — 2 classes Master Data Science, Paris" },
+    { "years": "2023", "degree": "Formateur Java", "org": "Institution Saint-Aspais — Certification Oracle Java SE 8 (L3)" }
+  ],
+  "languages": ["Français : natif", "Anglais : courant"],
+  "hobbies": ["Veille Technologique", "Dessin", "Ping-pong"],
+  "missions": [
+    {
+      "dates": "Aujourd'hui",
+      "client": "Proxym — Mission interne stratégique",
+      "role": "Technical Leader — Lab IA",
+      "summary": "Définir la stratégie technologique de Proxym.<br>Création et structuration du pôle IA : roadmap, POC métier, acculturation des équipes et accompagnement avant-vente.",
+      "tasks": [
+        { "label": "Définition de la roadmap IA &amp; veille technologique active (LLM, architectures agents)" },
+        { "label": "POC – Spec Agent : agent IA d'analyse documentaire &amp; code", "desc": "But : Croiser differentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB." },
+        { "label": "POC – Payroll Agent : pilotage IA de la masse salariale", "desc": "Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision." },
+        { "label": "Formation IA pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)" },
+        { "label": "Accompagnement avant-vente sur sujets IA" }
+      ],
+      "stack": ""
+    },
+    {
+      "dates": "Mars 2025 – Juin 2025",
+      "client": "Dubaï Police — Benchmarking stratégique de mesures preventives",
+      "role": "Task Force Member — Proxym, 4 personnes",
+      "summary": "Conception d'une plateforme IA de benchmarking institutionnel permettant la comparaison de pratiques entre organismes et la génération de plans d'implémentation actionnables.",
+      "tasks": [
+        { "label": "Comparaison des pratiques internes avec celles d'autres institutions policières" },
+        { "label": "Identification d'experts et extraction de bonnes pratiques" },
+        { "label": "Génération de plans d'implémentation via agents IA" }
+      ],
+      "stack": "Python, Django REST Framework, LangChain, Neo4j, PGVector, PostgreSQL, Docker, GitLab CI"
+    },
+    {
+      "dates": "Juin 2021 – Février 2025",
+      "client": "Bforbank — Transformation néobanque",
+      "role": "Lead Developer Backend — via Proxym, Squad 13 personnes",
+      "summary": "Transformation de Bforbank en néobanque.<br>Squad Customer Acquisition : Onboarding, KYC, screening AML, signature électronique.<br>Environnement microservices hautement disponible.",
+      "tasks": [
+        { "label": "Conception et développement de microservices d'onboarding client" },
+        { "label": "Intégration KYC &amp; screening AML" },
+        { "label": "Architecture event-driven (Kafka) et infrastructure GCP" }
+      ],
+      "stack": "Java 17, Spring Boot 3, Kafka, GCP, Terraform, Kubernetes, BDD/TDD/DDD"
+    },
+    {
+      "dates": "Mai 2019 – Mai 2021",
+      "client": "Transdev — Refonte système de gestion RH",
+      "role": "Lead Tech — Devoteam Creative Tech, Squad 10 personnes",
+      "summary": "Refonte complète du système de gestion des employés pour Transdev.<br>Coordination inter-feature teams et promotion des bonnes pratiques DDD.",
+      "tasks": [
+        { "label": "Architecture orientée microservices" },
+        { "label": "Coordination inter-feature teams" },
+        { "label": "Promotion DDD &amp; bonnes pratiques engineering" }
+      ],
+      "stack": "Java 11, Spring, Angular, AWS"
+    },
+    {
+      "dates": "Janvier 2013 – Décembre 2019",
+      "client": "EGIS · Airbus · SNCF",
+      "role": "Tech Lead — Sopra Steria puis Devoteam",
+      "summary": "Interventions sur projets critiques dans les secteurs Énergie, Aéronautique et Transport ferroviaire, via ESN (Sopra Steria puis Devoteam).",
+      "tasks": [
+        { "label": "Clients notables : Airbus, SNCF" },
+        { "label": "Secteurs : Énergie, Aéronautique, Transport ferroviaire" }
+      ],
+      "stack": ""
+    }
+  ],
+  "visibility": {
+    "about": true,
+    "skills": true,
+    "timeline": true,
+    "education": true,
+    "teaching": true,
+    "languages": true,
+    "hobbies": true,
+    "missions": true
+  }
+}

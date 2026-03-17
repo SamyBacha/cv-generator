@@ -4,8 +4,9 @@ pages:
   image: alpine:latest
   stage: deploy
   script:
-    - mkdir -p public
-    - cp index.html style.css public/
+    - mkdir public
+    - cp index.html public/
+    - cp style.css public/
     - cp -r src public/
   artifacts:
     paths:

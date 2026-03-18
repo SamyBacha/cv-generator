@@ -46,6 +46,10 @@ function bindInputs(container) {
 
 function mkWysiwyg(path, multiline = true, cls = '') {
     const contentCls = multiline ? '' : ' wysiwyg-inline';
+    const listBtns = multiline ? `
+                <div class="wysiwyg-sep"></div>
+                <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('insertUnorderedList')" title="Liste à puces">• ≡</button>
+                <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('insertOrderedList')" title="Liste numérotée">1. ≡</button>` : '';
     return `
         <div class="wysiwyg-wrap${cls ? ' ' + cls : ''}">
             <div class="wysiwyg-bar">
@@ -53,6 +57,7 @@ function mkWysiwyg(path, multiline = true, cls = '') {
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('italic')" title="Italique"><i>I</i></button>
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('underline')" title="Souligné"><u>U</u></button>
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('strikeThrough')" title="Barré"><s>S</s></button>
+                ${listBtns}
                 <div class="wysiwyg-sep"></div>
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('removeFormat')" title="Effacer le style">✕</button>
             </div>
@@ -61,10 +66,15 @@ function mkWysiwyg(path, multiline = true, cls = '') {
     `;
 }
 
+function markViewerEmpty(el) {
+    el.classList.toggle('cv-field-empty', !el.textContent.trim());
+}
+
 function bindViewerInputs() {
     const panel = document.getElementById('viewer-panel');
     if (!panel) return;
     panel.querySelectorAll('[data-path][contenteditable="true"]').forEach(el => {
+        markViewerEmpty(el);
         if (el._viewerBound) return;
         el._viewerBound = true;
         const path = el.dataset.path;
@@ -74,7 +84,9 @@ function bindViewerInputs() {
             setPath(editData, path, v);
             const stack = el.closest('.m-stack');
             if (stack) stack.classList.toggle('m-stack-empty', !el.textContent.trim());
+            markViewerEmpty(el);
         });
+        el.addEventListener('blur', () => markViewerEmpty(el));
     });
 }
 
@@ -129,19 +141,19 @@ function renderPersonalBody() {
         <div class="e-grid-2">
             <div class="e-field">
                 <label class="e-label">Email</label>
-                <input class="e-input" data-path="personal.contacts.email" placeholder="email@example.com">
+                <textarea class="e-input" rows="1" data-path="personal.contacts.email" placeholder="email@example.com"></textarea>
             </div>
             <div class="e-field">
                 <label class="e-label">Téléphone</label>
-                <input class="e-input" data-path="personal.contacts.phone" placeholder="+33...">
+                <textarea class="e-input" rows="1" data-path="personal.contacts.phone" placeholder="+33..."></textarea>
             </div>
         </div>
         <div class="e-field">
             <label class="e-label">Liens</label>
             ${links.map((l, i) => `
                 <div class="e-row" style="margin-bottom:6px">
-                    <input class="e-input e-flex" data-path="personal.links.${i}.link" placeholder="https://...">
-                    <input class="e-input" style="width:100px;flex-shrink:0" data-path="personal.links.${i}.ico" placeholder="emoji ou URL">
+                    <textarea class="e-input e-flex" rows="1" data-path="personal.links.${i}.link" placeholder="https://..."></textarea>
+                    <textarea class="e-input" rows="1" style="width:100px;flex-shrink:0" data-path="personal.links.${i}.ico" placeholder="emoji ou URL"></textarea>
                     <button class="btn-remove" onclick="removePersonalLink(${i})">−</button>
                 </div>
             `).join('')}
@@ -172,20 +184,6 @@ function renderAboutBody() {
         <div class="e-field">
             <label class="e-label">Introduction</label>
             ${mkWysiwyg('about.intro')}
-        </div>
-        <div class="e-field">
-            <label class="e-label">Expertise</label>
-            ${editData.about.expertise.map((_, i) => `
-                <div class="e-row">
-                    ${mkWysiwyg(`about.expertise.${i}`, false, 'e-flex')}
-                    <button class="btn-remove" onclick="removeExpertise(${i})">−</button>
-                </div>
-            `).join('')}
-            <button class="btn-add" onclick="addExpertise()">+ Ajouter une ligne</button>
-        </div>
-        <div class="e-field">
-            <label class="e-label">Conclusion</label>
-            ${mkWysiwyg('about.conclusion')}
         </div>
     `;
 }
@@ -379,9 +377,14 @@ function renderMissionsBody() {
                         <div class="e-logo-preview">${m.logo ? renderLogoHtml(m.logo) : '<span class="e-logo-empty">Aucun</span>'}</div>
                         <div class="e-logo-btns">
                             <button class="btn-sm" onclick="edLogoUpload(${i})">📁 Image</button>
+                            <button class="btn-sm" onclick="edLogoUrl(${i})">🔗 URL</button>
                             <button class="btn-sm" onclick="edLogoSvg(${i})">✏ SVG</button>
                             ${m.logo ? `<button class="btn-sm btn-sm-del" onclick="edLogoRemove(${i})">✕</button>` : ''}
                         </div>
+                    </div>
+                    <div class="e-logo-url-wrap" id="e-logo-url-wrap-${i}" style="display:none">
+                        <input class="e-input" id="e-logo-url-input-${i}" placeholder="https://example.com/logo.png" style="margin-top:6px">
+                        <button class="btn-add" onclick="edLogoApplyUrl(${i})">Appliquer</button>
                     </div>
                     <div class="e-logo-svg-wrap" id="e-logo-svg-wrap-${i}" style="display:none">
                         <textarea class="e-logo-svg-area" id="e-logo-svg-area-${i}" placeholder="Coller le code SVG ici…"></textarea>
@@ -614,6 +617,22 @@ async function loadBlank() {
     }
 }
 
+function toggleLang() {
+    const newLang = (CV_DATA.lang || 'fr') === 'fr' ? 'en' : 'fr';
+    CV_DATA.lang = newLang;
+    editData.lang = newLang;
+    const btn = document.getElementById('btn-lang');
+    if (btn) btn.textContent = newLang === 'fr' ? '🌐 FR' : '🌐 EN';
+    if (currentMode === 'viewer') {
+        ['cv-page1', 'cv-page2'].forEach(tag => {
+            const el = document.querySelector('#viewer-panel ' + tag);
+            if (el) el.data = CV_DATA;
+        });
+        cloneLogos();
+        bindViewerInputs();
+    }
+}
+
 function saveToLocalStorage() {
     localStorage.setItem(LS_KEY, JSON.stringify(editData));
     const btn = document.getElementById('btn-save');
@@ -637,6 +656,16 @@ function openLogoPopover(idx, anchor) {
     pop.style.left = Math.max(4, Math.min(rect.left, window.innerWidth - 290)) + 'px';
     pop.style.top = (rect.bottom + 6) + 'px';
     pop.classList.add('visible');
+}
+
+function lpToggleUrl() {
+    const area = document.getElementById('lp-url-area');
+    area.style.display = area.style.display === 'none' ? 'flex' : 'none';
+}
+
+function lpApplyUrl() {
+    const val = document.getElementById('lp-url-input').value.trim();
+    if (val) lpApplyLogo(val);
 }
 
 function lpToggleSvg() {
@@ -668,6 +697,18 @@ let _edLogoIdx = null;
 function edLogoUpload(i) {
     _edLogoIdx = i;
     document.getElementById('ed-logo-file-input').click();
+}
+
+function edLogoUrl(i) {
+    const wrap = document.getElementById('e-logo-url-wrap-' + i);
+    if (wrap) wrap.style.display = wrap.style.display === 'none' ? '' : 'none';
+}
+
+function edLogoApplyUrl(i) {
+    const val = (document.getElementById('e-logo-url-input-' + i)?.value || '').trim();
+    if (!val) return;
+    editData.missions[i].logo = val;
+    rebuildSection('e-missions', renderMissionsBody);
 }
 
 function edLogoSvg(i) {
@@ -715,8 +756,13 @@ function initLogoHandlers() {
         <div class="lp-preview" id="lp-preview"></div>
         <div class="lp-actions">
             <button class="lp-btn" onclick="document.getElementById('lp-file-input').click()">📁 Image</button>
+            <button class="lp-btn" onclick="lpToggleUrl()">🔗 URL</button>
             <button class="lp-btn" onclick="lpToggleSvg()">✏ SVG</button>
             <button class="lp-btn lp-btn-del" id="lp-del" onclick="lpRemove()">✕</button>
+        </div>
+        <div id="lp-url-area" style="display:none;flex-direction:column;gap:4px">
+            <input id="lp-url-input" placeholder="https://example.com/logo.png" style="width:100%;padding:5px 8px;border:1px solid rgba(255,255,255,.1);border-radius:6px;background:rgba(255,255,255,.05);color:#ccc;font-size:11px;box-sizing:border-box">
+            <button class="lp-btn" onclick="lpApplyUrl()">Appliquer</button>
         </div>
         <div id="lp-svg-area" style="display:none">
             <textarea id="lp-svg-input" placeholder="Coller le code SVG ici…" rows="4"></textarea>
@@ -776,6 +822,20 @@ export function initApp(data) {
     if (!CV_DATA.personal.contacts)  CV_DATA.personal.contacts  = {};
     if (!CV_DATA.personal.links)     CV_DATA.personal.links     = [];
     if (!CV_DATA.personal_projects)  CV_DATA.personal_projects  = [];
+    if (!CV_DATA.lang)               CV_DATA.lang               = 'fr';
+
+    // Migration : fusionner expertise[] + conclusion dans about.intro
+    if (CV_DATA.about.expertise?.length || CV_DATA.about.conclusion) {
+        const parts = [];
+        if (CV_DATA.about.intro) parts.push(CV_DATA.about.intro);
+        if ((CV_DATA.about.expertise || []).length)
+            parts.push('<ul>' + CV_DATA.about.expertise.map(e => `<li>${e}</li>`).join('') + '</ul>');
+        if (CV_DATA.about.conclusion)
+            parts.push(`<p>${CV_DATA.about.conclusion}</p>`);
+        CV_DATA.about.intro = parts.join('');
+        delete CV_DATA.about.expertise;
+        delete CV_DATA.about.conclusion;
+    }
     editData = deepCopy(CV_DATA);
 
     ['cv-page1', 'cv-page2'].forEach(tag => {
@@ -783,7 +843,18 @@ export function initApp(data) {
         if (el) el.data = CV_DATA;
     });
 
+    const btnLang = document.getElementById('btn-lang');
+    if (btnLang) btnLang.textContent = CV_DATA.lang === 'en' ? '🌐 EN' : '🌐 FR';
+
     initSectionsPanel();
+    document.addEventListener('click', e => {
+        const panel = document.getElementById('sections-panel');
+        const btn   = document.getElementById('btn-sections');
+        if (panel && panel.style.display !== 'none' && !btn.contains(e.target) && !panel.contains(e.target)) {
+            panel.style.display = 'none';
+            btn.classList.remove('active');
+        }
+    });
     cloneLogos();
     bindViewerInputs();
     initLogoHandlers();
@@ -801,10 +872,14 @@ window.saveToLocalStorage   = saveToLocalStorage;
 window.toggleSection        = toggleSection;
 window.toggleMission        = toggleMission;
 window.openLogoPopover      = openLogoPopover;
+window.lpToggleUrl          = lpToggleUrl;
+window.lpApplyUrl           = lpApplyUrl;
 window.lpToggleSvg          = lpToggleSvg;
 window.lpApplySvg           = lpApplySvg;
 window.lpRemove             = lpRemove;
 window.edLogoUpload         = edLogoUpload;
+window.edLogoUrl            = edLogoUrl;
+window.edLogoApplyUrl       = edLogoApplyUrl;
 window.edLogoSvg            = edLogoSvg;
 window.edLogoApplySvg       = edLogoApplySvg;
 window.edLogoRemove         = edLogoRemove;
@@ -831,3 +906,4 @@ window.removePersonalLink   = removePersonalLink;
 window.addPersonalProject   = addPersonalProject;
 window.removePersonalProject= removePersonalProject;
 window.loadBlank            = loadBlank;
+window.toggleLang           = toggleLang;

@@ -10,7 +10,7 @@
 
 .m-dates {
     font-size: 10.5px;
-    color: #999;
+    color: #6a6a6a;
     text-transform: uppercase;
     letter-spacing: .3px;
     margin-bottom: 3px;
@@ -102,7 +102,7 @@
 
 .m-tasks li::before {
     content: '+ ';
-    color: var(--orange);
+    color: var(--purple);
     font-weight: bold;
 }
 

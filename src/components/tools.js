@@ -1,5 +1,34 @@
 const _loadedStyles = new Set();
 
+export const I18N = {
+    fr: {
+        about:             'À PROPOS',
+        skills:            'COMPÉTENCES',
+        timeline:          'TIMELINE',
+        education:         'FORMATION',
+        teaching:          'ENSEIGNEMENT',
+        languages:         'LANGUES',
+        hobbies:           'HOBBIES',
+        personal_projects: 'PROJETS PERSO',
+        projects_header:   'RÉFÉRENCES PROJETS',
+    },
+    en: {
+        about:             'ABOUT',
+        skills:            'SKILLS',
+        timeline:          'TIMELINE',
+        education:         'EDUCATION',
+        teaching:          'TEACHING',
+        languages:         'LANGUAGES',
+        hobbies:           'HOBBIES',
+        personal_projects: 'PERSONAL PROJECTS',
+        projects_header:   'PROJECT REFERENCES',
+    },
+};
+
+export function t(key, lang) {
+    return (I18N[lang] || I18N.fr)[key] || key;
+}
+
 export function applyStyles(element) {
     const name = element.tagName.toLowerCase();
     if (_loadedStyles.has(name)) return;

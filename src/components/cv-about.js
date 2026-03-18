@@ -1,26 +1,16 @@
 import { applyStyles } from './tools.js';
 
 export class CvAbout extends HTMLElement {
-    set data({ intro, expertise, conclusion }) {
-        this._data = { intro, expertise, conclusion };
+    set data(about) {
+        this._data = about;
         this._render();
     }
 
     _render() {
         applyStyles(this);
-        const { intro = '', expertise = [], conclusion = '' } = this._data || {};
+        const intro = this._data?.intro || '';
         this.innerHTML = `
-            <div class="about">
-                <p contenteditable="true" data-path="about.intro">${intro}</p>
-                <p>Expertise forte en
-                    <ul style="padding-left: 40px;">
-                        ${expertise.map((e, i) => `
-                            <li contenteditable="true" data-path="about.expertise.${i}">${e}</li>
-                        `).join('')}
-                    </ul>
-                </p>
-                <p contenteditable="true" data-path="about.conclusion">${conclusion}</p>
-            </div>
+            <div class="about" contenteditable="true" data-path="about.intro">${intro}</div>
         `;
     }
 }

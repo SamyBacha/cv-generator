@@ -1,4 +1,4 @@
-import { applyStyles, defaultVisibility } from './tools.js';
+import { applyStyles, defaultVisibility, t } from './tools.js';
 
 export class CvPage2 extends HTMLElement {
     set data(d) {
@@ -12,9 +12,10 @@ export class CvPage2 extends HTMLElement {
         applyStyles(this);
         const vis = d.visibility || defaultVisibility();
         this.style.display = vis.missions ? '' : 'none';
+        const lang = d.lang || 'fr';
         this.innerHTML = `
             <div class="logo-wrap logo-clone"></div>
-            <div class="projects-hdr">PROJECTS REFERENCES</div>
+            <div class="projects-hdr">${t('projects_header', lang)}</div>
             ${d.missions.map(() => '<cv-mission></cv-mission>').join('')}
         `;
         const nodes = this.querySelectorAll('cv-mission');

@@ -1,0 +1,253 @@
+{
+  "personal": {
+    "name": "Aleksandar Kirilov",
+    "role": "Architecte Logiciel",
+    "contacts": {
+      "email": "alexander.n.kirilov@gmail.com",
+      "phone": "+33695023765"
+    },
+    "links": [
+      { "link": "https://blog.kirilov.dev/",                                                             "ico": "📝" },
+      { "link": "https://github.com/sashokbg/",                                                          "ico": "https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" },
+      { "link": "https://www.linkedin.com/in/alexander-kirilov-b0373a62/",                               "ico": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/2048px-LinkedIn_icon.svg.png" }
+    ]
+  },
+  "about": {
+    "intro": "Passionné d'informatique et de technologies avec <strong>14 ans d'expérience</strong> dans de grandes entreprises : Transdev, Teréga, Boursorama, AG2R La Mondiale, GMF, AXA, Priceminister, BforBank, et d'autres.<br>Capable de mener un projet de la conception à la production en mettant en place une solution technique adaptée à la situation et aux contraintes du client.",
+    "expertise": [
+      "Best practices, méthodologie Agile, BDD, DDD et TDD",
+      "Architecture cloud-native &amp; microservices",
+      "DevOps : Kubernetes, Terraform, CI/CD, IaC"
+    ],
+    "conclusion": "Positif, patient et pédagogue, j'aime partager et expliquer autant qu'apprendre des autres."
+  },
+  "skills": [
+    { "label": "DevOps &amp; Cloud", "items": "GCP, AWS, Azure, Kubernetes, Docker, Cloudformation, Terraform, Ansible, ArgoCD, Helm" },
+    { "label": "Langages", "items": "Java 21/JEE, JavaScript, TypeScript, Python, Shell" },
+    { "label": "IA", "items": "Embedding models, Agents, RAG, Knowledge Graphs, LangChain, N8N, Pydantic AI, MCP" },
+    { "label": "Frameworks", "items": "Spring, Hibernate/JPA, NodeJs, NestJs, NextJs, React, Angular, Python Flask" },
+    { "label": "Databases", "items": "PostgreSQL, MySQL, Oracle, DynamoDB, H2" },
+    { "label": "Qualité", "items": "Cucumber, Archunit, EsLint, PyLint, Mockito, Gatling, jMeter, TDD, BDD" },
+    { "label": "Infra &amp; Outils", "items": "Linux, Nginx, Git, GitLab CI, Bitbucket CI, Maven, Gradle, Nexus, Sonar, Jenkins" }
+  ],
+  "timeline": [
+    { "year": "2012", "label": "Dev Junior — Boursorama", "alt": false, "current": false },
+    { "year": "2015", "label": "Developer — GMF", "alt": true, "current": false },
+    { "year": "2017", "label": "Tech Lead — AXA", "alt": false, "current": false },
+    { "year": "2019", "label": "Architect — Transdev", "alt": true, "current": false },
+    { "year": "2022", "label": "Architect — Proxym", "alt": false, "current": false },
+    { "year": "2025", "label": "Senior Devops — Egis", "alt": true, "current": true }
+  ],
+  "education": [
+    { "years": "2010", "degree": "Ingénieur d'études et besoins", "org": "University of Luxembourg" }
+  ],
+  "teaching": [
+    { "years": "2018", "degree": "Linux Foundation CKAD", "org": "Formation (non certifié)" }
+  ],
+  "languages": ["Français : C2", "Anglais : C1", "Bulgare : natif"],
+  "hobbies": ["Électronique", "Photographie", "Ping-pong", "Guitare"],
+  "personal_projects": [
+    "Home cloud hosting : bare metal k8s",
+    "AI Agent for time planning app",
+    "BDD Frameworks",
+    "Git Exercise Framework",
+    "Piano Notes Reading",
+    "Personal Blog",
+    "Arduino plants watering system"
+  ],
+  "missions": [
+    {
+      "dates": "Mai 2025 – Oct. 2025",
+      "client": "Egis Group — Deployment v2 / Cloud Native Database",
+      "role": "Senior Devops — 4 personnes",
+      "summary": "Modernisation et migration d'infrastructures on-prem et VM vers le cloud native. Préparation des exigences ISO 27001.<br>Migration du cluster Postgres vers Cloud Native Postgres. Amélioration du time-to-market par l'optimisation des manifests de déploiement.",
+      "tasks": [
+        { "label": "Rédaction de plans de reprise d'activité (DRP)" },
+        { "label": "Configuration du cluster CNPG pour la restauration Point in Time Recovery" },
+        { "label": "Stratégie de sauvegardes 3-2-1 pour CNPG Postgres" },
+        { "label": "Migration de Kustomize vers Helm Chart" },
+        { "label": "Rédaction de tests d'intégration pour l'IaC" },
+        { "label": "Réorganisation et amélioration de l'écosystème de scripting" },
+        { "label": "Coaching et formation de l'équipe" }
+      ],
+      "stack": "OVH Cloud, Azure, Kubernetes, Architecture Microservices"
+    },
+    {
+      "dates": "Mai 2024 – Mai 2025",
+      "client": "Proxym — Product Assistant AI Agent",
+      "role": "Architect & Author — 5 personnes",
+      "summary": "Auteur, créateur et architecte d'une application générant les fiches produit pour un système PIM, à partir d'entrées non structurées et multi-modales (texte, PDF, Excel, Word, images).",
+      "tasks": [
+        { "label": "Implémentation d'une chaîne d'outils IA : embedding models, classification, RAG, LLM function calls et modèles génératifs" },
+        { "label": "Développement d'un smart prompt loader sélectionnant les prompts selon la classification produit" },
+        { "label": "Architecture design de l'application" },
+        { "label": "Déploiement et infrastructure sur Azure Container Apps" },
+        { "label": "Scénarios BDD et automatisation des tests avec Puppeteer" },
+        { "label": "Prospection et présentations client" }
+      ],
+      "stack": "Azure, Container Apps, LLM, RAG, Agents, LangChain, Pydantic AI, N8N, Knowledge Graphs, Puppeteer"
+    },
+    {
+      "dates": "Fév. 2023 – Mai 2024",
+      "client": "Qatar Government (Ministry of Health) — Symptoms Checker",
+      "role": "Architect & Devops — 6 personnes",
+      "summary": "Développement d'une application de santé hybride pour le Ministère de la Santé du Qatar, en partenariat avec Infermedica.<br>Objectif : permettre aux patients de réaliser un auto-diagnostic IA avant de consulter un spécialiste.",
+      "tasks": [
+        { "label": "Architecte applicatif" },
+        { "label": "Architecte Cloud / DevOps" },
+        { "label": "Analyse des exigences fonctionnelles avec BDD" }
+      ],
+      "stack": "React Native, Node.js, NestJS, PostgreSQL, Azure AKS, Azure DevOps CI/CD"
+    },
+    {
+      "dates": "Oct. 2022 – Jan. 2023",
+      "client": "Proxym — Bankerise",
+      "role": "Architect & Devops — 8 personnes",
+      "summary": "Développement d'un logiciel bancaire digital white-label intégrant des core banking systems (Sopra Banking, Temenos T24). Onboarding, gestion des bénéficiaires, virements instantanés.<br>Mission : concevoir la version corporate banking et piloter l'équipe de développement.",
+      "tasks": [
+        { "label": "Architecte applicatif &amp; DevOps" },
+        { "label": "Consultant en bonnes pratiques et qualité code/architecture" },
+        { "label": "Infrastructure as code (IaC) et documentation as code" },
+        { "label": "Conteneurisation de l'application avec Docker" }
+      ],
+      "stack": "Architecture hexagonale (DDD), CQRS, Event Driven, Java, Spring, React, Docker"
+    },
+    {
+      "dates": "Mars 2020 – Oct. 2021",
+      "client": "BforBank — Move to Cloud",
+      "role": "Architect & Devops — 12 personnes",
+      "summary": "Refonte complète de l'écosystème opérationnel et migration vers Google Cloud Platform. Installation et configuration des outils pour les équipes de développement.",
+      "tasks": [
+        { "label": "Déploiement de l'infrastructure GCP pour Kubernetes avec Terraform" },
+        { "label": "Installation de GitLab et ArgoCD sur les clusters Kubernetes" },
+        { "label": "Configuration du Workload Identity, Cert-Manager et autres opérateurs" },
+        { "label": "Support des squads dev et implémentation de charts Helm" },
+        { "label": "Formation des équipes legacy pour la transition cloud" }
+      ],
+      "stack": "Microservices, Kafka, GCP, Kubernetes, Helm, ArgoCD, Terraform, Ansible, Java, Angular"
+    },
+    {
+      "dates": "Mars 2020 – Oct. 2021",
+      "client": "BforBank — Quality Workflow & Tools",
+      "role": "Tech Lead — 3 personnes",
+      "summary": "Implémentation de SonarQube comme produit Tech for Tech. Développement d'un logiciel de modélisation C4 de l'architecture du système d'information.",
+      "tasks": [
+        { "label": "Recueil des besoins auprès des développeurs et Tech Leads" },
+        { "label": "Installation et intégration de SonarQube dans les pipelines CI/CD" },
+        { "label": "Organisation d'ateliers Three Amigos (BDD)" },
+        { "label": "Rédaction de guides utilisateur et documentation" }
+      ],
+      "stack": "SonarQube, GitLab, Asciidoc, NestJS, Angular, Cytoscape"
+    },
+    {
+      "dates": "Juil. 2019 – Mars 2020",
+      "client": "Transdev — Project FDS Next",
+      "role": "Architect & Devops — 15 personnes",
+      "summary": "Refonte complète du logiciel de planification et gestion des conducteurs. Migration vers AWS et support pour la mise en place d'un studio de développement.",
+      "tasks": [
+        { "label": "Définition et implémentation de l'architecture applicative et cloud" },
+        { "label": "Conception des composants microservices et serverless" },
+        { "label": "Coordination de 15 développeurs sur 3 équipes" },
+        { "label": "DevOps : ressources cloud, pipelines CI/CD, scripts de déploiement" },
+        { "label": "Promotion du TDD, BDD et code reviews" }
+      ],
+      "stack": "AWS, CloudFormation, Jenkins, Java 11, Node.js, Spring Boot/MVC/Data/Security, Angular 8"
+    },
+    {
+      "dates": "Juil. 2018 – Juil. 2019",
+      "client": "Teréga — STAR Portal",
+      "role": "Architect & Devops — 15 personnes",
+      "summary": "Portail stakeholders avec enchères pour le stockage/transport de gaz et tableaux de bord. Reprise et relance d'un projet en échec.",
+      "tasks": [
+        { "label": "Reprise de projet et leadership technique" },
+        { "label": "Architecture serverless et pipeline DevOps (Bitbucket)" },
+        { "label": "Améliorations architecturales et développement full-stack" },
+        { "label": "Coaching développeurs et amélioration des processus Agile" }
+      ],
+      "stack": "AWS Serverless (API Gateway, SNS, SQS, S3, Lambda), Bitbucket Pipelines, Terraform, Node.js, TypeScript, Angular 6"
+    },
+    {
+      "dates": "Avr. 2018 – Juil. 2018",
+      "client": "Pointp / Air Liquide / Pernod Ricard — Mini Projects Fixed Price",
+      "role": "Tech Lead & Devops — ~3 personnes",
+      "summary": "Livraison de plusieurs projets courts à prix fixe : application mobile de scan codes-barres, système de gestion de jobs sur AWS, et redirection d'URL avec Lambda@Edge.",
+      "tasks": [
+        { "label": "Développement full-stack et création de pipelines CI/CD" },
+        { "label": "Architecture serverless (AWS Lambda, API Gateway, Cognito)" },
+        { "label": "Analyse des besoins métier et communication directe avec les parties prenantes" }
+      ],
+      "stack": "AWS, GCP, Cordova, Angular 6, Java, Node.js"
+    },
+    {
+      "dates": "Avr. 2017 – Avr. 2018",
+      "client": "Priceminister (Rakuten) — Rakuten Ads",
+      "role": "Developer & Scrum Master — 6 personnes",
+      "summary": "Conception et développement d'un système de gestion des publicités payantes Rakuten Ads (facturation clic/impression, statistiques, mises à jour automatiques).",
+      "tasks": [
+        { "label": "Développement et refactoring de fonctionnalités" },
+        { "label": "Animation des cérémonies Agile/Scrum et sessions BBL" },
+        { "label": "Automatisation des tests BDD avec Cucumber" }
+      ],
+      "stack": "Java 8, Spring, Cucumber, Agile/Scrum"
+    },
+    {
+      "dates": "Jan. 2017 – Avr. 2017",
+      "client": "AXA Assurances — FICOVIE Golden Record",
+      "role": "Tech Lead — 3 personnes",
+      "summary": "Amélioration de la fiabilité par consolidation de sources de données multiples. Vérification et mise à jour du Golden Record en un clic pour les utilisateurs.",
+      "tasks": [
+        { "label": "Conception des modèles de données et optimisation des requêtes" },
+        { "label": "Développement backend avec Spring Boot" },
+        { "label": "Traitements batch avec Spring Batch (TDD)" }
+      ],
+      "stack": "Java, Spring Boot, Spring Batch, Angular 2"
+    },
+    {
+      "dates": "Mars 2016 – Jan. 2017",
+      "client": "BforBank — Secret Code Reset",
+      "role": "Developer — 5 personnes",
+      "summary": "Réinitialisation du code PIN par SMS avec double vérification d'identité. Migration de la fondation technique et amélioration de la couche présentation.",
+      "tasks": [
+        { "label": "Développement backend et APIs REST" },
+        { "label": "Assurance qualité via code reviews et pull requests" },
+        { "label": "Amélioration des processus Gitflow" }
+      ],
+      "stack": "Java 8, Spring Boot, Thymeleaf, jQuery, Oracle DB"
+    },
+    {
+      "dates": "Mars 2015 – Mars 2016",
+      "client": "GMF — Expense Report & Stock Management",
+      "role": "Developer — 4 personnes",
+      "summary": "Gestion du workflow d'approbation et des notifications pour les notes de frais. Logiciel de gestion de stock et traitements batch pour toutes les agences françaises, intégré avec KIMOCE.",
+      "tasks": [
+        { "label": "Développement et maintenance backend" },
+        { "label": "Correction de bugs et optimisation des performances" },
+        { "label": "Analyse de logs et requêtes avancées" }
+      ],
+      "stack": "JSF, DB2, WebSphere, PL/SQL, Java Batch"
+    },
+    {
+      "dates": "Août 2013 – Mars 2015",
+      "client": "AG2R La Mondiale — Third Party Application Maintenance",
+      "role": "Developer — 3 personnes",
+      "summary": "Coordination et synchronisation des releases. Gestion du backlog de bugs et incidents.",
+      "tasks": [
+        { "label": "Maintenance évolutive et corrective" },
+        { "label": "Coordination des releases et gestion du backlog" }
+      ],
+      "stack": "Jahia 6.1/6.6, Java, Spring, JSP, JSF, MySQL, Tomcat, Apache"
+    },
+    {
+      "dates": "Fév. 2012 – Juin 2013",
+      "client": "Boursorama Banque — CRM / Referral Program",
+      "role": "Junior Developer — 8 personnes",
+      "summary": "Travail sur la plateforme CRM pour les opérations en ligne. Implémentation du programme de parrainage client avec gestion de l'éligibilité.",
+      "tasks": [
+        { "label": "Développement web avec Spring MVC, Struts, Hibernate, jQuery" },
+        { "label": "Travail avec Oracle DB et PL/SQL" },
+        { "label": "Qualité avec JUnit, Selenium et intégration continue" }
+      ],
+      "stack": "Spring MVC, Struts, Hibernate, jQuery, Oracle, PL/SQL, JUnit, Selenium, SVN"
+    }
+  ]
+}

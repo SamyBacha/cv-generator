@@ -1,55 +1,137 @@
 {
-  "personal": { "name": "Samy Bacha", "role": "Technical Leader" },
+  "personal": {
+    "name": "Samy Bacha",
+    "role": "Technical Leader",
+    "contacts": {},
+    "links": []
+  },
   "about": {
-    "intro": "Technical Leader avec plus de <strong>12 ans d'expérience</strong> en développement et en architecture logicielle.<br>J'ai évolué de développeur backend à Tech Lead puis architecte Technique, dans des contextes exigeants (banque, transport, industrie, secteur public international).",
-    "expertise": [
-      "Architecture distribuée &amp; microservices",
-      "Domain Driven Design &amp; Software Craftsmanship",
-      "Environnements Agile à l'échelle",
-      "<strong>Transformation technologique et intégration de l'IA en entreprise</strong>"
-    ],
-    "conclusion": "Aujourd'hui, j'interviens à la croisée des enjeux techniques, business et humains, avec une forte orientation innovation et <b>intelligence artificielle.</b>"
+    "intro": "Technical Leader avec plus de <strong>12 ans d'expérience</strong> en développement et en architecture logicielle.<br>J'ai évolué de développeur backend à Tech Lead puis architecte Technique, dans des contextes exigeants (banque, transport, industrie, secteur public international). <p> Expertise forte en : </p> <ul><li>Architecture distribuée &amp; microservices</li><li>Domain Driven Design &amp; Software Craftsmanship</li><li>Environnements Agile à l'échelle</li><li><strong>Transformation technologique et intégration de l'IA en entreprise</strong></li></ul><p>Aujourd'hui, j'interviens à la croisée des enjeux techniques, business et humains, avec une forte orientation innovation et <b>intelligence artificielle.</b></p>"
   },
   "skills": [
-    { "label": "IA &amp; NLP", "items": "Python, LangChain, Pydantic, Knowledge Graph, Agents &amp; MCP, RAG, Embeddings, N8N" },
-    { "label": "Langages &amp; Frameworks", "items": "Java, Python, JavaScript/TypeScript, Spring, NodeJs, NestJs, NextJs, React, Angular" },
-    { "label": "Architecture", "items": "Microservices, Hexagonale, DDD, TDD, BDD, SOLID, Design Patterns, Event-driven, Kafka" },
-    { "label": "Cloud &amp; DevOps", "items": "GCP, AWS, Azure, Docker, Kubernetes, ArgoCD, Helm, Terraform, CloudFormation, GitLab CI, Jenkins" },
-    { "label": "Databases", "items": "PostgreSQL, Oracle, SQL Server, MySQL, MongoDB, Neo4j, PGVector, Redis, ehCache" },
-    { "label": "Outils", "items": "Git, Maven, Gradle, Sonar" }
+    {
+      "label": "IA &amp; NLP",
+      "items": "Python, LangChain, Pydantic, Knowledge Graph, Agents &amp; MCP, RAG, Embeddings, N8N"
+    },
+    {
+      "label": "Langages &amp; Frameworks",
+      "items": "Java, Python, JavaScript/TypeScript, Spring, NodeJs, NestJs, NextJs, React, Angular"
+    },
+    {
+      "label": "Architecture",
+      "items": "Microservices, Hexagonale, DDD, TDD, BDD, SOLID, Design Patterns, Event-driven, Kafka"
+    },
+    {
+      "label": "Cloud &amp; DevOps",
+      "items": "GCP, AWS, Azure, Docker, Kubernetes, ArgoCD, Helm, Terraform, CloudFormation, GitLab CI, Jenkins"
+    },
+    {
+      "label": "Databases",
+      "items": "PostgreSQL, Oracle, SQL Server, MySQL, MongoDB, Neo4j, PGVector, Redis, ehCache"
+    },
+    {
+      "label": "Outils",
+      "items": "Git, Maven, Gradle, Sonar"
+    }
   ],
   "timeline": [
-    { "year": "2013", "label": "Master MIAGE", "alt": false, "current": false },
-    { "year": "2013", "label": "Dev SNCF", "alt": true, "current": false },
-    { "year": "2019", "label": "Lead Tech Transdev", "alt": false, "current": false },
-    { "year": "2021", "label": "Lead Tech Bforbank", "alt": true, "current": false },
-    { "year": "2025", "label": "Mission IA pour Dubaï Police", "alt": false, "current": false },
-    { "year": "Auj.", "label": "Tech Leader Lab'IA Proxym", "alt": true, "current": true }
+    {
+      "year": "2013",
+      "label": "Master MIAGE",
+      "alt": false,
+      "current": false
+    },
+    {
+      "year": "2013",
+      "label": "Dev SNCF",
+      "alt": true,
+      "current": false
+    },
+    {
+      "year": "2019",
+      "label": "Lead Tech Transdev",
+      "alt": false,
+      "current": false
+    },
+    {
+      "year": "2021",
+      "label": "Lead Tech Bforbank",
+      "alt": true,
+      "current": false
+    },
+    {
+      "year": "2025",
+      "label": "Mission IA pour Dubaï Police",
+      "alt": false,
+      "current": false
+    },
+    {
+      "year": "Auj.",
+      "label": "Tech Leader Lab'IA Proxym",
+      "alt": true,
+      "current": true
+    }
   ],
   "education": [
-    { "years": "Sept 2010 – Sept 2013", "degree": "Master MIAGE", "org": "ESIAG, Paris 12 — Alternance L3, M1, M2" },
-    { "years": "2005 – 2006", "degree": "Baccalauréat Scientifique", "org": "Lycée Gaston Bachelard, Chelles" }
+    {
+      "years": "Sept 2010 – Sept 2013",
+      "degree": "Master MIAGE",
+      "org": "ESIAG, Paris 12 — Alternance L3, M1, M2"
+    },
+    {
+      "years": "2005 – 2006",
+      "degree": "Baccalauréat Scientifique",
+      "org": "Lycée Gaston Bachelard, Chelles"
+    }
   ],
   "teaching": [
-    { "years": "Mai 2024 – Juin 2024", "degree": "Enseignant DevOps", "org": "ESGI — 2 classes Master Data Science, Paris" },
-    { "years": "2023", "degree": "Formateur Java", "org": "Institution Saint-Aspais — Certification Oracle Java SE 8 (L3)" }
+    {
+      "years": "Mai 2024 – Juin 2024",
+      "degree": "Enseignant DevOps",
+      "org": "ESGI — 2 classes Master Data Science, Paris"
+    },
+    {
+      "years": "2023",
+      "degree": "Formateur Java",
+      "org": "Institution Saint-Aspais — Certification Oracle Java SE 8 (L3)"
+    }
   ],
-  "languages": ["Français : natif", "Anglais : courant"],
-  "hobbies": ["Veille Technologique", "Dessin", "Ping-pong"],
+  "languages": [
+    "Français : natif",
+    "Anglais : courant"
+  ],
+  "hobbies": [
+    "Veille Technologique",
+    "Dessin",
+    "Ping-pong"
+  ],
   "missions": [
     {
       "dates": "Aujourd'hui",
       "client": "Proxym — Mission interne stratégique",
-      "role": "Technical Leader — Lab IA",
-      "summary": "Définir la stratégie technologique de Proxym.<br>Création et structuration du pôle IA : roadmap, POC métier, acculturation des équipes et accompagnement avant-vente.",
+      "role": "<span data-teams=\"true\">Direction Technique et accompagnement de clients stratégiques</span>",
+      "summary": "Définir la stratégie technologique de Proxym.<br>Création et structuration du <b>pôle IA</b> : roadmap, POC métier, acculturation des équipes et accompagnement avant-vente.",
       "tasks": [
-        { "label": "Définition de la roadmap IA &amp; veille technologique active (LLM, architectures agents)" },
-        { "label": "POC – Spec Agent : agent IA d'analyse documentaire &amp; code", "desc": "But : Croiser differentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB." },
-        { "label": "POC – Payroll Agent : pilotage IA de la masse salariale", "desc": "Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision." },
-        { "label": "Formation IA pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)" },
-        { "label": "Accompagnement avant-vente sur sujets IA" }
+        {
+          "label": "Définition de la roadmap IA &amp; veille technologique active (LLM, architectures agents)"
+        },
+        {
+          "label": "POC – <b>EGIS</b>&nbsp;&nbsp;– Spec Agent : agent IA d'analyse documentaire &amp; code",
+          "desc": "But : Croiser differentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB."
+        },
+        {
+          "label": "POC – <b>BEL</b>&nbsp;&nbsp;– Payroll Agent : pilotage IA de la masse salariale",
+          "desc": "Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision."
+        },
+        {
+          "label": "Formation IA –&nbsp;<span data-teams=\"true\"><b>Safran</b> –&nbsp;</span>pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)"
+        },
+        {
+          "label": "Accompagnement avant-vente sur sujets IA"
+        }
       ],
-      "stack": ""
+      "stack": "",
+      "logo": "data:image/png;base64,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"
     },
     {
       "dates": "Mars 2025 – Juin 2025",
@@ -57,11 +139,18 @@
       "role": "Task Force Member — Proxym, 4 personnes",
       "summary": "Conception d'une plateforme IA de benchmarking institutionnel permettant la comparaison de pratiques entre organismes et la génération de plans d'implémentation actionnables.",
       "tasks": [
-        { "label": "Comparaison des pratiques internes avec celles d'autres institutions policières" },
-        { "label": "Identification d'experts et extraction de bonnes pratiques" },
-        { "label": "Génération de plans d'implémentation via agents IA" }
+        {
+          "label": "Comparaison des pratiques internes avec celles d'autres institutions policières"
+        },
+        {
+          "label": "Identification d'experts et extraction de bonnes pratiques"
+        },
+        {
+          "label": "Génération de plans d'implémentation via agents IA"
+        }
       ],
-      "stack": "Python, Django REST Framework, LangChain, Neo4j, PGVector, PostgreSQL, Docker, GitLab CI"
+      "stack": "Python, Django REST Framework, LangChain, Neo4j, PGVector, PostgreSQL, Docker, GitLab CI",
+      "logo": "https://play-lh.googleusercontent.com/eClEC8Eytd__4SjjgB93XY9lKD57jIB1YcOi2taKbr7lYbXCa6AsWNgyCVQPhH1fBg"
     },
     {
       "dates": "Juin 2021 – Février 2025",
@@ -69,11 +158,18 @@
       "role": "Lead Developer Backend — via Proxym, Squad 13 personnes",
       "summary": "Transformation de Bforbank en néobanque.<br>Squad Customer Acquisition : Onboarding, KYC, screening AML, signature électronique.<br>Environnement microservices hautement disponible.",
       "tasks": [
-        { "label": "Conception et développement de microservices d'onboarding client" },
-        { "label": "Intégration KYC &amp; screening AML" },
-        { "label": "Architecture event-driven (Kafka) et infrastructure GCP" }
+        {
+          "label": "Conception et développement de microservices d'onboarding client"
+        },
+        {
+          "label": "Intégration KYC &amp; screening AML"
+        },
+        {
+          "label": "Architecture event-driven (Kafka) et infrastructure GCP"
+        }
       ],
-      "stack": "Java 17, Spring Boot 3, Kafka, GCP, Terraform, Kubernetes, BDD/TDD/DDD"
+      "stack": "Java 17, Spring Boot 3, Kafka, GCP, Terraform, Kubernetes, BDD/TDD/DDD",
+      "logo": "data:image/png;base64,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"
     },
     {
       "dates": "Mai 2019 – Mai 2021",
@@ -81,11 +177,18 @@
       "role": "Lead Tech — Devoteam Creative Tech, Squad 10 personnes",
       "summary": "Refonte complète du système de gestion des employés pour Transdev.<br>Coordination inter-feature teams et promotion des bonnes pratiques DDD.",
       "tasks": [
-        { "label": "Architecture orientée microservices" },
-        { "label": "Coordination inter-feature teams" },
-        { "label": "Promotion DDD &amp; bonnes pratiques engineering" }
+        {
+          "label": "Architecture orientée microservices"
+        },
+        {
+          "label": "Coordination inter-feature teams"
+        },
+        {
+          "label": "Promotion DDD &amp; bonnes pratiques engineering"
+        }
       ],
-      "stack": "Java 11, Spring, Angular, AWS"
+      "stack": "Java 11, Spring, Angular, AWS",
+      "logo": "data:image/png;base64,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"
     },
     {
       "dates": "Janvier 2013 – Décembre 2019",
@@ -93,10 +196,15 @@
       "role": "Tech Lead — Sopra Steria puis Devoteam",
       "summary": "Interventions sur projets critiques dans les secteurs Énergie, Aéronautique et Transport ferroviaire, via ESN (Sopra Steria puis Devoteam).",
       "tasks": [
-        { "label": "Clients notables : Airbus, SNCF" },
-        { "label": "Secteurs : Énergie, Aéronautique, Transport ferroviaire" }
+        {
+          "label": "Clients notables : Airbus, SNCF"
+        },
+        {
+          "label": "Secteurs : Énergie, Aéronautique, Transport ferroviaire"
+        }
       ],
-      "stack": ""
+      "stack": "JSF,&nbsp;thymeleaf, JAVA/Spring, AmCharts....",
+      "logo": "data:image/png;base64,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"
     }
   ],
   "visibility": {
@@ -108,5 +216,7 @@
     "languages": true,
     "hobbies": true,
     "missions": true
-  }
+  },
+  "personal_projects": [],
+  "lang": "fr"
 }

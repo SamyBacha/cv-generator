@@ -6,13 +6,13 @@
 .col-left {
     background: white;
     color: var(--text);
-    padding: 35px 22px 40px;
+    padding: 28px 32px 40px;
     display: flex;
     flex-direction: column;
 }
 
 .profile-block {
-    padding-bottom: 20px;
+    padding-bottom: 12px;
     margin-bottom: 4px;
     border-bottom: 1px solid rgba(44, 62, 80, .12);
 }
@@ -34,8 +34,9 @@
 }
 
 .col-right {
-    padding: 35px 28px 30px;
+    padding: 28px 38px 30px;
     position: relative;
+    margin-top: 15%;
 }
 
 .cv-contacts {
@@ -58,7 +59,7 @@
 
 .proxym-logo {
     position: absolute;
-    top: 18px;
+    top: 35px;
     right: 22px;
 }
 
@@ -66,6 +67,11 @@
     position: absolute;
     top: 18px;
     right: 22px;
+}
+
+#cv-sect-skills,
+#cv-sect-timeline {
+    margin-top: 30px;
 }
 
 @media print {

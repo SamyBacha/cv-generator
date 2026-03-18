@@ -1,4 +1,4 @@
-import { applyStyles, defaultVisibility } from './tools.js';
+import { applyStyles, defaultVisibility, t } from './tools.js';
 import './cv-section.js';
 import './cv-entry-list.js';
 import './cv-simple-list.js';
@@ -22,6 +22,7 @@ export class CvPage1 extends HTMLElement {
         const hasContacts = d.personal.contacts?.email || d.personal.contacts?.phone;
         const hasLinks    = d.personal.links?.length;
         const hasProjects = d.personal_projects?.length;
+        const lang        = d.lang || 'fr';
 
         this.innerHTML = `
             <div class="col-left">
@@ -36,20 +37,20 @@ export class CvPage1 extends HTMLElement {
                     ` : ''}
                     ${hasLinks ? `<cv-links data-for="links"></cv-links>` : ''}
                 </div>
-                <cv-section label="EDUCATION"    vis-key="education" visible="${vis.education}"><cv-entry-list  data-for="education"></cv-entry-list></cv-section>
-                <cv-section label="ENSEIGNEMENT" vis-key="teaching"   visible="${vis.teaching}"> <cv-entry-list  data-for="teaching"></cv-entry-list></cv-section>
-                <cv-section label="LANGUAGES"    vis-key="languages"  visible="${vis.languages}"><cv-simple-list data-for="languages"></cv-simple-list></cv-section>
-                <cv-section label="HOBBIES"      vis-key="hobbies"    visible="${vis.hobbies}">  <cv-simple-list data-for="hobbies"></cv-simple-list></cv-section>
+                <cv-section label="${t('education', lang)}"         vis-key="education"         visible="${vis.education}"><cv-entry-list  data-for="education"></cv-entry-list></cv-section>
+                <cv-section label="${t('teaching', lang)}"          vis-key="teaching"           visible="${vis.teaching}"> <cv-entry-list  data-for="teaching"></cv-entry-list></cv-section>
+                <cv-section label="${t('languages', lang)}"         vis-key="languages"          visible="${vis.languages}"><cv-simple-list data-for="languages"></cv-simple-list></cv-section>
+                <cv-section label="${t('hobbies', lang)}"           vis-key="hobbies"            visible="${vis.hobbies}">  <cv-simple-list data-for="hobbies"></cv-simple-list></cv-section>
                 ${hasProjects ? `
-                    <cv-section label="PROJETS PERSO" vis-key="personal_projects" visible="${vis.personal_projects !== false}"><cv-simple-list data-for="personal_projects"></cv-simple-list></cv-section>
+                    <cv-section label="${t('personal_projects', lang)}" vis-key="personal_projects" visible="${vis.personal_projects !== false}"><cv-simple-list data-for="personal_projects"></cv-simple-list></cv-section>
                 ` : ''}
             </div>
+            <div class="proxym-logo"></div>
 
             <div class="col-right">
-                <div class="proxym-logo"></div>
-                <cv-section label="ABOUT"    vis-key="about"    visible="${vis.about}"    side="right"><cv-about></cv-about></cv-section>
-                <cv-section label="SKILLS"   vis-key="skills"   visible="${vis.skills}"   side="right"><cv-skills></cv-skills></cv-section>
-                <cv-section label="TIMELINE" vis-key="timeline" visible="${vis.timeline}" side="right"><cv-timeline></cv-timeline></cv-section>
+                <cv-section label="${t('about', lang)}"    vis-key="about"    visible="${vis.about}"    side="right"><cv-about></cv-about></cv-section>
+                <cv-section label="${t('skills', lang)}"   vis-key="skills"   visible="${vis.skills}"   side="right"><cv-skills></cv-skills></cv-section>
+                <cv-section label="${t('timeline', lang)}" vis-key="timeline" visible="${vis.timeline}" side="right"><cv-timeline></cv-timeline></cv-section>
             </div>
         `;
 

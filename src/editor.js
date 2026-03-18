@@ -26,6 +26,30 @@ function setPath(obj, path, value) {
     cur[keys[keys.length - 1]] = value;
 }
 
+/* ===== NETTOYAGE COLLAGE ===== */
+const PASTE_ALLOWED  = new Set(['B','STRONG','I','EM','U','UL','OL','LI','BR','P']);
+const PASTE_TO_P     = new Set(['DIV','H1','H2','H3','H4','H5','H6','BLOCKQUOTE','PRE']);
+
+function cleanPasteHtml(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    function walk(node) {
+        if (node.nodeType === 3) return node.cloneNode();
+        if (node.nodeType !== 1) return null;
+        const tag = node.nodeName;
+        let el;
+        if (PASTE_ALLOWED.has(tag))  el = document.createElement(tag.toLowerCase());
+        else if (PASTE_TO_P.has(tag)) el = document.createElement('p');
+        else                          el = document.createDocumentFragment();
+        for (const child of node.childNodes) { const c = walk(child); if (c) el.appendChild(c); }
+        return el;
+    }
+    const frag = document.createDocumentFragment();
+    for (const child of doc.body.childNodes) { const c = walk(child); if (c) frag.appendChild(c); }
+    const tmp = document.createElement('div');
+    tmp.appendChild(frag);
+    return tmp.innerHTML;
+}
+
 function bindInputs(container) {
     const root = container || document;
     root.querySelectorAll('[data-path]').forEach(el => {
@@ -845,6 +869,15 @@ export function initApp(data) {
 
     const btnLang = document.getElementById('btn-lang');
     if (btnLang) btnLang.textContent = CV_DATA.lang === 'en' ? '🌐 EN' : '🌐 FR';
+
+    document.addEventListener('paste', e => {
+        if (!e.target.isContentEditable) return;
+        e.preventDefault();
+        const html  = e.clipboardData.getData('text/html');
+        const text  = e.clipboardData.getData('text/plain');
+        const clean = html ? cleanPasteHtml(html) : text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+        document.execCommand('insertHTML', false, clean);
+    }, true);
 
     initSectionsPanel();
     document.addEventListener('click', e => {

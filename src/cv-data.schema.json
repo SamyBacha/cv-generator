@@ -38,15 +38,11 @@
     },
     "about": {
       "type": "object",
-      "required": ["intro", "expertise", "conclusion"],
+      "required": ["intro"],
       "additionalProperties": false,
       "properties": {
-        "intro": { "type": "string" },
-        "expertise": {
-          "type": "array",
-          "items": { "type": "string" },
-          "minItems": 1
-        },
+        "intro":      { "type": "string" },
+        "expertise":  { "type": "array", "items": { "type": "string" } },
         "conclusion": { "type": "string" }
       }
     },
@@ -98,6 +94,7 @@
       "type": "array",
       "items": { "type": "string", "minLength": 1 }
     },
+    "lang": { "type": "string", "enum": ["fr", "en"] },
     "visibility": {
       "type": "object",
       "additionalProperties": false,

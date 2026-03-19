@@ -575,6 +575,48 @@
             flex-shrink: 0;
         }
 
+        /* ===== Panneaux action toolbar (JSON, Sauvegarder) ===== */
+        .toolbar-action-panel {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            background: #1a1a2e;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 8px;
+            padding: 8px;
+            z-index: 200;
+            min-width: 160px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .toolbar-action-btn {
+            background: rgba(255, 255, 255, .05);
+            border: 1px solid rgba(255, 255, 255, .1);
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+            padding: 6px 12px;
+            cursor: pointer;
+            text-align: left;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .toolbar-action-btn:hover {
+            background: rgba(255, 255, 255, .12);
+        }
+
+        .toolbar-action-btn-danger {
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, .3);
+        }
+
+        .toolbar-action-btn-danger:hover {
+            background: rgba(255, 107, 107, .15);
+        }
+
         /* ===== Édition inline visualiseur ===== */
         #viewer-panel [contenteditable="true"] {
             outline: none;

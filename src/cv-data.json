@@ -14,7 +14,7 @@
       "items": "Python, LangChain, Pydantic, Knowledge Graph, Agents &amp; MCP, RAG, Embeddings, N8N"
     },
     {
-      "label": "Langages &amp; Frameworks",
+      "label": "Langages &amp; Frameworks :",
       "items": "Java, Python, JavaScript/TypeScript, Spring, NodeJs, NestJs, NextJs, React, Angular"
     },
     {
@@ -108,7 +108,7 @@
   "missions": [
     {
       "dates": "Aujourd'hui",
-      "client": "Proxym — Mission interne stratégique",
+      "client": "Proxym",
       "role": "<span data-teams=\"true\">Direction Technique et accompagnement de clients stratégiques</span>",
       "summary": "Définir la stratégie technologique de Proxym.<br>Création et structuration du <b>pôle IA</b> : roadmap, POC métier, acculturation des équipes et accompagnement avant-vente.",
       "tasks": [
@@ -116,12 +116,12 @@
           "label": "Définition de la roadmap IA &amp; veille technologique active (LLM, architectures agents)"
         },
         {
-          "label": "POC – <b>EGIS</b>&nbsp;&nbsp;– Spec Agent : agent IA d'analyse documentaire &amp; code",
-          "desc": "But : Croiser differentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB."
+          "label": "&nbsp;Spec Agent (client <b>EGIS</b>) agent IA d'analyse documentaire &amp; code",
+          "desc": "<b>But</b> : Croiser différentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB.<br><b>Impact</b>: <br>- gain de temps : 1 jour par Sprint environ en moins en relecture<br>- homogénéisation : code et spec plus harmonisés (ubiquitous language)<br>- fiabilité : detection d'écarts entre code et spec"
         },
         {
-          "label": "POC – <b>BEL</b>&nbsp;&nbsp;– Payroll Agent : pilotage IA de la masse salariale",
-          "desc": "Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision."
+          "label": "Payroll Agent (client&nbsp;<b>BEL</b>): pilotage IA de la masse salariale",
+          "desc": "<b>But : </b>Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision.<br><b>Impact</b>: Gain de temps pour l'analyse des variations de salaire​<br>Aide à la projection et prédiction des coûts​<br>Respect des conventions collectives<br>Détection d'autres anomalies​<br>Detection de l'effet Noria<br><br>"
         },
         {
           "label": "Formation IA –&nbsp;<span data-teams=\"true\"><b>Safran</b> –&nbsp;</span>pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)"

@@ -38,9 +38,20 @@
     <button id="btn-lang" class="toolbar-btn" onclick="toggleLang()">🌐 FR</button>
     <button class="toolbar-btn" onclick="document.getElementById('help-modal').style.display='flex'" title="Aide">? Aide</button>
     <button class="toolbar-btn" onclick="loadBlank()">+ Nouveau CV vierge</button>
-    <button class="toolbar-btn" onclick="importJSON()">↑ Importer JSON</button>
-    <button class="toolbar-btn" onclick="exportJSON()">↓ Exporter JSON</button>
-    <button id="btn-save" class="toolbar-btn" onclick="saveToLocalStorage()">💾 Sauvegarder</button>
+    <div class="sections-wrap">
+        <button id="btn-json" class="toolbar-btn" onclick="toggleJsonPanel()">JSON ▾</button>
+        <div id="json-panel" class="toolbar-action-panel" style="display:none">
+            <button class="toolbar-action-btn" onclick="importJSON()">↑ Importer JSON</button>
+            <button class="toolbar-action-btn" onclick="exportJSON()">↓ Exporter JSON</button>
+        </div>
+    </div>
+    <div class="sections-wrap">
+        <button id="btn-save-group" class="toolbar-btn" onclick="toggleSavePanel()">💾 Sauvegarder ▾</button>
+        <div id="save-panel" class="toolbar-action-panel" style="display:none">
+            <button class="toolbar-action-btn" id="btn-save" onclick="saveToLocalStorage()">💾 Sauvegarder</button>
+            <button class="toolbar-action-btn toolbar-action-btn-danger" onclick="clearLocalStorage()">🗑 Supp. Sauvegarde</button>
+        </div>
+    </div>
 </div>
 </div>
 
@@ -72,7 +83,7 @@
         <div class="help-body">
             <dl>
                 <dt>✏ Édition directe dans le viewer</dt>
-                <dd>Cliquez sur n'importe quel texte (nom, poste, compétences…) pour l'éditer directement, pofiner... Une mini-barre de mise en forme apparaît lors de la sélection.</dd>
+                <dd>Cliquez sur n'importe quel texte (nom, poste, compétences…) pour l'éditer directement. Une mini-barre de mise en forme apparaît lors de la sélection.</dd>
 
                 <dt>📋 Panneau Édition</dt>
                 <dd>Le mode <strong>Édition</strong> affiche un formulaire structuré : ajout / suppression d'entrées, missions, compétences, langues, etc.</dd>
@@ -86,11 +97,21 @@
                 <dt>🖼 Logo de mission</dt>
                 <dd>En mode Visualisation, cliquez sur la zone logo d'une mission pour uploader une image, coller du code SVG ou saisir une URL. En mode Édition les mêmes options sont disponibles dans le formulaire.</dd>
 
-                <dt>💾 Sauvegarder</dt>
-                <dd>Enregistre le CV dans le localStorage du navigateur. Les données sont restaurées automatiquement à la prochaine ouverture.</dd>
+                <dt>💾 Sauvegarder ▾</dt>
+                <dd>Menu déroulant avec deux actions :
+                    <ul>
+                        <li><strong>Sauvegarder</strong> — enregistre le CV dans le localStorage de ce navigateur. Les données sont restaurées automatiquement à la prochaine ouverture.</li>
+                        <li><strong>Supprimer Sauvegarde</strong> — supprime uniquement les données de ce CV enregistrées dans ce navigateur (les autres sites ne sont pas affectés). Le CV par défaut est rechargé.</li>
+                    </ul>
+                </dd>
 
-                <dt>↑ ↓ Import / Export JSON</dt>
-                <dd>Exportez votre CV en fichier <code>.json</code> pour le sauvegarder ou le partager. Importez un fichier JSON pour le restaurer.</dd>
+                <dt>JSON ▾</dt>
+                <dd>Menu déroulant avec deux actions :
+                    <ul>
+                        <li><strong>↑ Importer JSON</strong> — charge un fichier <code>.json</code> exporté précédemment pour restaurer un CV.</li>
+                        <li><strong>↓ Exporter JSON</strong> — télécharge le CV courant en fichier <code>.json</code> pour le sauvegarder ou le partager.</li>
+                    </ul>
+                </dd>
 
                 <dt>+ Nouveau CV vierge</dt>
                 <dd>Charge un template vide (lorem ipsum) pour repartir de zéro. Les données actuelles non sauvegardées seront perdues.</dd>

@@ -659,9 +659,33 @@ function toggleLang() {
 
 function saveToLocalStorage() {
     localStorage.setItem(LS_KEY, JSON.stringify(editData));
-    const btn = document.getElementById('btn-save');
+    const btn = document.getElementById('btn-save-group');
     btn.textContent = '✓ Sauvegardé';
-    setTimeout(() => { btn.textContent = '💾 Sauvegarder'; }, 1500);
+    setTimeout(() => { btn.textContent = '💾 Sauvegarder ▾'; }, 1500);
+    document.getElementById('save-panel').style.display = 'none';
+    btn.classList.remove('active');
+}
+
+function clearLocalStorage() {
+    if (!confirm('Vider le cache supprimera les données sauvegardées dans ce navigateur. Le CV par défaut sera rechargé. Continuer ?')) return;
+    localStorage.removeItem(LS_KEY);
+    location.reload();
+}
+
+function toggleJsonPanel() {
+    const panel = document.getElementById('json-panel');
+    const btn = document.getElementById('btn-json');
+    const isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : '';
+    btn.classList.toggle('active', !isOpen);
+}
+
+function toggleSavePanel() {
+    const panel = document.getElementById('save-panel');
+    const btn = document.getElementById('btn-save-group');
+    const isOpen = panel.style.display !== 'none';
+    panel.style.display = isOpen ? 'none' : '';
+    btn.classList.toggle('active', !isOpen);
 }
 
 /* ===== LOGO POPOVER (viewer) ===== */
@@ -881,12 +905,18 @@ export function initApp(data) {
 
     initSectionsPanel();
     document.addEventListener('click', e => {
-        const panel = document.getElementById('sections-panel');
-        const btn   = document.getElementById('btn-sections');
-        if (panel && panel.style.display !== 'none' && !btn.contains(e.target) && !panel.contains(e.target)) {
-            panel.style.display = 'none';
-            btn.classList.remove('active');
-        }
+        [
+            { panelId: 'sections-panel', btnId: 'btn-sections' },
+            { panelId: 'json-panel',     btnId: 'btn-json' },
+            { panelId: 'save-panel',     btnId: 'btn-save-group' },
+        ].forEach(({ panelId, btnId }) => {
+            const panel = document.getElementById(panelId);
+            const btn   = document.getElementById(btnId);
+            if (panel && panel.style.display !== 'none' && !btn.contains(e.target) && !panel.contains(e.target)) {
+                panel.style.display = 'none';
+                btn.classList.remove('active');
+            }
+        });
     });
     cloneLogos();
     bindViewerInputs();
@@ -902,6 +932,9 @@ window.toggleSectionsPanel  = toggleSectionsPanel;
 window.exportJSON           = exportJSON;
 window.importJSON           = importJSON;
 window.saveToLocalStorage   = saveToLocalStorage;
+window.clearLocalStorage    = clearLocalStorage;
+window.toggleJsonPanel      = toggleJsonPanel;
+window.toggleSavePanel      = toggleSavePanel;
 window.toggleSection        = toggleSection;
 window.toggleMission        = toggleMission;
 window.openLogoPopover      = openLogoPopover;

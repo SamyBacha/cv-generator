@@ -121,7 +121,7 @@
         },
         {
           "label": "Payroll Agent (client&nbsp;<b>BEL</b>): pilotage IA de la masse salariale",
-          "desc": "<b>But : </b>Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision.<br><b>Impact</b>: Gain de temps pour l'analyse des variations de salaire​<br>Aide à la projection et prédiction des coûts​<br>Respect des conventions collectives<br>Détection d'autres anomalies​<br>Detection de l'effet Noria<br><br>"
+          "desc": "<b>But : </b>Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision.<br><b>Impact</b>: <br>- Gain de temps pour l'analyse des variations de salaire​<br>- Aide à la projection et prédiction des coûts​<br>- Respect des conventions collectives<br>- Détection d'autres anomalies​<br>- Detection de l'effet Noria<br><br>"
         },
         {
           "label": "Formation IA –&nbsp;<span data-teams=\"true\"><b>Safran</b> –&nbsp;</span>pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)"

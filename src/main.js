@@ -5,12 +5,12 @@ import { initApp, LS_KEY } from './editor.js';
 
 async function loadData() {
     if (new URLSearchParams(location.search).has('blank')) {
-        const resp = await fetch(new URL('./cv-blank.json', import.meta.url));
+        const resp = await fetch(new URL('./resources/cv-blank.json', import.meta.url));
         return resp.json();
     }
     const stored = localStorage.getItem(LS_KEY);
     if (stored) return JSON.parse(stored);
-    const resp = await fetch(new URL('./cv-data.json', import.meta.url));
+    const resp = await fetch(new URL('./resources/cv-data-bacha.json', import.meta.url));
     return resp.json();
 }
 

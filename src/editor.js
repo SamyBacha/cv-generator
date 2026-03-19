@@ -625,7 +625,7 @@ function importJSON() {
 
 async function loadBlank() {
     if (!confirm('Charger un CV vierge ? Les données non sauvegardées seront perdues.')) return;
-    const resp = await fetch(new URL('./cv-blank.json', import.meta.url));
+    const resp = await fetch(new URL('./resources/cv-blank.json', import.meta.url));
     const blank = await resp.json();
     CV_DATA = blank;
     editData = deepCopy(CV_DATA);

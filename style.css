@@ -487,6 +487,37 @@
             background: #fdd;
         }
 
+        /* ===== Drag & Drop éditeur ===== */
+        .drag-handle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            flex-shrink: 0;
+            color: rgba(25,22,165,.35);
+            font-size: 16px;
+            cursor: grab;
+            user-select: none;
+            letter-spacing: -2px;
+        }
+
+        .drag-handle:hover {
+            color: rgba(10,10,10,.7);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        [data-drag-index].dragging {
+            opacity: .4;
+        }
+
+        [data-drag-index].drag-over {
+            outline: 2px dashed rgba(92,78,201,.8);
+            border-radius: 6px;
+        }
+
         .e-check-row {
             display: flex;
             align-items: center;

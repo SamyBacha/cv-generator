@@ -114,10 +114,65 @@ function bindViewerInputs() {
     });
 }
 
+/* ===== DRAG & DROP ===== */
+const DRAG_CONFIGS = {
+    skills:            { arr: () => editData.skills,            sectionId: 'e-skills',            bodyFn: () => renderSkillsBody() },
+    timeline:          { arr: () => editData.timeline,          sectionId: 'e-timeline',          bodyFn: () => renderTimelineBody() },
+    education:         { arr: () => editData.education,         sectionId: 'e-education',         bodyFn: () => renderEducationBody() },
+    teaching:          { arr: () => editData.teaching,          sectionId: 'e-teaching',          bodyFn: () => renderTeachingBody() },
+    languages:         { arr: () => editData.languages,         sectionId: 'e-languages',         bodyFn: () => renderLanguagesBody() },
+    hobbies:           { arr: () => editData.hobbies,           sectionId: 'e-hobbies',           bodyFn: () => renderHobbiesBody() },
+    missions:          { arr: () => editData.missions,          sectionId: 'e-missions',          bodyFn: () => renderMissionsBody() },
+    personal_projects: { arr: () => editData.personal_projects, sectionId: 'e-personal-projects', bodyFn: () => renderPersonalProjectsBody() },
+};
+
+function initDraggable(body) {
+    let srcIdx = null;
+    let srcKey = null;
+
+    body.querySelectorAll('.drag-handle').forEach(handle => {
+        handle.addEventListener('dragstart', e => {
+            const item = handle.closest('[data-drag-index]');
+            srcIdx = parseInt(item.dataset.dragIndex);
+            srcKey = item.dataset.dragKey;
+            e.dataTransfer.effectAllowed = 'move';
+            requestAnimationFrame(() => item.classList.add('dragging'));
+        });
+        handle.addEventListener('dragend', () => {
+            body.querySelectorAll('[data-drag-index]').forEach(el =>
+                el.classList.remove('dragging', 'drag-over'));
+        });
+    });
+
+    body.querySelectorAll('[data-drag-index]').forEach(item => {
+        item.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            body.querySelectorAll('[data-drag-index]').forEach(el => el.classList.remove('drag-over'));
+            if (item.dataset.dragKey === srcKey) item.classList.add('drag-over');
+        });
+        item.addEventListener('dragleave', e => {
+            if (!item.contains(e.relatedTarget)) item.classList.remove('drag-over');
+        });
+        item.addEventListener('drop', e => {
+            e.preventDefault();
+            const toIdx = parseInt(item.dataset.dragIndex);
+            if (!srcKey || srcKey !== item.dataset.dragKey || srcIdx === toIdx) return;
+            const cfg = DRAG_CONFIGS[srcKey];
+            const arr = cfg.arr();
+            const [moved] = arr.splice(srcIdx, 1);
+            arr.splice(toIdx, 0, moved);
+            srcIdx = null;
+            rebuildSection(cfg.sectionId, cfg.bodyFn);
+        });
+    });
+}
+
 function rebuildSection(id, bodyFn) {
     const body = document.querySelector('#' + id + ' .e-section-body');
     body.innerHTML = bodyFn();
     bindInputs(body);
+    initDraggable(body);
 }
 
 function toggleSection(id) {
@@ -192,9 +247,12 @@ function renderPersonal() {
 /* --- Section: Projets personnels --- */
 function renderPersonalProjectsBody() {
     return (editData.personal_projects || []).map((p, i) => `
-        <div class="e-row">
-            ${mkWysiwyg(`personal_projects.${i}`, false, 'e-flex')}
-            <button class="btn-remove" onclick="removePersonalProject(${i})">−</button>
+        <div data-drag-index="${i}" data-drag-key="personal_projects">
+            <div class="e-row">
+                <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
+                ${mkWysiwyg(`personal_projects.${i}`, false, 'e-flex')}
+                <button class="btn-remove" onclick="removePersonalProject(${i})">−</button>
+            </div>
         </div>
     `).join('') + `<button class="btn-add" onclick="addPersonalProject()">+ Ajouter un projet</button>`;
 }
@@ -218,8 +276,9 @@ function renderAbout() {
 /* --- Section: Compétences --- */
 function renderSkillsBody() {
     return editData.skills.map((s, i) => `
-        <div style="margin-bottom:10px">
+        <div data-drag-index="${i}" data-drag-key="skills" style="margin-bottom:10px">
             <div class="e-row" style="align-items:flex-start">
+                <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
                 <div class="e-flex">
                     <div class="e-field">
                         <label class="e-label">Catégorie</label>
@@ -243,8 +302,9 @@ function renderSkills() {
 /* --- Section: Timeline --- */
 function renderTimelineBody() {
     return editData.timeline.map((t, i) => `
-        <div style="margin-bottom:10px">
+        <div data-drag-index="${i}" data-drag-key="timeline" style="margin-bottom:10px">
             <div class="e-row" style="align-items:flex-end; flex-wrap:wrap; gap:8px">
+                <span class="drag-handle" draggable="true" title="Réordonner" style="padding-bottom:2px">⠿</span>
                 <div style="flex:1; min-width:80px">
                     <label class="e-label">Année</label>
                     ${mkWysiwyg(`timeline.${i}.year`, false)}
@@ -276,23 +336,28 @@ function renderTimeline() {
 /* --- Section: Formation --- */
 function renderEducationBody() {
     return editData.education.map((e, i) => `
-        <div style="margin-bottom:10px">
-            <div class="e-grid-2">
-                <div class="e-field">
-                    <label class="e-label">Période</label>
-                    ${mkWysiwyg(`education.${i}.years`, false)}
+        <div data-drag-index="${i}" data-drag-key="education" style="margin-bottom:10px">
+            <div class="e-row" style="align-items:flex-start; gap:4px">
+                <span class="drag-handle" draggable="true" title="Réordonner" style="margin-top:24px">⠿</span>
+                <div style="flex:1">
+                    <div class="e-grid-2">
+                        <div class="e-field">
+                            <label class="e-label">Période</label>
+                            ${mkWysiwyg(`education.${i}.years`, false)}
+                        </div>
+                        <div class="e-field">
+                            <label class="e-label">Diplôme</label>
+                            ${mkWysiwyg(`education.${i}.degree`, false)}
+                        </div>
+                    </div>
+                    <div class="e-row">
+                        <div class="e-field e-flex" style="margin-bottom:0">
+                            <label class="e-label">Établissement</label>
+                            ${mkWysiwyg(`education.${i}.org`, false, 'e-flex')}
+                        </div>
+                        <button class="btn-remove" style="margin-top:18px" onclick="removeEducation(${i})">−</button>
+                    </div>
                 </div>
-                <div class="e-field">
-                    <label class="e-label">Diplôme</label>
-                    ${mkWysiwyg(`education.${i}.degree`, false)}
-                </div>
-            </div>
-            <div class="e-row">
-                <div class="e-field e-flex" style="margin-bottom:0">
-                    <label class="e-label">Établissement</label>
-                    ${mkWysiwyg(`education.${i}.org`, false, 'e-flex')}
-                </div>
-                <button class="btn-remove" style="margin-top:18px" onclick="removeEducation(${i})">−</button>
             </div>
         </div>
         ${i < editData.education.length - 1 ? '<div class="e-sep"></div>' : ''}
@@ -305,23 +370,28 @@ function renderEducation() {
 /* --- Section: Enseignement --- */
 function renderTeachingBody() {
     return editData.teaching.map((t, i) => `
-        <div style="margin-bottom:10px">
-            <div class="e-grid-2">
-                <div class="e-field">
-                    <label class="e-label">Période</label>
-                    ${mkWysiwyg(`teaching.${i}.years`, false)}
+        <div data-drag-index="${i}" data-drag-key="teaching" style="margin-bottom:10px">
+            <div class="e-row" style="align-items:flex-start; gap:4px">
+                <span class="drag-handle" draggable="true" title="Réordonner" style="margin-top:24px">⠿</span>
+                <div style="flex:1">
+                    <div class="e-grid-2">
+                        <div class="e-field">
+                            <label class="e-label">Période</label>
+                            ${mkWysiwyg(`teaching.${i}.years`, false)}
+                        </div>
+                        <div class="e-field">
+                            <label class="e-label">Intitulé</label>
+                            ${mkWysiwyg(`teaching.${i}.degree`, false)}
+                        </div>
+                    </div>
+                    <div class="e-row">
+                        <div class="e-field e-flex" style="margin-bottom:0">
+                            <label class="e-label">Organisation</label>
+                            ${mkWysiwyg(`teaching.${i}.org`, false, 'e-flex')}
+                        </div>
+                        <button class="btn-remove" style="margin-top:18px" onclick="removeTeaching(${i})">−</button>
+                    </div>
                 </div>
-                <div class="e-field">
-                    <label class="e-label">Intitulé</label>
-                    ${mkWysiwyg(`teaching.${i}.degree`, false)}
-                </div>
-            </div>
-            <div class="e-row">
-                <div class="e-field e-flex" style="margin-bottom:0">
-                    <label class="e-label">Organisation</label>
-                    ${mkWysiwyg(`teaching.${i}.org`, false, 'e-flex')}
-                </div>
-                <button class="btn-remove" style="margin-top:18px" onclick="removeTeaching(${i})">−</button>
             </div>
         </div>
         ${i < editData.teaching.length - 1 ? '<div class="e-sep"></div>' : ''}
@@ -334,9 +404,12 @@ function renderTeaching() {
 /* --- Section: Langues --- */
 function renderLanguagesBody() {
     return editData.languages.map((_, i) => `
-        <div class="e-row">
-            ${mkWysiwyg(`languages.${i}`, false, 'e-flex')}
-            <button class="btn-remove" onclick="removeLanguage(${i})">−</button>
+        <div data-drag-index="${i}" data-drag-key="languages">
+            <div class="e-row">
+                <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
+                ${mkWysiwyg(`languages.${i}`, false, 'e-flex')}
+                <button class="btn-remove" onclick="removeLanguage(${i})">−</button>
+            </div>
         </div>
     `).join('') + `<button class="btn-add" onclick="addLanguage()">+ Ajouter une langue</button>`;
 }
@@ -347,9 +420,12 @@ function renderLanguages() {
 /* --- Section: Hobbies --- */
 function renderHobbiesBody() {
     return editData.hobbies.map((_, i) => `
-        <div class="e-row">
-            ${mkWysiwyg(`hobbies.${i}`, false, 'e-flex')}
-            <button class="btn-remove" onclick="removeHobby(${i})">−</button>
+        <div data-drag-index="${i}" data-drag-key="hobbies">
+            <div class="e-row">
+                <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
+                ${mkWysiwyg(`hobbies.${i}`, false, 'e-flex')}
+                <button class="btn-remove" onclick="removeHobby(${i})">−</button>
+            </div>
         </div>
     `).join('') + `<button class="btn-add" onclick="addHobby()">+ Ajouter un hobby</button>`;
 }
@@ -360,8 +436,9 @@ function renderHobbies() {
 /* --- Section: Missions --- */
 function renderMissionsBody() {
     return editData.missions.map((m, i) => `
-        <div class="e-mission" id="e-mission-${i}">
+        <div class="e-mission" id="e-mission-${i}" data-drag-index="${i}" data-drag-key="missions">
             <div class="e-mission-header" onclick="toggleMission(${i})">
+                <span class="drag-handle" draggable="true" title="Réordonner" onclick="event.stopPropagation()">⠿</span>
                 <span><span class="e-chevron">▾</span> ${escHtml(m.client) || '<em>Nouvelle mission</em>'}</span>
                 <button class="btn-remove" onclick="event.stopPropagation(); removeMission(${i})">🗑 Supprimer</button>
             </div>
@@ -443,6 +520,7 @@ function buildEditor() {
         renderMissions()
     ].join('');
     bindInputs(content);
+    content.querySelectorAll('.e-section-body').forEach(initDraggable);
 }
 
 /* ===== ADD / REMOVE ===== */

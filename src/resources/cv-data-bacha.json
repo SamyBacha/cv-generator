@@ -110,24 +110,19 @@
       "dates": "Aujourd'hui",
       "client": "Proxym",
       "role": "<span data-teams=\"true\">Direction Technique et accompagnement de clients stratégiques</span>",
-      "summary": "Définir la stratégie technologique de Proxym.<br>Création et structuration du <b>pôle IA</b> : roadmap, POC métier, acculturation des équipes et accompagnement avant-vente.",
+      "summary": "Définir la stratégie technologique de Proxym.<br><div><p><strong>Structuration et pilotage du pôle IA de Proxym </strong>: structuration des offres, mise en place d’une démarche de&nbsp;delivery&nbsp;(PoC&nbsp;→ MVP → production) et lancement de produits, définition de la roadmap, acculturation des équipes, vieille technologique active (LLM, architecture agent) et accompagnement avant-vente.</p><p>Cadrage technique et&nbsp;delivery&nbsp;de projets IA pour des clients grands comptes, sur des use cases à forte valeur métier</p><p><strong>Animation</strong> et <strong>encadrement</strong> d’une équipe de<strong> 6 développeurs augmentés&nbsp;</strong></p><p>Secteurs et tailles d’organisation variés : Industrie, Santé, Ressources Humaines, Informatique et produit...<br>&nbsp;<br><strong>Les projets réalisés :&nbsp;</strong></p></div>",
       "tasks": [
         {
-          "label": "Définition de la roadmap IA &amp; veille technologique active (LLM, architectures agents)"
-        },
-        {
           "label": "&nbsp;Spec Agent (client <b>EGIS</b>) agent IA d'analyse documentaire &amp; code",
-          "desc": "<b>But</b> : Croiser différentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB.<br><b>Impact</b>: <br>- gain de temps : 1 jour par Sprint environ en moins en relecture<br>- homogénéisation : code et spec plus harmonisés (ubiquitous language)<br>- fiabilité : detection d'écarts entre code et spec"
+          "desc": "<p><i><strong>But</strong> : Croiser différentes sources de vérités comme Jira, Confluence et/ou code source pour détecter des incohérences, extraire les règles métier et</i></p><p><i>générer des tickets Jira estimés — via RAG, LLM orchestration et vector DB.</i></p><p><i><strong>Impact</strong>:</i></p><p><i>- gain de temps : 1 jour par Sprint environ en moins en relecture</i></p><p><i>- homogénéisation : code et spec plus harmonisés (ubiquitous language)</i></p><p><i>- fiabilité : détection d'écarts entre code et spec</i></p>"
         },
         {
-          "label": "Payroll Agent (client&nbsp;<b>BEL</b>): pilotage IA de la masse salariale",
-          "desc": "<b>But : </b>Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les équipes RH dans la prise de décision.<br><b>Impact</b>: <br>- Gain de temps pour l'analyse des variations de salaire​<br>- Aide à la projection et prédiction des coûts​<br>- Respect des conventions collectives<br>- Détection d'autres anomalies​<br>- Detection de l'effet Noria<br><br>"
+          "label": "Payroll Agent (client <strong>BEL</strong>): pilotage IA de la masse salariale",
+          "desc": "<p><i><strong>But : </strong>Simule l'impact financier des recrutements/départs (effet Noria), génère des scénarios budgétaires (calcule de deviation) et assiste les</i></p><p><i>équipes RH dans la prise de décision.</i></p><p><i><strong>Impact</strong>:</i></p><p><i>- Gain de temps pour l'analyse des variations de salaire</i></p><p><i>- Aide à la projection et prédiction des coûts</i></p><p><i>- Respect des conventions collectives</i></p><p><i>- Détection d'autres anomalies</i></p><p><i>- Détection de l'effet Noria</i></p>"
         },
         {
-          "label": "Formation IA –&nbsp;<span data-teams=\"true\"><b>Safran</b> –&nbsp;</span>pour profils non-tech et développeurs (LLM, RAG, MCP, agents autonomes)"
-        },
-        {
-          "label": "Accompagnement avant-vente sur sujets IA"
+          "label": "<strong>Formation &amp; acculturation IA&nbsp;</strong>",
+          "desc": "<p></p><p>Conception et déploiement d’un programme IA en 3 niveaux (acculturation, prompt, agents) pour structurer l’adoption à l’échelle de l’entreprise</p><p>Formation dispensée pour un acteur industriel auprès de population métier RH et population tech &nbsp;<strong><br></strong></p><p><strong>Impact :</strong>&nbsp;<br>- Accélération de la montée en compétences des équipes&nbsp;<br>- Structuration du change management IA&nbsp;<br>- Diffusion rapide des usages et&nbsp;bonnes pratiques</p>"
         }
       ],
       "stack": "Python, FastApi, Langchain, N8N, MCP, Embeddings, PostgreSql",

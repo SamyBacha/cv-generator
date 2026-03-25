@@ -4,13 +4,19 @@ import './components/cv-page2.js';
 import { initApp, LS_KEY } from './editor.js';
 
 async function loadData() {
-    if (new URLSearchParams(location.search).has('blank')) {
+    const params = new URLSearchParams(location.search);
+    if (params.has('blank')) {
         const resp = await fetch(new URL('./resources/cv-blank.json', import.meta.url));
+        return resp.json();
+    }
+    const name = params.get('name');
+    if (name) {
+        const resp = await fetch(new URL(`./resources/${name}`, import.meta.url));
         return resp.json();
     }
     const stored = localStorage.getItem(LS_KEY);
     if (stored) return JSON.parse(stored);
-    const resp = await fetch(new URL('./resources/cv-data-bacha.json', import.meta.url));
+    const resp = await fetch(new URL('./resources/cv-blank.json', import.meta.url));
     return resp.json();
 }
 

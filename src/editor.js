@@ -719,8 +719,41 @@ async function loadBlank() {
     }
 }
 
-function toggleLang() {
+async function toggleLang() {
     const newLang = (CV_DATA.lang || 'fr') === 'fr' ? 'en' : 'fr';
+    const params = new URLSearchParams(location.search);
+    const name = params.get('name');
+
+    if (name) {
+        if (newLang === 'en') {
+            const enName = name.replace(/\.json$/, '-en.json');
+            let loaded = false;
+            try {
+                const resp = await fetch(new URL(`./resources/${enName}`, import.meta.url));
+                if (resp.ok) {
+                    const data = await resp.json();
+                    CV_DATA = data;
+                    editData = deepCopy(CV_DATA);
+                    loaded = true;
+                }
+            } catch (_) {}
+            if (!loaded) {
+                const proceed = confirm(`${enName} introuvable — voulez-vous charger le CV en anglais en gardant le contenu en français quand même ?`);
+                if (!proceed) return;
+            }
+        } else {
+            const frName = name.replace(/-en\.json$/, '.json');
+            try {
+                const resp = await fetch(new URL(`./resources/${frName}`, import.meta.url));
+                if (resp.ok) {
+                    const data = await resp.json();
+                    CV_DATA = data;
+                    editData = deepCopy(CV_DATA);
+                }
+            } catch (_) {}
+        }
+    }
+
     CV_DATA.lang = newLang;
     editData.lang = newLang;
     const btn = document.getElementById('btn-lang');

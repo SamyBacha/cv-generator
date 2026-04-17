@@ -1,7 +1,7 @@
         /* ===== CSS global, éditeur, impression ===== */
         :root {
             --dark: #2c3e50;
-            --purple: #618cc9;
+            --purple: #3454e2;
             --purple-light: #6c67a6;
             --yellow: #facc2a;
             --orange: #E8620A;
@@ -860,4 +860,5 @@
 
         @media print {
             #help-modal { display: none !important; }
+            .page-break-marker { display: none !important; }
         }

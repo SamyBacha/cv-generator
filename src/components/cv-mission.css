@@ -76,7 +76,6 @@
 
 .m-role {
     font-size: 12.5px;
-    font-style: italic;
     color: var(--purple);
     margin-bottom: 8px;
 }
@@ -100,7 +99,7 @@
     padding: 2px 0;
 }
 
-.m-tasks li::before {
+.m-tasks > li::before {
     content: '+ ';
     color: var(--purple);
     font-weight: bold;
@@ -125,6 +124,10 @@
     line-height: 1.4;
     margin-top: 2px;
     padding-left: 12px;
+}
+
+.m-stack.m-stack-empty {
+    display: none;
 }
 
 @media print {

@@ -11,6 +11,6 @@
 
 .ll li::before {
     content: '+ ';
-    color: var(--orange);
+    color: var(--purple);
     font-weight: bold;
 }

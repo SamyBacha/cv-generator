@@ -1,0 +1,20 @@
+{
+  "name": "proxym-france-cv",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^16.0.0",
+    "prettier": "^3.8.1",
+    "vite": "^8.0.6"
+  }
+}

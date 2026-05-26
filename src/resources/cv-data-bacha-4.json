@@ -27,7 +27,7 @@
     },
     {
       "label": "Front / BFF",
-      "items": "React, Next.js, NestJS, TypeScript"
+      "items": "Node.js, ReactJs, Next.js, NestJS, TypeScript"
     },
     {
       "label": "Langages &amp; Frameworks&nbsp;",
@@ -135,7 +135,7 @@
         {
           "label": "<b>Agents conversationnels</b>",
           "desc": "Conception et expérimentation d’agents IA textuels et vocaux adaptés à différents métiers : RH, support, santé. Mise en place de prototypes, conception de pipelines RAG, orchestration LLM, stratégie de grounding, design d’agents et intégration métier<div><b>Objectifs</b> : automatiser les interactions récurrentes, améliorer l’expérience utilisateur et valider l’adoption des agents IA en conditions réelles.\n</div><div><b>Résultats</b> : agents capables de traiter jusqu’à 80 % des questions récurrentes, amélioration de l’autonomie utilisateur et validation de cas d’usage\n</div><div>métier.</div>",
-          "stack": "NextJS, VercelAI, ZOD, ReactJs, CosmoDB<br><br>"
+          "stack": "NextJS, VercelAI, ZOD, ReactJs, MongoDB<br><br>"
         },
         {
           "label": "&nbsp;Spec Agent (client <b>EGIS</b>) agent IA d'analyse documentaire &amp; code",
@@ -220,7 +220,7 @@
     {
       "dates": "Janvier 2018 – Décembre 2019",
       "client": "EGIS — Suivi de la performance énergétique des bâtiments",
-      "role": "Développeur Full Stack — Sopra Steria",
+      "role": "Développeur Full Stack — Devoteam Digital Factory",
       "summary": "Application web de suivi dynamique de la performance énergétique des bâtiments. Projet de build au forfait, intégration en quasi-début de projet sur la conception technique et le développement, en approche agile (daily Scrum).",
       "tasks": [
         {
@@ -252,24 +252,56 @@
           "stack": "Rocket Chat"
         }
       ],
-      "stack": "Java, Spring (Core, Security, Data, MVC), Thymeleaf, AJAX, JavaScript, MongoDB, Rocket Chat",
-      "logo": ""
+      "stack": "Java, Spring (Core, Security, Data, MVC), Thymeleaf, AJAX, JavaScript, MongoDB, Rocket Chat, AmCharts",
+      "logo": "https://media.ouest-france.fr/assets-pcm/cb5ee563-4c90-46bf-a820-9e7ddcb29519?width=940&fit=outside"
     },
     {
-      "dates": "Janvier 2013 – Décembre 2017",
-      "client": "Airbus · SNCF",
-      "role": "Tech Lead — Sopra Steria puis Devoteam",
-      "summary": "Interventions sur projets critiques dans les secteurs Aéronautique et Transport ferroviaire, via ESN (Sopra Steria puis Devoteam).",
+      "dates": "Janvier 2016 – Décembre 2017",
+      "client": "Airbus — Prototype mobile multi-plateforme",
+      "role": "Développeur — Sopra Steria",
+      "summary": "Réalisation d'un prototype d'application mobile multi-plateforme (iOS / Android) en Ionic, adossé à des services back-end hébergés sur Azure. Le POC visait à évaluer la viabilité d'une approche JavaScript pour les futurs développements mobiles internes (Ionic vs React Native).",
       "tasks": [
         {
-          "label": "Clients notables : Airbus, SNCF"
+          "label": "<b>POC mobile cross-platform</b>",
+          "desc": "Conception et implémentation d'un prototype Ionic/Cordova ciblant iOS et Android à partir d'une codebase unique.",
+          "stack": "Ionic, Angular, TypeScript, Cordova"
         },
         {
-          "label": "Secteurs : Aéronautique, Transport ferroviaire"
+          "label": "<b>Back-end & services cloud</b>",
+          "desc": "Mise en place des APIs et services consommés par l'app mobile, déployés sur Azure (App Services, stockage, authentification).",
+          "stack": "Azure App Services, Node.js, REST"
+        },
+        {
+          "label": "<b>Étude comparative React Native</b>",
+          "desc": "Benchmark technique entre Ionic et React Native (performances, courbe d'apprentissage, écosystème natif, maturité en 2017) pour orienter le choix d'un futur stack mobile JS.",
+          "stack": "React Native, Ionic"
+        },
+        {
+          "label": "<b>Démo & restitution</b>",
+          "desc": "Préparation de démos sur device, restitution des résultats du POC aux parties prenantes techniques et métier."
         }
       ],
-      "stack": "JSF,&nbsp;thymeleaf, JAVA/Spring, AmCharts....",
-      "logo": "data:image/png;base64,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"
+      "stack": "Ionic, Angular, TypeScript, Cordova, Azure (App Services), Node.js, REST",
+      "logo": "https://logos-marques.com/wp-content/uploads/2020/11/Airbus-Logo-2001.jpg"
+    },
+    {
+      "dates": "Janvier 2013 – Décembre 2015",
+      "client": "SNCF — Transport ferroviaire",
+      "role": "Développeur Java — Sopra Steria",
+      "summary": "Premier poste suite au Master MIAGE : développement applicatif Java/JSF sur projets internes SNCF.",
+      "tasks": [
+        {
+          "label": "<b>Développement full-stack Java</b>",
+          "desc": "Implémentation de composants backend et de l'IHM web pour applications métier.",
+          "stack": "Java, JSF, Spring"
+        },
+        {
+          "label": "<b>Maintenance évolutive et corrective</b>",
+          "desc": "Suivi des anomalies, livraison de correctifs et accompagnement des évolutions fonctionnelles."
+        }
+      ],
+      "stack": "Java, JSF, Spring",
+      "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/a/a1/Logo_SNCF_%282011%29.svg/500px-Logo_SNCF_%282011%29.svg.png"
     }
   ],
   "visibility": {

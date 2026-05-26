@@ -56,6 +56,53 @@ export function defaultVisibility() {
   };
 }
 
+const URL_RE =
+  /(?<![\w@])(https?:\/\/[^\s<>"'`]+|www\.[\w-]+(?:\.[\w-]+)+[^\s<>"'`]*|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/gi;
+const MD_LINK_RE = /\[([^\]\n]+)\]\(([^\s)]+)\)/g;
+const ANCHOR_SPLIT_RE = /(<a\b[^>]*>[\s\S]*?<\/a>)/gi;
+
+export function normalizeHref(url) {
+  const v = String(url || "").trim();
+  if (!v) return v;
+  if (/^[\w.+-]+@[\w-]+(?:\.[\w-]+)+$/.test(v)) return `mailto:${v}`;
+  if (/^www\./i.test(v)) return `https://${v}`;
+  if (!/^[a-z][\w+.-]*:/i.test(v) && !v.startsWith("/") && !v.startsWith("#")) {
+    return `https://${v}`;
+  }
+  return v;
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/"/g, "&quot;");
+}
+
+export function linkify(html) {
+  if (!html) return html;
+  const parts = String(html).split(ANCHOR_SPLIT_RE);
+  return parts
+    .map((part) => {
+      if (/^<a\b/i.test(part)) return part;
+      const withMd = part.replace(MD_LINK_RE, (_m, text, url) => {
+        const href = normalizeHref(url);
+        return `<a href="${escapeAttr(href)}" target="_blank" rel="noopener">${text}</a>`;
+      });
+      return withMd
+        .split(ANCHOR_SPLIT_RE)
+        .map((sub) => {
+          if (/^<a\b/i.test(sub)) return sub;
+          return sub.replace(URL_RE, (m) => {
+            const trail = m.match(/[.,;:!?)\]"'>]+$/);
+            const trailing = trail ? trail[0] : "";
+            const url = trailing ? m.slice(0, -trailing.length) : m;
+            const href = normalizeHref(url);
+            return `<a href="${escapeAttr(href)}" target="_blank" rel="noopener">${url}</a>${trailing}`;
+          });
+        })
+        .join("");
+    })
+    .join("");
+}
+
 export function renderLogoHtml(logo) {
   if (!logo) return "";
   const s = logo.trim();

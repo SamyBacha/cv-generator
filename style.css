@@ -655,6 +655,145 @@
             background: #fdd;
         }
 
+        /* ===== Link dialog ===== */
+        #link-dialog {
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        #link-dialog.link-dialog-open {
+            display: flex;
+        }
+        .link-dialog-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 18, 40, .45);
+            backdrop-filter: blur(2px);
+        }
+        .link-dialog-panel {
+            position: relative;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(20, 18, 40, .25);
+            padding: 20px 22px 16px;
+            width: min(420px, calc(100% - 32px));
+            font-family: inherit;
+        }
+        .link-dialog-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 14px;
+            letter-spacing: .2px;
+        }
+        .link-dialog-label {
+            display: block;
+            font-size: 11px;
+            color: #6a6a78;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            margin-bottom: 4px;
+        }
+        .link-dialog-label + .link-dialog-input {
+            margin-bottom: 12px;
+        }
+        .link-dialog-input {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #d8d6e4;
+            border-radius: 7px;
+            padding: 8px 10px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text);
+            background: #f7f6fb;
+            transition: border-color .15s, background .15s, box-shadow .15s;
+        }
+        .link-dialog-input:focus {
+            outline: none;
+            border-color: var(--purple);
+            background: #fff;
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--purple) 18%, transparent);
+        }
+        .link-dialog-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .link-dialog-spacer {
+            flex: 1;
+        }
+        .link-dialog-btn {
+            border: 1px solid transparent;
+            border-radius: 7px;
+            padding: 7px 14px;
+            font-size: 12.5px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .15s, color .15s, border-color .15s;
+        }
+        .link-dialog-btn-cancel {
+            background: transparent;
+            color: #6a6a78;
+            border-color: #d8d6e4;
+        }
+        .link-dialog-btn-cancel:hover {
+            background: #f0eef7;
+            color: var(--dark);
+        }
+        .link-dialog-btn-ok {
+            background: var(--purple);
+            color: #fff;
+            border-color: var(--purple);
+        }
+        .link-dialog-btn-ok:hover {
+            filter: brightness(1.08);
+        }
+        .link-dialog-btn-remove {
+            background: transparent;
+            color: #c0392b;
+            border-color: transparent;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+        .link-dialog-btn-remove:hover {
+            background: rgba(192, 57, 43, .08);
+        }
+
+        /* ===== Liens auto-détectés ===== */
+        #editor-content a[href],
+        #viewer-panel a[href] {
+            color: var(--purple);
+            text-decoration: underline;
+            text-decoration-color: color-mix(in srgb, var(--purple) 30%, transparent);
+            text-decoration-thickness: 1px;
+            text-underline-offset: 3px;
+            cursor: pointer;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            transition: text-decoration-color .15s ease, color .15s ease;
+        }
+        #editor-content a[href]:hover,
+        #viewer-panel a[href]:hover {
+            text-decoration-color: var(--purple);
+            color: var(--dark);
+        }
+        @media print {
+            #viewer-panel a[href] {
+                color: inherit;
+                text-decoration: underline;
+                text-decoration-color: color-mix(in srgb, currentColor 25%, transparent);
+                text-decoration-thickness: .5px;
+                text-underline-offset: 2px;
+                word-break: break-word;
+                overflow-wrap: anywhere;
+            }
+        }
+
         /* ===== Drag & Drop éditeur ===== */
         .drag-handle {
             display: flex;

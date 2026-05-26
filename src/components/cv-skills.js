@@ -1,4 +1,4 @@
-import { applyStyles } from "./tools.js";
+import { applyStyles, linkify } from "./tools.js";
 
 export class CvSkills extends HTMLElement {
   set data(skills) {
@@ -15,7 +15,7 @@ export class CvSkills extends HTMLElement {
                     (s, i) => `
                     <li>
                         <strong contenteditable="true" data-path="skills.${i}.label">${s.label.replace(/\s*:\s*$/, "")} :</strong>
-                        <span contenteditable="true" data-path="skills.${i}.items">${s.items}</span>
+                        <span contenteditable="true" data-path="skills.${i}.items">${linkify(s.items)}</span>
                     </li>
                 `,
                   )

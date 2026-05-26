@@ -1,6 +1,8 @@
 import {
   compressImage,
   defaultVisibility,
+  linkify,
+  normalizeHref,
   renderLogoHtml,
 } from "./components/tools.js";
 
@@ -109,8 +111,22 @@ function bindInputs(container) {
     const path = el.dataset.path;
     const val = getPath(editData, path);
     if (el.contentEditable === "true") {
-      el.innerHTML = val != null ? val : "";
+      el.innerHTML = linkify(val != null ? val : "");
       el.addEventListener("input", () => setPath(editData, path, el.innerHTML));
+      el.addEventListener("blur", () => {
+        const linkified = linkify(el.innerHTML);
+        if (linkified !== el.innerHTML) {
+          el.innerHTML = linkified;
+          setPath(editData, path, linkified);
+          const viewerEl = document.querySelector(
+            `#viewer-panel [data-path="${path}"]`,
+          );
+          if (viewerEl) {
+            viewerEl.innerHTML = linkified;
+            setPath(CV_DATA, path, linkified);
+          }
+        }
+      });
     } else if (el.type === "checkbox") {
       el.checked = !!val;
       el.addEventListener("change", () => setPath(editData, path, el.checked));
@@ -136,6 +152,8 @@ function mkWysiwyg(path, multiline = true, cls = "") {
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('italic')" title="Italique"><i>I</i></button>
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('underline')" title="Souligné"><u>U</u></button>
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('strikeThrough')" title="Barré"><s>S</s></button>
+                <div class="wysiwyg-sep"></div>
+                <button class="wysiwyg-btn" onmousedown="event.preventDefault();openLinkDialog()" title="Insérer / modifier un lien">🔗</button>
                 ${listBtns}
                 <div class="wysiwyg-sep"></div>
                 <button class="wysiwyg-btn" onmousedown="event.preventDefault();document.execCommand('removeFormat')" title="Effacer le style">✕</button>
@@ -147,6 +165,204 @@ function mkWysiwyg(path, multiline = true, cls = "") {
 
 function markViewerEmpty(el) {
   el.classList.toggle("cv-field-empty", !el.textContent.trim());
+}
+
+function initLinkClicks() {
+  const panel = document.getElementById("viewer-panel");
+  if (!panel || panel._linkClicksBound) {
+    return;
+  }
+  panel._linkClicksBound = true;
+  panel.addEventListener("click", (e) => {
+    const link = e.target.closest("a[href]");
+    if (!link || !panel.contains(link)) {
+      return;
+    }
+    e.preventDefault();
+    window.open(link.href, "_blank", "noopener,noreferrer");
+  });
+}
+
+function initEditorLinkClicks() {
+  const editorContent = document.getElementById("editor-content");
+  if (!editorContent || editorContent._linkClicksBound) {
+    return;
+  }
+  editorContent._linkClicksBound = true;
+  editorContent.addEventListener("click", (e) => {
+    const link = e.target.closest("a[href]");
+    if (!link) return;
+    e.preventDefault();
+    e.stopPropagation();
+    openLinkDialog(link);
+  });
+}
+
+/* ===== LINK DIALOG ===== */
+let linkDialogState = {
+  targetEditor: null,
+  existingAnchor: null,
+  savedRange: null,
+};
+
+function ensureLinkDialog() {
+  if (document.getElementById("link-dialog")) return;
+  const dlg = document.createElement("div");
+  dlg.id = "link-dialog";
+  dlg.innerHTML = `
+        <div class="link-dialog-backdrop"></div>
+        <div class="link-dialog-panel" role="dialog" aria-modal="true">
+            <div class="link-dialog-title" id="link-dialog-title">Insérer un lien</div>
+            <label class="link-dialog-label" for="link-dialog-text">Texte à afficher</label>
+            <input type="text" class="link-dialog-input" id="link-dialog-text" placeholder="Ex : Mon portfolio">
+            <label class="link-dialog-label" for="link-dialog-url">URL</label>
+            <input type="text" class="link-dialog-input" id="link-dialog-url" placeholder="https://exemple.com">
+            <div class="link-dialog-actions">
+                <button class="link-dialog-btn link-dialog-btn-remove" id="link-dialog-remove">Supprimer</button>
+                <span class="link-dialog-spacer"></span>
+                <button class="link-dialog-btn link-dialog-btn-cancel" id="link-dialog-cancel">Annuler</button>
+                <button class="link-dialog-btn link-dialog-btn-ok" id="link-dialog-ok">Insérer</button>
+            </div>
+        </div>
+    `;
+  document.body.appendChild(dlg);
+  dlg
+    .querySelector(".link-dialog-backdrop")
+    .addEventListener("click", closeLinkDialog);
+  document
+    .getElementById("link-dialog-cancel")
+    .addEventListener("click", closeLinkDialog);
+  document
+    .getElementById("link-dialog-ok")
+    .addEventListener("click", submitLinkDialog);
+  document
+    .getElementById("link-dialog-remove")
+    .addEventListener("click", removeLinkAndClose);
+  [
+    document.getElementById("link-dialog-text"),
+    document.getElementById("link-dialog-url"),
+  ].forEach((input) => {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        submitLinkDialog();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closeLinkDialog();
+      }
+    });
+  });
+}
+
+window.openLinkDialog = function (existingAnchor) {
+  ensureLinkDialog();
+  const sel = window.getSelection();
+  const range =
+    sel && sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null;
+
+  if (existingAnchor) {
+    linkDialogState.targetEditor = existingAnchor.closest(
+      '[contenteditable="true"]',
+    );
+    linkDialogState.existingAnchor = existingAnchor;
+    linkDialogState.savedRange = null;
+    document.getElementById("link-dialog-text").value =
+      existingAnchor.textContent;
+    document.getElementById("link-dialog-url").value =
+      existingAnchor.getAttribute("href") || "";
+    document.getElementById("link-dialog-title").textContent =
+      "Modifier le lien";
+    document.getElementById("link-dialog-ok").textContent = "Mettre à jour";
+    document.getElementById("link-dialog-remove").style.display = "";
+  } else {
+    const focusEl = range
+      ? (range.startContainer.nodeType === 1
+          ? range.startContainer
+          : range.startContainer.parentElement
+        )?.closest('[contenteditable="true"]')
+      : null;
+    linkDialogState.targetEditor = focusEl;
+    linkDialogState.existingAnchor = null;
+    linkDialogState.savedRange = range;
+    const selectedText = range && !range.collapsed ? range.toString() : "";
+    document.getElementById("link-dialog-text").value = selectedText;
+    document.getElementById("link-dialog-url").value = "";
+    document.getElementById("link-dialog-title").textContent =
+      "Insérer un lien";
+    document.getElementById("link-dialog-ok").textContent = "Insérer";
+    document.getElementById("link-dialog-remove").style.display = "none";
+  }
+
+  document.getElementById("link-dialog").classList.add("link-dialog-open");
+  setTimeout(() => {
+    const textInput = document.getElementById("link-dialog-text");
+    const urlInput = document.getElementById("link-dialog-url");
+    const target = textInput.value ? urlInput : textInput;
+    target.focus();
+    target.select();
+  }, 0);
+};
+
+function closeLinkDialog() {
+  const dlg = document.getElementById("link-dialog");
+  if (dlg) dlg.classList.remove("link-dialog-open");
+  linkDialogState = {
+    targetEditor: null,
+    existingAnchor: null,
+    savedRange: null,
+  };
+}
+
+function notifyEditorChanged(el) {
+  if (!el) return;
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+function submitLinkDialog() {
+  const text = document.getElementById("link-dialog-text").value.trim();
+  const url = document.getElementById("link-dialog-url").value.trim();
+  if (!url) {
+    document.getElementById("link-dialog-url").focus();
+    return;
+  }
+  const href = normalizeHref(url);
+  const finalText = text || url;
+
+  if (linkDialogState.existingAnchor) {
+    const a = linkDialogState.existingAnchor;
+    a.setAttribute("href", href);
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener");
+    a.textContent = finalText;
+    notifyEditorChanged(linkDialogState.targetEditor);
+  } else if (linkDialogState.targetEditor) {
+    const a = document.createElement("a");
+    a.href = href;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = finalText;
+    if (linkDialogState.savedRange) {
+      const range = linkDialogState.savedRange;
+      range.deleteContents();
+      range.insertNode(a);
+      const after = document.createTextNode("​");
+      a.parentNode.insertBefore(after, a.nextSibling);
+    } else {
+      linkDialogState.targetEditor.appendChild(a);
+    }
+    notifyEditorChanged(linkDialogState.targetEditor);
+  }
+  closeLinkDialog();
+}
+
+function removeLinkAndClose() {
+  if (linkDialogState.existingAnchor) {
+    const a = linkDialogState.existingAnchor;
+    const text = document.createTextNode(a.textContent);
+    a.parentNode.replaceChild(text, a);
+    notifyEditorChanged(linkDialogState.targetEditor);
+  }
+  closeLinkDialog();
 }
 
 function bindViewerInputs() {
@@ -178,7 +394,24 @@ function bindViewerInputs() {
         }
         markViewerEmpty(el);
       });
-      el.addEventListener("blur", () => markViewerEmpty(el));
+      el.addEventListener("blur", () => {
+        markViewerEmpty(el);
+        if (usePlainText) {
+          return;
+        }
+        const linkified = linkify(el.innerHTML);
+        if (linkified !== el.innerHTML) {
+          el.innerHTML = linkified;
+          setPath(CV_DATA, path, linkified);
+          setPath(editData, path, linkified);
+          const editorEl = document.querySelector(
+            `#editor-content [data-path="${path}"]`,
+          );
+          if (editorEl && editorEl !== el) {
+            editorEl.innerHTML = linkified;
+          }
+        }
+      });
     });
 }
 
@@ -231,6 +464,18 @@ const DRAG_CONFIGS = {
   },
 };
 
+function resolveDragConfig(key) {
+  if (key && key.startsWith("tasks-")) {
+    const mi = parseInt(key.slice(6));
+    return {
+      arr: () => editData.missions[mi].tasks,
+      sectionId: "e-missions",
+      bodyFn: () => renderMissionsBody(),
+    };
+  }
+  return DRAG_CONFIGS[key];
+}
+
 function initDraggable(body) {
   let srcIdx = null;
   let srcKey = null;
@@ -272,7 +517,7 @@ function initDraggable(body) {
       if (!srcKey || srcKey !== item.dataset.dragKey || srcIdx === toIdx) {
         return;
       }
-      const cfg = DRAG_CONFIGS[srcKey];
+      const cfg = resolveDragConfig(srcKey);
       const arr = cfg.arr();
       const [moved] = arr.splice(srcIdx, 1);
       arr.splice(toIdx, 0, moved);
@@ -357,7 +602,7 @@ function renderPersonalBody() {
               .map(
                 (l, i) => `
                 <div class="e-row" style="margin-bottom:6px">
-                    <textarea class="e-input e-flex" rows="1" data-path="personal.links.${i}.link" placeholder="https://..."></textarea>
+                    ${mkWysiwyg(`personal.links.${i}.link`, false, "e-flex")}
                     <textarea class="e-input" rows="1" style="width:100px;flex-shrink:0" data-path="personal.links.${i}.ico" placeholder="emoji ou URL"></textarea>
                     <button class="btn-remove" onclick="removePersonalLink(${i})">−</button>
                 </div>
@@ -718,7 +963,8 @@ function renderMissionsBody() {
                     ${m.tasks
                       .map(
                         (t, j) => `
-                        <div class="e-row" style="margin-bottom:6px">
+                        <div class="e-row" style="margin-bottom:6px" data-drag-index="${j}" data-drag-key="tasks-${i}">
+                            <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
                             ${mkWysiwyg(`missions.${i}.tasks.${j}.label`, false, "e-flex")}
                             ${mkWysiwyg(`missions.${i}.tasks.${j}.desc`, false, "e-flex")}
                             <button class="btn-remove" onclick="removeTask(${i}, ${j})">−</button>
@@ -1544,6 +1790,8 @@ export function initApp(data) {
   });
   cloneLogos();
   bindViewerInputs();
+  initLinkClicks();
+  initEditorLinkClicks();
   initLogoHandlers();
   initViewerToolbar();
   initTheme();

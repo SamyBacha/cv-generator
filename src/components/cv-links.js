@@ -1,4 +1,4 @@
-import { applyStyles } from "./tools.js";
+import { applyStyles, linkify } from "./tools.js";
 
 export class CvLinks extends HTMLElement {
   set data(links) {
@@ -17,7 +17,7 @@ export class CvLinks extends HTMLElement {
                         ? `<img src="${l.ico}" alt="" class="link-ico-img">`
                         : `<span class="link-ico">${l.ico}</span>`
                       : "";
-                    return `<li class="cv-link-item">${ico}<span contenteditable="true" data-path="personal.links.${i}.link" data-plain>${l.link}</span></li>`;
+                    return `<li class="cv-link-item">${ico}<span contenteditable="true" data-path="personal.links.${i}.link">${linkify(l.link)}</span></li>`;
                   })
                   .join("")}
             </ul>

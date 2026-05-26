@@ -9,13 +9,22 @@
 
 .cv-link,
 .cv-link-item {
-    display: inline-flex;
-    align-items: center;
+    display: flex;
+    align-items: baseline;
     gap: 5px;
     font-size: 10.5px;
     color: var(--purple);
     text-decoration: none;
     list-style: none;
+    max-width: 100%;
+}
+
+.cv-link-item > span[contenteditable],
+.cv-link > span[contenteditable] {
+    min-width: 0;
+    flex: 1;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .link-ico-img {

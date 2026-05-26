@@ -1,4 +1,4 @@
-import { applyStyles } from "./tools.js";
+import { applyStyles, linkify } from "./tools.js";
 
 export class CvEntryList extends HTMLElement {
   set data({ entries, pathPrefix }) {
@@ -15,8 +15,8 @@ export class CvEntryList extends HTMLElement {
         (e, i) => `
             <div class="entry">
                 <span class="yr" contenteditable="true" data-path="${p}.${i}.years">${e.years}</span>
-                <div class="deg" contenteditable="true" data-path="${p}.${i}.degree">${e.degree}</div>
-                <div class="org" contenteditable="true" data-path="${p}.${i}.org">${e.org}</div>
+                <div class="deg" contenteditable="true" data-path="${p}.${i}.degree">${linkify(e.degree)}</div>
+                <div class="org" contenteditable="true" data-path="${p}.${i}.org">${linkify(e.org)}</div>
             </div>
         `,
       )

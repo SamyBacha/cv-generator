@@ -1,4 +1,4 @@
-import { applyStyles } from "./tools.js";
+import { applyStyles, linkify } from "./tools.js";
 
 export class CvTimeline extends HTMLElement {
   set data(timeline) {
@@ -16,7 +16,7 @@ export class CvTimeline extends HTMLElement {
                     <div class="tl-ev${t.alt ? " alt" : ""}">
                         <div class="tl-yr" contenteditable="true" data-path="timeline.${i}.year">${t.year}</div>
                         <div class="tl-dot${t.current ? " cur" : ""}"></div>
-                        <div class="tl-lbl" contenteditable="true" data-path="timeline.${i}.label">${t.label}</div>
+                        <div class="tl-lbl" contenteditable="true" data-path="timeline.${i}.label">${linkify(t.label)}</div>
                     </div>
                 `,
                   )

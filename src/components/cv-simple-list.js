@@ -1,4 +1,4 @@
-import { applyStyles } from "./tools.js";
+import { applyStyles, linkify } from "./tools.js";
 
 export class CvSimpleList extends HTMLElement {
   set data({ items, pathPrefix }) {
@@ -15,7 +15,7 @@ export class CvSimpleList extends HTMLElement {
                 ${(this._items || [])
                   .map(
                     (item, i) => `
-                    <li contenteditable="true" data-path="${p}.${i}">${item}</li>
+                    <li contenteditable="true" data-path="${p}.${i}">${linkify(item)}</li>
                 `,
                   )
                   .join("")}

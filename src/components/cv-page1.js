@@ -1,4 +1,4 @@
-import { applyStyles, defaultVisibility, t } from "./tools.js";
+import { applyStyles, defaultVisibility, linkify, t } from "./tools.js";
 import "./cv-section.js";
 import "./cv-entry-list.js";
 import "./cv-simple-list.js";
@@ -29,7 +29,7 @@ export class CvPage1 extends HTMLElement {
                     <div class="cv-name" contenteditable="true" data-path="personal.name">${d.personal.name}</div>
                     <div class="cv-post" contenteditable="true" data-path="personal.role">${d.personal.role}</div>
                     <div class="cv-contacts">
-                        <div class="cv-contact${d.personal.contacts?.email ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">✉</span><span contenteditable="true" data-path="personal.contacts.email" data-plain>${d.personal.contacts?.email || ""}</span></div>
+                        <div class="cv-contact${d.personal.contacts?.email ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">✉</span><span contenteditable="true" data-path="personal.contacts.email" data-plain>${linkify(d.personal.contacts?.email || "")}</span></div>
                         <div class="cv-contact${d.personal.contacts?.phone ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">☎</span><span contenteditable="true" data-path="personal.contacts.phone" data-plain>${d.personal.contacts?.phone || ""}</span></div>
                     </div>
                     ${hasLinks ? `<cv-links data-for="links"></cv-links>` : ""}

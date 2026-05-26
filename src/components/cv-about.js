@@ -1,4 +1,4 @@
-import { applyStyles } from "./tools.js";
+import { applyStyles, linkify } from "./tools.js";
 
 export class CvAbout extends HTMLElement {
   set data(about) {
@@ -10,7 +10,7 @@ export class CvAbout extends HTMLElement {
     applyStyles(this);
     const intro = this._data?.intro || "";
     this.innerHTML = `
-            <div class="about" contenteditable="true" data-path="about.intro">${intro}</div>
+            <div class="about" contenteditable="true" data-path="about.intro">${linkify(intro)}</div>
         `;
   }
 }

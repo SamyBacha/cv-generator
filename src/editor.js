@@ -963,11 +963,17 @@ function renderMissionsBody() {
                     ${m.tasks
                       .map(
                         (t, j) => `
-                        <div class="e-row" style="margin-bottom:6px" data-drag-index="${j}" data-drag-key="tasks-${i}">
-                            <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
-                            ${mkWysiwyg(`missions.${i}.tasks.${j}.label`, false, "e-flex")}
-                            ${mkWysiwyg(`missions.${i}.tasks.${j}.desc`, false, "e-flex")}
-                            <button class="btn-remove" onclick="removeTask(${i}, ${j})">−</button>
+                        <div class="e-task" data-drag-index="${j}" data-drag-key="tasks-${i}">
+                            <div class="e-row">
+                                <span class="drag-handle" draggable="true" title="Réordonner">⠿</span>
+                                ${mkWysiwyg(`missions.${i}.tasks.${j}.label`, false, "e-flex")}
+                                ${mkWysiwyg(`missions.${i}.tasks.${j}.desc`, false, "e-flex")}
+                                <button class="btn-remove" onclick="removeTask(${i}, ${j})">−</button>
+                            </div>
+                            <div class="e-row e-task-stack-row">
+                                <label class="e-label e-task-stack-label">Stack</label>
+                                ${mkWysiwyg(`missions.${i}.tasks.${j}.stack`, false, "e-flex")}
+                            </div>
                         </div>
                     `,
                       )

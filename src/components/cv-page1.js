@@ -101,6 +101,25 @@ export class CvPage1 extends HTMLElement {
       this.querySelector(".proxym-logo").appendChild(
         tpl.content.cloneNode(true),
       );
+
+    requestAnimationFrame(() => this._addPageBreakMarkers());
+  }
+
+  _addPageBreakMarkers() {
+    this.querySelectorAll(".page-break-marker").forEach((m) => m.remove());
+    const PAGE_H_PX = 297 * 3.7795275591;
+    const totalH = this.scrollHeight;
+    for (let y = PAGE_H_PX; y < totalH; y += PAGE_H_PX) {
+      const marker = document.createElement("div");
+      marker.className = "page-break-marker";
+      marker.style.cssText = `position:absolute;left:0;right:0;top:${Math.round(y)}px;pointer-events:none;z-index:50;border-top:2px dashed rgba(220,50,50,0.55);`;
+      const label = document.createElement("span");
+      label.textContent = "— coupure de page —";
+      label.style.cssText =
+        "position:absolute;left:50%;transform:translateX(-50%);top:-9px;font-size:10px;color:rgba(220,50,50,0.7);background:white;padding:0 6px;font-family:monospace;white-space:nowrap;";
+      marker.appendChild(label);
+      this.appendChild(marker);
+    }
   }
 }
 

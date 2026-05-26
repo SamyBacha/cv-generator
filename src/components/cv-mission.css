@@ -126,6 +126,20 @@
     padding-left: 12px;
 }
 
+.t-stack {
+    display: block;
+    font-size: 10.5px;
+    color: #666;
+    line-height: 1.4;
+    margin-top: 2px;
+    padding-left: 12px;
+}
+
+.t-stack b {
+    color: var(--dark);
+    font-weight: 700;
+}
+
 .m-stack.m-stack-empty {
     display: none;
 }

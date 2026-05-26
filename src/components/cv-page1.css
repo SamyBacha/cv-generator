@@ -6,7 +6,7 @@
 .col-left {
     background: white;
     color: var(--text);
-    padding: 28px 32px 40px;
+    padding: 40px 32px 40px;
     display: flex;
     flex-direction: column;
 }

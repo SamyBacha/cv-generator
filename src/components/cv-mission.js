@@ -24,7 +24,7 @@ export class CvMission extends HTMLElement {
                     ${m.tasks
                       .map(
                         (t, j) => `
-                        <li><span ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.label"` : ""}>${linkify(t.label)}</span>${t.desc ? `<span class="poc-desc" ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.desc"` : ""}>${linkify(t.desc)}</span>` : ""}</li>
+                        <li><span ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.label"` : ""}>${linkify(t.label)}</span>${t.desc ? `<span class="poc-desc" ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.desc"` : ""}>${linkify(t.desc)}</span>` : ""}${t.stack ? `<span class="t-stack"><b>Stack :</b> <span ${p ? `contenteditable="true" data-path="${p}.tasks.${j}.stack"` : ""}>${linkify(t.stack)}</span></span>` : ""}</li>
                     `,
                       )
                       .join("")}

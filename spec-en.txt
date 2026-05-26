@@ -1,0 +1,65 @@
+
+Bonne revue. Tu as raison de le signaler — pour une app qui consomme ce JSON, ces champs doivent rester présents même s'ils sont optionnels. Sinon on risques des comportements implicites côté front.
+Voici ce que je te recommande de faire concrètement :
+
+[DONE]
+1️⃣ Ajouter les champs manquants au root
+
+"lang": "en",
+"visibility": {
+  "personal_projects": true,
+  "teaching": true,
+  "missions": true,
+  "education": true
+},
+"personal_projects": []
+
+Pourquoi c'est important :
+	•	lang → permet à l'app de charger les bons contenus / traductions
+	•	visibility → évite de casser un rendu conditionnel
+	•	personal_projects → garde la compatibilité schema même vide
+
+[DONE]
+2️⃣ Logos dans les missions
+Dans chaque mission il faut remettre :
+
+"logo": "URL_OR_BASE64"
+
+Exemple :
+
+{
+  "dates": "Today",
+  "client": "Proxym",
+  "logo": "proxym_logo_url_or_base64",
+  "role": "Technical Leadership and Strategic Client Advisory",
+  ...
+}
+
+À faire pour :
+	•	Proxym ✅
+	•	Dubai Police ✅
+	•	BforBank ✅
+	•	Transdev ✅
+	•	EGIS / Airbus / SNCF mission ✅
+
+
+[DONE]
+3️⃣ Le <span data-teams="true">
+Vérifié : data-teams n'est utilisé nulle part dans le front (index.html, src/).
+Présent uniquement dans cv-data-bacha.json (version FR) — pas de logique qui s'appuie dessus.
+Décision : supprimé dans la version EN. Pas besoin d'un champ "teams": true non plus.
+
+[N/A]
+4️⃣ Petit conseil d'archi JSON (version + updated_at)
+Impossible à ajouter : le schema cv-data.schema.json a "additionalProperties": false à la racine.
+Ajouter ces champs casserait la validation JSON Schema.
+→ Si on veut les ajouter, il faut d'abord mettre à jour le schema.
+
+[DONE]
+✅ Conclusion :
+Pour la version EN (anglais), corrections nécessaires sont structurelles :
+	[DONE]	ajouter lang
+	[DONE]	ajouter visibility
+	[DONE]	ajouter personal_projects
+	[DONE]	remettre les logos (tous les 5)
+	[DONE]	décider si on gardes ou non <span data-teams="true"> → supprimé (non utilisé front)

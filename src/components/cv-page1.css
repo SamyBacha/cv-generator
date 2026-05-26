@@ -34,7 +34,7 @@
 }
 
 .col-right {
-    padding: 28px 38px 30px;
+    padding: 70px 38px 30px;
     position: relative;
     margin-top: 15%;
 }
@@ -57,10 +57,50 @@
     font-size: 11px;
 }
 
-.proxym-logo {
+.cv-contact-empty .cv-contact-ico {
+    display: none;
+}
+
+@media print {
+    .cv-contact-empty {
+        display: none;
+    }
+}
+
+.proxym-logo-wrap {
     position: absolute;
     top: 35px;
     right: 22px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.proxym-logo-wrap .sect-eye {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #aaa;
+    opacity: 0;
+    transition: opacity .15s;
+    padding: 2px;
+}
+
+.proxym-logo-wrap:hover .sect-eye {
+    opacity: 0.6;
+}
+
+.proxym-logo-wrap .sect-eye:hover {
+    opacity: 1;
+}
+
+.proxym-logo-hidden .proxym-logo {
+    opacity: 0.15;
+}
+
+.proxym-logo-hidden .sect-eye {
+    opacity: 0.8 !important;
 }
 
 .logo-wrap {
@@ -80,8 +120,16 @@
         break-after: page;
     }
 
+    .proxym-logo-wrap .sect-eye {
+        display: none !important;
+    }
+
     .proxym-logo,
     .logo-wrap {
         display: none;
+    }
+
+    .hide-proxym-logo .logo-fixed {
+        display: none !important;
     }
 }

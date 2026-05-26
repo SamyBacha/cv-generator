@@ -33,6 +33,16 @@
     <div class="sect-item"><label><input type="checkbox" data-key="hobbies" onchange="toggleCvSection('hobbies')"> Hobbies</label></div>
     <div class="sect-item"><label><input type="checkbox" data-key="missions" onchange="toggleCvSection('missions')"> Missions</label></div>
     <div class="sect-item"><label><input type="checkbox" data-key="personal_projects" onchange="toggleCvSection('personal_projects')"> Projets perso</label></div>
+    <div class="sect-sep"></div>
+    <div class="sect-item"><label><input type="checkbox" id="cb-proxym-logo" checked onchange="toggleProxymLogo(this.checked)"> Logo Proxym</label></div>
+        </div>
+    </div>
+    <div class="sections-wrap">
+        <button id="btn-theme" class="toolbar-btn" onclick="toggleThemePanel()">🎨 Thème ▾</button>
+        <div id="theme-panel" class="toolbar-action-panel" style="display:none">
+            <div id="theme-list"></div>
+            <div class="theme-panel-sep"></div>
+            <button class="toolbar-action-btn" onclick="openCustomThemeEditor()">+ Thème personnalisé</button>
         </div>
     </div>
     <button id="btn-lang" class="toolbar-btn" onclick="toggleLang()">🌐 FR</button>
@@ -119,6 +129,27 @@
                 <dt>🖨 Imprimer / PDF</dt>
                 <dd>Ouvre la boîte d'impression du navigateur. Pensez à cocher <strong>« Graphiques d'arrière-plan »</strong> pour que les couleurs et dégradés s'impriment correctement.</dd>
             </dl>
+        </div>
+    </div>
+</div>
+
+<div id="theme-editor-modal" onclick="if(event.target===this)this.style.display='none'">
+    <div class="theme-editor-box">
+        <div class="help-header">
+            <span id="theme-editor-title">Nouveau thème</span>
+            <button class="help-close" onclick="document.getElementById('theme-editor-modal').style.display='none'">✕</button>
+        </div>
+        <div class="theme-editor-body">
+            <label>Nom <input type="text" id="te-name" placeholder="Mon thème"></label>
+            <label>Couleur principale <input type="color" id="te-purple" value="#3454e2"></label>
+            <label>Couleur secondaire <input type="color" id="te-purple-light" value="#6c67a6"></label>
+            <label>Accent <input type="color" id="te-yellow" value="#facc2a"></label>
+            <label>Foncé <input type="color" id="te-dark" value="#2c3e50"></label>
+            <label>Texte <input type="color" id="te-text" value="#2d2d2d"></label>
+            <div class="te-actions">
+                <button class="toolbar-action-btn" onclick="saveCustomTheme()">Enregistrer</button>
+                <button class="toolbar-action-btn te-delete-btn" id="te-delete" style="display:none" onclick="deleteCustomTheme()">Supprimer</button>
+            </div>
         </div>
     </div>
 </div>

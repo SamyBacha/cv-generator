@@ -7,17 +7,15 @@
     margin-top: 8px;
 }
 
-.cv-link {
+.cv-link,
+.cv-link-item {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     font-size: 10.5px;
     color: var(--purple);
     text-decoration: none;
-}
-
-.cv-link:hover {
-    text-decoration: underline;
+    list-style: none;
 }
 
 .link-ico-img {
@@ -32,7 +30,8 @@
 }
 
 @media print {
-    .cv-link {
+    .cv-link,
+    .cv-link-item {
         color: var(--dark);
     }
 }

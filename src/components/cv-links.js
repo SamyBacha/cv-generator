@@ -11,13 +11,13 @@ export class CvLinks extends HTMLElement {
     this.innerHTML = `
             <ul class="links-list">
                 ${(this._links || [])
-                  .map((l) => {
+                  .map((l, i) => {
                     const ico = l.ico
                       ? l.ico.startsWith("http") || l.ico.startsWith("data:")
                         ? `<img src="${l.ico}" alt="" class="link-ico-img">`
                         : `<span class="link-ico">${l.ico}</span>`
                       : "";
-                    return `<li><a href="${l.link}" target="_blank" class="cv-link">${ico}<span>${l.link.replace(/^https?:\/\//, "")}</span></a></li>`;
+                    return `<li class="cv-link-item">${ico}<span contenteditable="true" data-path="personal.links.${i}.link" data-plain>${l.link}</span></li>`;
                   })
                   .join("")}
             </ul>

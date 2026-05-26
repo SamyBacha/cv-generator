@@ -31,6 +31,9 @@ function setPath(obj, path, value) {
   const keys = path.split(".");
   let cur = obj;
   for (let i = 0; i < keys.length - 1; i++) {
+    if (cur[keys[i]] == null) {
+      cur[keys[i]] = /^\d+$/.test(keys[i + 1]) ? [] : {};
+    }
     cur = cur[keys[i]];
   }
   cur[keys[keys.length - 1]] = value;
@@ -160,13 +163,18 @@ function bindViewerInputs() {
       }
       el._viewerBound = true;
       const path = el.dataset.path;
+      const usePlainText = el.dataset.plain != null;
       el.addEventListener("input", () => {
-        const v = el.innerHTML;
+        const v = usePlainText ? el.textContent : el.innerHTML;
         setPath(CV_DATA, path, v);
         setPath(editData, path, v);
         const stack = el.closest(".m-stack");
         if (stack) {
           stack.classList.toggle("m-stack-empty", !el.textContent.trim());
+        }
+        const contact = el.closest(".cv-contact");
+        if (contact) {
+          contact.classList.toggle("cv-contact-empty", !el.textContent.trim());
         }
         markViewerEmpty(el);
       });
@@ -1519,6 +1527,7 @@ export function initApp(data) {
       { panelId: "sections-panel", btnId: "btn-sections" },
       { panelId: "json-panel", btnId: "btn-json" },
       { panelId: "save-panel", btnId: "btn-save-group" },
+      { panelId: "theme-panel", btnId: "btn-theme" },
     ].forEach(({ panelId, btnId }) => {
       const panel = document.getElementById(panelId);
       const btn = document.getElementById(btnId);
@@ -1537,6 +1546,8 @@ export function initApp(data) {
   bindViewerInputs();
   initLogoHandlers();
   initViewerToolbar();
+  initTheme();
+  initProxymLogoToggle();
 
   // Restore mode from URL and normalize history entry
   const initialMode = new URLSearchParams(location.search).get("mode");
@@ -1559,6 +1570,253 @@ export function initApp(data) {
       switchToView(true);
     }
   });
+}
+
+/* ===== THÈMES ===== */
+const BUILTIN_THEMES = [
+  {
+    id: "default",
+    name: "Violet",
+    purple: "#3454e2",
+    purpleLight: "#6c67a6",
+    yellow: "#facc2a",
+    dark: "#2c3e50",
+    text: "#2d2d2d",
+  },
+  {
+    id: "blue",
+    name: "Bleu",
+    purple: "#1976d2",
+    purpleLight: "#5e92c7",
+    yellow: "#42a5f5",
+    dark: "#1a3a5c",
+    text: "#263238",
+  },
+  {
+    id: "green",
+    name: "Vert",
+    purple: "#2e7d32",
+    purpleLight: "#66a96a",
+    yellow: "#8bc34a",
+    dark: "#2e4a3e",
+    text: "#2d3b2d",
+  },
+  {
+    id: "orange",
+    name: "Orange",
+    purple: "#e65100",
+    purpleLight: "#c77a4a",
+    yellow: "#ffb74d",
+    dark: "#4a2c1a",
+    text: "#3e2723",
+  },
+  {
+    id: "dark",
+    name: "Sombre",
+    purple: "#4a4a6a",
+    purpleLight: "#6c6c8a",
+    yellow: "#9e9e9e",
+    dark: "#1a1a2e",
+    text: "#212121",
+  },
+];
+
+let currentThemeId = "default";
+let editingThemeId = null;
+
+function getCustomThemes() {
+  try {
+    return JSON.parse(localStorage.getItem("proxym-cv-custom-themes") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomThemes(themes) {
+  localStorage.setItem("proxym-cv-custom-themes", JSON.stringify(themes));
+}
+
+function getAllThemes() {
+  return [...BUILTIN_THEMES, ...getCustomThemes()];
+}
+
+function applyThemeVars(theme) {
+  const r = document.documentElement;
+  if (theme.id === "default") {
+    r.removeAttribute("data-theme");
+  } else if (BUILTIN_THEMES.some((t) => t.id === theme.id)) {
+    r.setAttribute("data-theme", theme.id);
+    // builtin themes use CSS [data-theme] rules
+  } else {
+    // custom theme — set vars inline
+    r.removeAttribute("data-theme");
+    r.style.setProperty("--purple", theme.purple);
+    r.style.setProperty("--purple-light", theme.purpleLight);
+    r.style.setProperty("--yellow", theme.yellow);
+    r.style.setProperty("--dark", theme.dark);
+    r.style.setProperty("--text", theme.text);
+  }
+}
+
+function clearInlineVars() {
+  const r = document.documentElement;
+  ["--purple", "--purple-light", "--yellow", "--dark", "--text"].forEach(
+    (v) => {
+      r.style.removeProperty(v);
+    },
+  );
+}
+
+function setTheme(id) {
+  clearInlineVars();
+  const theme = getAllThemes().find((t) => t.id === id) || BUILTIN_THEMES[0];
+  currentThemeId = theme.id;
+  applyThemeVars(theme);
+  localStorage.setItem("proxym-cv-theme", theme.id);
+  renderThemeList();
+}
+
+function renderThemeList() {
+  const list = document.getElementById("theme-list");
+  if (!list) {
+    return;
+  }
+  list.innerHTML = getAllThemes()
+    .map((t) => {
+      const isCustom = !BUILTIN_THEMES.some((b) => b.id === t.id);
+      const editBtn = isCustom
+        ? `<span class="theme-item-edit" onclick="event.stopPropagation();editCustomTheme('${t.id}')">✎</span>`
+        : "";
+      return `<div class="theme-item${t.id === currentThemeId ? " active" : ""}" onclick="setTheme('${t.id}')">
+        <span class="theme-dot" style="background:${t.purple}"></span>
+        <span>${t.name}</span>${editBtn}
+      </div>`;
+    })
+    .join("");
+}
+
+function toggleThemePanel() {
+  const panel = document.getElementById("theme-panel");
+  const btn = document.getElementById("btn-theme");
+  const isOpen = panel.style.display !== "none";
+  panel.style.display = isOpen ? "none" : "";
+  btn.classList.toggle("active", !isOpen);
+  if (!isOpen) {
+    renderThemeList();
+  }
+}
+
+function openCustomThemeEditor(theme) {
+  editingThemeId = theme ? theme.id : null;
+  document.getElementById("theme-editor-title").textContent = theme
+    ? "Modifier le thème"
+    : "Nouveau thème";
+  document.getElementById("te-name").value = theme ? theme.name : "";
+  document.getElementById("te-purple").value = theme ? theme.purple : "#3454e2";
+  document.getElementById("te-purple-light").value = theme
+    ? theme.purpleLight
+    : "#6c67a6";
+  document.getElementById("te-yellow").value = theme ? theme.yellow : "#facc2a";
+  document.getElementById("te-dark").value = theme ? theme.dark : "#2c3e50";
+  document.getElementById("te-text").value = theme ? theme.text : "#2d2d2d";
+  document.getElementById("te-delete").style.display = theme ? "" : "none";
+  document.getElementById("theme-editor-modal").style.display = "flex";
+}
+
+function editCustomTheme(id) {
+  const theme = getCustomThemes().find((t) => t.id === id);
+  if (theme) {
+    openCustomThemeEditor(theme);
+  }
+}
+
+function saveCustomTheme() {
+  const name = document.getElementById("te-name").value.trim();
+  if (!name) {
+    return;
+  }
+  const theme = {
+    id: editingThemeId || "custom-" + Date.now(),
+    name,
+    purple: document.getElementById("te-purple").value,
+    purpleLight: document.getElementById("te-purple-light").value,
+    yellow: document.getElementById("te-yellow").value,
+    dark: document.getElementById("te-dark").value,
+    text: document.getElementById("te-text").value,
+  };
+  const customs = getCustomThemes();
+  const idx = customs.findIndex((t) => t.id === theme.id);
+  if (idx >= 0) {
+    customs[idx] = theme;
+  } else {
+    customs.push(theme);
+  }
+  saveCustomThemes(customs);
+  document.getElementById("theme-editor-modal").style.display = "none";
+  setTheme(theme.id);
+}
+
+function deleteCustomTheme() {
+  if (!editingThemeId) {
+    return;
+  }
+  const customs = getCustomThemes().filter((t) => t.id !== editingThemeId);
+  saveCustomThemes(customs);
+  document.getElementById("theme-editor-modal").style.display = "none";
+  if (currentThemeId === editingThemeId) {
+    setTheme("default");
+  } else {
+    renderThemeList();
+  }
+}
+
+function initTheme() {
+  const saved = localStorage.getItem("proxym-cv-theme") || "default";
+  setTheme(saved);
+}
+
+/* ===== TOGGLE LOGO PROXYM ===== */
+function toggleProxymLogo(forceVisible) {
+  const isHidden =
+    forceVisible !== undefined
+      ? !forceVisible
+      : !document.body.classList.contains("hide-proxym-logo");
+  document.body.classList.toggle("hide-proxym-logo", isHidden);
+  localStorage.setItem("proxym-cv-hide-logo", isHidden ? "1" : "");
+  // sync eye button
+  const eye = document.getElementById("logo-eye");
+  if (eye) {
+    eye.textContent = isHidden ? "⊘" : "⊙";
+  }
+  // sync wrap visual
+  const wrap = document.querySelector(".proxym-logo-wrap");
+  if (wrap) {
+    wrap.classList.toggle("proxym-logo-hidden", isHidden);
+  }
+  // sync sections panel checkbox
+  const cb = document.getElementById("cb-proxym-logo");
+  if (cb) {
+    cb.checked = !isHidden;
+  }
+}
+
+function initProxymLogoToggle() {
+  const hidden = localStorage.getItem("proxym-cv-hide-logo") === "1";
+  if (hidden) {
+    document.body.classList.add("hide-proxym-logo");
+    const eye = document.getElementById("logo-eye");
+    if (eye) {
+      eye.textContent = "⊘";
+    }
+    const wrap = document.querySelector(".proxym-logo-wrap");
+    if (wrap) {
+      wrap.classList.add("proxym-logo-hidden");
+    }
+    const cb = document.getElementById("cb-proxym-logo");
+    if (cb) {
+      cb.checked = false;
+    }
+  }
 }
 
 /* ===== EXPOSITION GLOBALE (handlers inline HTML) ===== */
@@ -1612,3 +1870,10 @@ window.addSoftSkill = addSoftSkill;
 window.removeSoftSkill = removeSoftSkill;
 window.loadBlank = loadBlank;
 window.toggleLang = toggleLang;
+window.setTheme = setTheme;
+window.toggleThemePanel = toggleThemePanel;
+window.openCustomThemeEditor = openCustomThemeEditor;
+window.editCustomTheme = editCustomTheme;
+window.saveCustomTheme = saveCustomTheme;
+window.deleteCustomTheme = deleteCustomTheme;
+window.toggleProxymLogo = toggleProxymLogo;

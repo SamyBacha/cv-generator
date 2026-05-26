@@ -40,7 +40,7 @@
         left: 0;
         height: 55%;
         width: 30%;
-        background-color: #facc2a !important;
+        background-color: var(--yellow) !important;
         z-index: -1;
     }
 }

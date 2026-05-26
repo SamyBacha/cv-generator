@@ -8,6 +8,43 @@
             --text: #2d2d2d;
         }
 
+        /* ===== Thèmes alternatifs ===== */
+        [data-theme="blue"] {
+            --dark: #1a3a5c;
+            --purple: #1976d2;
+            --purple-light: #5e92c7;
+            --yellow: #42a5f5;
+            --orange: #0d47a1;
+            --text: #263238;
+        }
+
+        [data-theme="green"] {
+            --dark: #2e4a3e;
+            --purple: #2e7d32;
+            --purple-light: #66a96a;
+            --yellow: #8bc34a;
+            --orange: #1b5e20;
+            --text: #2d3b2d;
+        }
+
+        [data-theme="orange"] {
+            --dark: #4a2c1a;
+            --purple: #e65100;
+            --purple-light: #c77a4a;
+            --yellow: #ffb74d;
+            --orange: #bf360c;
+            --text: #3e2723;
+        }
+
+        [data-theme="dark"] {
+            --dark: #1a1a2e;
+            --purple: #4a4a6a;
+            --purple-light: #6c6c8a;
+            --yellow: #9e9e9e;
+            --orange: #37474f;
+            --text: #212121;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -332,6 +369,137 @@
         .toolbar-btn.active {
             background: #5C4EC9;
             border-color: #5C4EC9;
+        }
+
+        /* ===== Theme panel ===== */
+        #theme-panel {
+            min-width: 180px;
+        }
+
+        .theme-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 12px;
+            color: white;
+            transition: background .12s;
+        }
+
+        .theme-item:hover {
+            background: rgba(255,255,255,.1);
+        }
+
+        .theme-item.active {
+            background: rgba(92, 78, 201, .4);
+        }
+
+        .theme-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,.25);
+            flex-shrink: 0;
+        }
+
+        .theme-item.active .theme-dot {
+            border-color: white;
+        }
+
+        .theme-item-edit {
+            margin-left: auto;
+            opacity: 0;
+            font-size: 10px;
+            color: rgba(255,255,255,.5);
+            cursor: pointer;
+            padding: 2px 4px;
+        }
+
+        .theme-item:hover .theme-item-edit {
+            opacity: 1;
+        }
+
+        .theme-panel-sep {
+            border-top: 1px solid rgba(255,255,255,.1);
+            margin: 4px 0;
+        }
+
+        /* ===== Theme editor modal ===== */
+        #theme-editor-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .theme-editor-box {
+            background: #1a1a2e;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 8px 32px rgba(0,0,0,.5);
+            overflow: hidden;
+        }
+
+        .theme-editor-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .theme-editor-body label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255,255,255,.8);
+            font-size: 12px;
+        }
+
+        .theme-editor-body input[type="text"] {
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 5px;
+            color: white;
+            padding: 5px 8px;
+            font-size: 12px;
+            width: 150px;
+        }
+
+        .theme-editor-body input[type="color"] {
+            width: 36px;
+            height: 28px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .te-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .te-delete-btn {
+            color: #e57373 !important;
+            border-color: #e57373 !important;
+        }
+
+        /* ===== Logo toggle ===== */
+        .sect-sep {
+            border-top: 1px solid rgba(255,255,255,.15);
+            margin: 4px 0;
+        }
+
+        .hide-proxym-logo .proxym-logo,
+        .hide-proxym-logo .logo-fixed,
+        .hide-proxym-logo .logo-clone {
+            display: none !important;
         }
 
         #editor-panel {

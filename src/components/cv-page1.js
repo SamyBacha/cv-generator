@@ -19,8 +19,6 @@ export class CvPage1 extends HTMLElement {
     if (!d) return;
     const vis = d.visibility || defaultVisibility();
 
-    const hasContacts =
-      d.personal.contacts?.email || d.personal.contacts?.phone;
     const hasLinks = d.personal.links?.length;
     const hasProjects = d.personal_projects?.length;
     const lang = d.lang || "fr";
@@ -30,16 +28,10 @@ export class CvPage1 extends HTMLElement {
                 <div class="profile-block">
                     <div class="cv-name" contenteditable="true" data-path="personal.name">${d.personal.name}</div>
                     <div class="cv-post" contenteditable="true" data-path="personal.role">${d.personal.role}</div>
-                    ${
-                      hasContacts
-                        ? `
-                        <div class="cv-contacts">
-                            ${d.personal.contacts.email ? `<div class="cv-contact"><span class="cv-contact-ico">✉</span><span>${d.personal.contacts.email}</span></div>` : ""}
-                            ${d.personal.contacts.phone ? `<div class="cv-contact"><span class="cv-contact-ico">☎</span><span>${d.personal.contacts.phone}</span></div>` : ""}
-                        </div>
-                    `
-                        : ""
-                    }
+                    <div class="cv-contacts">
+                        <div class="cv-contact${d.personal.contacts?.email ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">✉</span><span contenteditable="true" data-path="personal.contacts.email" data-plain>${d.personal.contacts?.email || ""}</span></div>
+                        <div class="cv-contact${d.personal.contacts?.phone ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">☎</span><span contenteditable="true" data-path="personal.contacts.phone" data-plain>${d.personal.contacts?.phone || ""}</span></div>
+                    </div>
                     ${hasLinks ? `<cv-links data-for="links"></cv-links>` : ""}
                 </div>
                 <cv-section label="${t("education", lang)}"         vis-key="education"         visible="${vis.education}"><cv-entry-list  data-for="education"></cv-entry-list></cv-section>
@@ -61,7 +53,10 @@ export class CvPage1 extends HTMLElement {
                     : ""
                 }
             </div>
-            <div class="proxym-logo"></div>
+            <div class="proxym-logo-wrap">
+                <div class="proxym-logo"></div>
+                <button class="sect-eye" id="logo-eye" onclick="toggleProxymLogo()" title="Masquer/afficher le logo Proxym">⊙</button>
+            </div>
 
             <div class="col-right">
                 <cv-section label="${t("about", lang)}"    vis-key="about"    visible="${vis.about}"    side="right"><cv-about></cv-about></cv-section>

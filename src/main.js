@@ -11,14 +11,15 @@ async function loadData() {
     );
     return resp.json();
   }
+  // localStorage prioritaire sur ?name= (sauvegarde utilisateur)
+  const stored = localStorage.getItem(LS_KEY);
+  if (stored) {
+    return JSON.parse(stored);
+  }
   const name = params.get("name");
   if (name) {
     const resp = await fetch(new URL(`./resources/${name}`, import.meta.url));
     return resp.json();
-  }
-  const stored = localStorage.getItem(LS_KEY);
-  if (stored) {
-    return JSON.parse(stored);
   }
   const resp = await fetch(
     new URL("./resources/cv-blank.json", import.meta.url),

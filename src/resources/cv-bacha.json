@@ -135,7 +135,7 @@
         {
           "label": "<b>Agents conversationnels</b>",
           "desc": "Conception et expérimentation d’agents IA textuels et vocaux adaptés à différents métiers : RH, support, santé. Mise en place de prototypes, conception de pipelines RAG, orchestration LLM, stratégie de grounding, design d’agents et intégration métier<div><b>Objectifs</b> : automatiser les interactions récurrentes, améliorer l’expérience utilisateur et valider l’adoption des agents IA en conditions réelles.\n</div><div><b>Résultats</b> : agents capables de traiter jusqu’à 80 % des questions récurrentes, amélioration de l’autonomie utilisateur et validation de cas d’usage\n</div><div>métier.</div>",
-          "stack": "Node.js, NextJS, ReactJs, TypeScript, VercelAI SDK, Zod, TailwindCSS, <b>MongoDB</b><br><br>"
+          "stack": "Node.js, NextJS, ReactJs, TypeScript, VercelAI SDK, Zod, TailwindCSS, Azure CosmosDB><br><br>"
         },
         {
           "label": "&nbsp;Spec Agent (client <b>EGIS</b>) agent IA d'analyse documentaire &amp; code",

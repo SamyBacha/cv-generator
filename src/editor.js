@@ -191,7 +191,9 @@ function initEditorLinkClicks() {
   editorContent._linkClicksBound = true;
   editorContent.addEventListener("click", (e) => {
     const link = e.target.closest("a[href]");
-    if (!link) return;
+    if (!link) {
+      return;
+    }
     e.preventDefault();
     e.stopPropagation();
     openLinkDialog(link);
@@ -206,7 +208,9 @@ let linkDialogState = {
 };
 
 function ensureLinkDialog() {
-  if (document.getElementById("link-dialog")) return;
+  if (document.getElementById("link-dialog")) {
+    return;
+  }
   const dlg = document.createElement("div");
   dlg.id = "link-dialog";
   dlg.innerHTML = `
@@ -305,7 +309,9 @@ window.openLinkDialog = function (existingAnchor) {
 
 function closeLinkDialog() {
   const dlg = document.getElementById("link-dialog");
-  if (dlg) dlg.classList.remove("link-dialog-open");
+  if (dlg) {
+    dlg.classList.remove("link-dialog-open");
+  }
   linkDialogState = {
     targetEditor: null,
     existingAnchor: null,
@@ -314,7 +320,9 @@ function closeLinkDialog() {
 }
 
 function notifyEditorChanged(el) {
-  if (!el) return;
+  if (!el) {
+    return;
+  }
   el.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
@@ -1178,23 +1186,35 @@ function buildModeUrl(mode) {
 
 /* ===== MODE SWITCH ===== */
 function cloneLogos() {
-  const src = document.querySelector("#viewer-panel .proxym-logo svg");
-  if (!src) {
+  const wrap = document.querySelector("#viewer-panel .proxym-logo");
+  if (!wrap) {
     return;
   }
+  const svgSrc = wrap.querySelector("svg");
+  const imgSrc = wrap.querySelector("img");
   document.querySelectorAll(".logo-clone").forEach((el, i) => {
     el.innerHTML = "";
-    const clone = src.cloneNode(true);
-    const suffix = "_vc" + i;
-    clone.querySelectorAll("[id]").forEach((node) => {
-      const oldId = node.id;
-      node.id = oldId + suffix;
-      clone.querySelectorAll('[mask="url(#' + oldId + ')"]').forEach((ref) => {
-        ref.setAttribute("mask", "url(#" + oldId + suffix + ")");
+    if (svgSrc) {
+      const clone = svgSrc.cloneNode(true);
+      const suffix = "_vc" + i;
+      clone.querySelectorAll("[id]").forEach((node) => {
+        const oldId = node.id;
+        node.id = oldId + suffix;
+        clone
+          .querySelectorAll('[mask="url(#' + oldId + ')"]')
+          .forEach((ref) => {
+            ref.setAttribute("mask", "url(#" + oldId + suffix + ")");
+          });
       });
-    });
-    el.appendChild(clone);
+      el.appendChild(clone);
+    } else if (imgSrc) {
+      el.appendChild(imgSrc.cloneNode(true));
+    }
   });
+  if (CV_DATA?.proxymLogoSize) {
+    _applyProxymLogoSize(CV_DATA.proxymLogoSize);
+  }
+  _applyProxymLogoPos(CV_DATA?.proxymLogoPos);
 }
 
 function togglePanels(mode) {
@@ -1483,23 +1503,38 @@ function toggleSavePanel() {
 }
 
 /* ===== LOGO POPOVER (viewer) ===== */
+let _lpTarget = "mission";
 let _lpMissionIdx = null;
 
 function openLogoPopover(idx, anchor) {
+  _lpTarget = "mission";
   _lpMissionIdx = idx;
+  const logo = CV_DATA.missions[idx]?.logo || "";
+  _openLp(anchor, logo, "Aucun logo");
+}
+
+function openProxymLogoPopover(anchor) {
+  _lpTarget = "proxym";
+  _lpMissionIdx = null;
+  const logo = CV_DATA?.proxymLogo || "";
+  _openLp(anchor, logo, "Logo Proxym par défaut");
+}
+
+function _openLp(anchor, logo, emptyLabel) {
   const pop = document.getElementById("logo-popover");
   if (!pop) {
     return;
   }
-  const logo = CV_DATA.missions[idx]?.logo || "";
   document.getElementById("lp-preview").innerHTML = logo
     ? renderLogoHtml(logo)
-    : '<span class="lp-empty">Aucun logo</span>';
+    : `<span class="lp-empty">${emptyLabel}</span>`;
   document.getElementById("lp-del").style.display = logo ? "" : "none";
+  document.getElementById("lp-del").title =
+    _lpTarget === "proxym" ? "Revenir au logo par défaut" : "Retirer le logo";
   document.getElementById("lp-svg-area").style.display = "none";
-  document.getElementById("lp-svg-input").value = logo.trim().startsWith("<svg")
-    ? logo
-    : "";
+  document.getElementById("lp-url-area").style.display = "none";
+  document.getElementById("lp-svg-input").value =
+    logo && logo.trim().startsWith("<svg") ? logo : "";
   const rect = anchor.getBoundingClientRect();
   pop.style.left =
     Math.max(4, Math.min(rect.left, window.innerWidth - 290)) + "px";
@@ -1532,6 +1567,23 @@ function lpApplySvg() {
 }
 
 function lpApplyLogo(logo) {
+  if (_lpTarget === "proxym") {
+    CV_DATA.proxymLogo = logo || "";
+    if (editData) {
+      editData.proxymLogo = logo || "";
+    }
+    const page1 = document.querySelector("#viewer-panel cv-page1");
+    if (page1) {
+      page1.data = CV_DATA;
+    }
+    cloneLogos();
+    bindViewerInputs();
+    document.getElementById("lp-preview").innerHTML = logo
+      ? renderLogoHtml(logo)
+      : '<span class="lp-empty">Logo Proxym par défaut</span>';
+    document.getElementById("lp-del").style.display = logo ? "" : "none";
+    return;
+  }
   if (_lpMissionIdx === null) {
     return;
   }
@@ -1552,6 +1604,143 @@ function lpApplyLogo(logo) {
 
 function lpRemove() {
   lpApplyLogo("");
+}
+
+function startProxymLogoInteract(event, logo) {
+  if (event.target.closest(".proxym-logo-handle")) {
+    return;
+  }
+  if (event.button !== undefined && event.button !== 0) {
+    return;
+  }
+  event.preventDefault();
+  const wrap = logo.closest(".proxym-logo-wrap");
+  if (!wrap) {
+    return;
+  }
+  const parent = wrap.offsetParent || wrap.parentElement;
+  const parentRect = parent.getBoundingClientRect();
+  const wrapRect = wrap.getBoundingClientRect();
+  const initialLeft = wrapRect.left - parentRect.left;
+  const initialTop = wrapRect.top - parentRect.top;
+  const startX = event.clientX;
+  const startY = event.clientY;
+  let dragging = false;
+
+  const onMove = (ev) => {
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    if (!dragging && (Math.abs(dx) > 3 || Math.abs(dy) > 3)) {
+      dragging = true;
+      logo.classList.add("proxym-logo-selected");
+      wrap.classList.add("proxym-logo-dragging");
+    }
+    if (dragging) {
+      wrap.style.top = initialTop + dy + "px";
+      wrap.style.left = initialLeft + dx + "px";
+      wrap.style.right = "auto";
+    }
+  };
+  const onUp = () => {
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    wrap.classList.remove("proxym-logo-dragging");
+    if (dragging) {
+      const pos = {
+        top: Math.round(parseFloat(wrap.style.top) || 0),
+        left: Math.round(parseFloat(wrap.style.left) || 0),
+      };
+      CV_DATA.proxymLogoPos = pos;
+      if (editData) {
+        editData.proxymLogoPos = { ...pos };
+      }
+      _applyProxymLogoPos(pos);
+    } else {
+      logo.classList.add("proxym-logo-selected");
+      openProxymLogoPopover(logo);
+    }
+  };
+  document.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerup", onUp);
+}
+
+function _deselectProxymLogo() {
+  document.querySelectorAll(".proxym-logo-selected").forEach((el) => {
+    el.classList.remove("proxym-logo-selected");
+  });
+}
+
+function startProxymLogoResize(event, handle) {
+  event.preventDefault();
+  event.stopPropagation();
+  const logo = handle.closest(".proxym-logo");
+  if (!logo) {
+    return;
+  }
+  const inner = logo.querySelector("svg, img");
+  if (!inner) {
+    return;
+  }
+  const rect = inner.getBoundingClientRect();
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const startH = rect.height;
+  logo.classList.add("proxym-logo-resizing");
+  logo.classList.add("proxym-logo-selected");
+
+  const onMove = (ev) => {
+    const dx = ev.clientX - startX;
+    const dy = ev.clientY - startY;
+    const delta = Math.max(dx, dy);
+    const newH = Math.round(Math.max(16, Math.min(200, startH + delta)));
+    _applyProxymLogoSize(newH);
+  };
+  const onUp = () => {
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", onUp);
+    logo.classList.remove("proxym-logo-resizing");
+    const finalH = parseFloat(inner.style.height) || null;
+    if (finalH) {
+      CV_DATA.proxymLogoSize = finalH;
+      if (editData) {
+        editData.proxymLogoSize = finalH;
+      }
+    }
+  };
+  document.addEventListener("pointermove", onMove);
+  document.addEventListener("pointerup", onUp);
+}
+
+function _applyProxymLogoSize(sizePx) {
+  document
+    .querySelectorAll(
+      "#viewer-panel .proxym-logo svg, #viewer-panel .proxym-logo img, .logo-clone svg, .logo-clone img",
+    )
+    .forEach((el) => {
+      el.style.height = sizePx + "px";
+      el.style.width = "auto";
+      el.style.maxHeight = "none";
+      el.style.maxWidth = "none";
+    });
+}
+
+function _applyProxymLogoPos(pos) {
+  const targets = document.querySelectorAll(
+    ".logo-fixed, #viewer-panel .page2 .logo-wrap",
+  );
+  targets.forEach((el) => {
+    if (pos && typeof pos.top === "number") {
+      el.style.top = pos.top + "px";
+      if (typeof pos.left === "number") {
+        el.style.left = pos.left + "px";
+        el.style.right = "auto";
+      }
+    } else {
+      el.style.top = "";
+      el.style.left = "";
+      el.style.right = "";
+    }
+  });
 }
 
 /* ===== LOGO ÉDITEUR ===== */
@@ -1657,7 +1846,11 @@ function initLogoHandlers() {
   document.body.appendChild(pop);
 
   document.addEventListener("mousedown", (e) => {
-    if (!pop.contains(e.target) && !e.target.closest(".m-logo-area")) {
+    if (
+      !pop.contains(e.target) &&
+      !e.target.closest(".m-logo-area") &&
+      !e.target.closest(".proxym-logo")
+    ) {
       pop.classList.remove("visible");
     }
   });
@@ -2071,6 +2264,19 @@ function initProxymLogoToggle() {
       cb.checked = false;
     }
   }
+  document.addEventListener("pointerdown", (e) => {
+    if (
+      !e.target.closest(".proxym-logo-wrap") &&
+      !e.target.closest("#logo-popover")
+    ) {
+      _deselectProxymLogo();
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      _deselectProxymLogo();
+    }
+  });
 }
 
 /* ===== EXPOSITION GLOBALE (handlers inline HTML) ===== */
@@ -2087,6 +2293,9 @@ window.toggleSavePanel = toggleSavePanel;
 window.toggleSection = toggleSection;
 window.toggleMission = toggleMission;
 window.openLogoPopover = openLogoPopover;
+window.openProxymLogoPopover = openProxymLogoPopover;
+window.startProxymLogoResize = startProxymLogoResize;
+window.startProxymLogoInteract = startProxymLogoInteract;
 window.lpToggleUrl = lpToggleUrl;
 window.lpApplyUrl = lpApplyUrl;
 window.lpToggleSvg = lpToggleSvg;

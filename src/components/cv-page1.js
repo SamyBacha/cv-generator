@@ -16,7 +16,9 @@ export class CvPage1 extends HTMLElement {
   _render() {
     applyStyles(this);
     const d = this._data;
-    if (!d) return;
+    if (!d) {
+      return;
+    }
     const vis = d.visibility || defaultVisibility();
 
     const hasLinks = d.personal.links?.length;
@@ -54,8 +56,8 @@ export class CvPage1 extends HTMLElement {
                 }
             </div>
             <div class="proxym-logo-wrap">
-                <div class="proxym-logo"></div>
-                <button class="sect-eye" id="logo-eye" onclick="toggleProxymLogo()" title="Masquer/afficher le logo Proxym">⊙</button>
+                <div class="proxym-logo${d.proxymLogo ? " proxym-logo-custom" : ""}" onmousedown="startProxymLogoInteract(event, this)" title="Cliquer pour changer • glisser pour déplacer • étirer la poignée pour redimensionner"></div>
+                <button class="sect-eye" id="logo-eye" onclick="event.stopPropagation();toggleProxymLogo()" title="Masquer/afficher le logo Proxym">⊙</button>
             </div>
 
             <div class="col-right">
@@ -85,22 +87,57 @@ export class CvPage1 extends HTMLElement {
     this.querySelector("cv-skills").data = d.skills;
     this.querySelector("cv-timeline").data = d.timeline;
 
-    if (hasLinks)
+    if (hasLinks) {
       this.querySelector('cv-links[data-for="links"]').data = d.personal.links;
-    if (d.softSkills?.length)
+    }
+    if (d.softSkills?.length) {
       this.querySelector('cv-simple-list[data-for="soft_skills"]').data = {
         items: d.softSkills,
         pathPrefix: "softSkills",
       };
-    if (hasProjects)
+    }
+    if (hasProjects) {
       this.querySelector('cv-simple-list[data-for="personal_projects"]').data =
         { items: d.personal_projects, pathPrefix: "personal_projects" };
+    }
 
-    const tpl = document.getElementById("proxym-logo-tpl");
-    if (tpl)
-      this.querySelector(".proxym-logo").appendChild(
-        tpl.content.cloneNode(true),
-      );
+    const logoEl = this.querySelector(".proxym-logo");
+    if (d.proxymLogo) {
+      const raw = String(d.proxymLogo).trim();
+      logoEl.innerHTML = raw.startsWith("<svg")
+        ? raw
+        : `<img src="${raw.replace(/"/g, "&quot;")}" alt="Logo">`;
+    } else {
+      const tpl = document.getElementById("proxym-logo-tpl");
+      if (tpl) {
+        logoEl.appendChild(tpl.content.cloneNode(true));
+      }
+    }
+    const inner = logoEl.querySelector("svg, img");
+    if (inner && d.proxymLogoSize) {
+      inner.style.height = d.proxymLogoSize + "px";
+      inner.style.width = "auto";
+      inner.style.maxHeight = "none";
+      inner.style.maxWidth = "none";
+    }
+    const handle = document.createElement("span");
+    handle.className = "proxym-logo-handle";
+    handle.title = "Étirer pour redimensionner";
+    handle.textContent = "↘";
+    handle.setAttribute("onmousedown", "startProxymLogoResize(event, this)");
+    handle.setAttribute("onclick", "event.stopPropagation()");
+    logoEl.appendChild(handle);
+    const wrap = this.querySelector(".proxym-logo-wrap");
+    if (wrap && d.proxymLogoPos) {
+      const { top, left } = d.proxymLogoPos;
+      if (typeof top === "number") {
+        wrap.style.top = top + "px";
+      }
+      if (typeof left === "number") {
+        wrap.style.left = left + "px";
+        wrap.style.right = "auto";
+      }
+    }
 
     requestAnimationFrame(() => this._addPageBreakMarkers());
   }

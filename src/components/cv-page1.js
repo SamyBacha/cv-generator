@@ -16,7 +16,9 @@ export class CvPage1 extends HTMLElement {
   _render() {
     applyStyles(this);
     const d = this._data;
-    if (!d) return;
+    if (!d) {
+      return;
+    }
     const vis = d.visibility || defaultVisibility();
 
     const hasLinks = d.personal.links?.length;
@@ -85,22 +87,26 @@ export class CvPage1 extends HTMLElement {
     this.querySelector("cv-skills").data = d.skills;
     this.querySelector("cv-timeline").data = d.timeline;
 
-    if (hasLinks)
+    if (hasLinks) {
       this.querySelector('cv-links[data-for="links"]').data = d.personal.links;
-    if (d.softSkills?.length)
+    }
+    if (d.softSkills?.length) {
       this.querySelector('cv-simple-list[data-for="soft_skills"]').data = {
         items: d.softSkills,
         pathPrefix: "softSkills",
       };
-    if (hasProjects)
+    }
+    if (hasProjects) {
       this.querySelector('cv-simple-list[data-for="personal_projects"]').data =
         { items: d.personal_projects, pathPrefix: "personal_projects" };
+    }
 
     const tpl = document.getElementById("proxym-logo-tpl");
-    if (tpl)
+    if (tpl) {
       this.querySelector(".proxym-logo").appendChild(
         tpl.content.cloneNode(true),
       );
+    }
 
     requestAnimationFrame(() => this._addPageBreakMarkers());
   }

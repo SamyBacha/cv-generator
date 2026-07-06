@@ -16,5 +16,8 @@
     "globals": "^16.0.0",
     "prettier": "^3.8.1",
     "vite": "^8.0.6"
+  },
+  "dependencies": {
+    "docx": "^9.7.1"
   }
 }

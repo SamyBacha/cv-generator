@@ -5,6 +5,7 @@ import {
   normalizeHref,
   renderLogoHtml,
 } from "./components/tools.js";
+import { exportDocx } from "./docx-export.js";
 
 /* ===== ÉTAT ===== */
 let CV_DATA = null;
@@ -191,10 +192,12 @@ function initEditorLinkClicks() {
   editorContent._linkClicksBound = true;
   editorContent.addEventListener("click", (e) => {
     const link = e.target.closest("a[href]");
-    if (!link) return;
+    if (!link) {
+      return;
+    }
     e.preventDefault();
     e.stopPropagation();
-    openLinkDialog(link);
+    window.openLinkDialog(link);
   });
 }
 
@@ -206,7 +209,9 @@ let linkDialogState = {
 };
 
 function ensureLinkDialog() {
-  if (document.getElementById("link-dialog")) return;
+  if (document.getElementById("link-dialog")) {
+    return;
+  }
   const dlg = document.createElement("div");
   dlg.id = "link-dialog";
   dlg.innerHTML = `
@@ -305,7 +310,9 @@ window.openLinkDialog = function (existingAnchor) {
 
 function closeLinkDialog() {
   const dlg = document.getElementById("link-dialog");
-  if (dlg) dlg.classList.remove("link-dialog-open");
+  if (dlg) {
+    dlg.classList.remove("link-dialog-open");
+  }
   linkDialogState = {
     targetEditor: null,
     existingAnchor: null,
@@ -314,7 +321,9 @@ function closeLinkDialog() {
 }
 
 function notifyEditorChanged(el) {
-  if (!el) return;
+  if (!el) {
+    return;
+  }
   el.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
@@ -1314,6 +1323,16 @@ function exportJSON() {
   URL.revokeObjectURL(url);
 }
 
+async function exportDOCX() {
+  try {
+    const data = currentMode === "editor" ? editData : CV_DATA;
+    await exportDocx(data);
+  } catch (error) {
+    console.error(error);
+    alert("Impossible de générer le fichier DOCX.");
+  }
+}
+
 function importJSON() {
   const input = document.createElement("input");
   input.type = "file";
@@ -2079,6 +2098,7 @@ window.switchToView = switchToView;
 window.toggleCvSection = toggleCvSection;
 window.toggleSectionsPanel = toggleSectionsPanel;
 window.exportJSON = exportJSON;
+window.exportDOCX = exportDOCX;
 window.importJSON = importJSON;
 window.saveToLocalStorage = saveToLocalStorage;
 window.clearLocalStorage = clearLocalStorage;

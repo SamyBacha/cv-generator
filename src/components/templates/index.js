@@ -20,12 +20,13 @@
  * même modèle, puis l'ajouter à `ALL_TEMPLATES` ci-dessous.
  */
 
+import { amina } from "./amina.js";
 import { banner } from "./banner.js";
 import { classic } from "./classic.js";
 import { mirror } from "./mirror.js";
 import { mono } from "./mono.js";
 
-const ALL_TEMPLATES = [classic, mirror, banner, mono];
+const ALL_TEMPLATES = [classic, mirror, banner, mono, amina];
 
 export const TEMPLATES = Object.fromEntries(
   ALL_TEMPLATES.map((tpl) => [tpl.key, tpl]),

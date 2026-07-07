@@ -13,7 +13,7 @@
     align-items: baseline;
     gap: 5px;
     font-size: 10.5px;
-    color: var(--purple);
+    color: var(--link);
     text-decoration: none;
     list-style: none;
     max-width: 100%;

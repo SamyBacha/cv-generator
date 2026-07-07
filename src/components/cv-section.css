@@ -5,7 +5,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: .9px;
-    color: var(--purple);
+    color: var(--heading);
     background: linear-gradient(transparent 45%, var(--yellow) 45%);
     background-size: 30% 100%;
     background-repeat: no-repeat;
@@ -20,7 +20,7 @@
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: .7px;
-    color: var(--purple);
+    color: var(--heading);
     background: linear-gradient(transparent 45%, var(--yellow) 45%);
     padding: 0 6px;
     border-radius: 3px;

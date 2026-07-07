@@ -31,7 +31,7 @@
 
 .page1[data-layout="banner"] > .col-banner {
     grid-column: 1 / -1;
-    background: white;
+    background: var(--paper);
     padding: 34px 40px 22px;
     border-bottom: 3px solid var(--yellow);
 }
@@ -51,7 +51,7 @@
 
 .page1[data-layout="banner"] > .col-left,
 .page1[data-layout="banner"] > .col-right {
-    background: white;
+    background: var(--paper);
     padding: 30px 34px;
     margin-top: 0;
 }
@@ -61,16 +61,176 @@
 }
 
 .page1[data-layout="mono"] > .col-mono {
-    background: white;
+    background: var(--paper);
     padding: 44px 48px 40px;
     max-width: 720px;
     margin: 0 auto;
 }
 
+/* ===== Layout "Amina" : bandeau coloré + pilules foncées + chevrons ===== */
+
+.page1[data-layout="amina"] {
+    grid-template-columns: 38% 62%;
+    background: var(--paper);
+}
+
+.page1[data-layout="amina"] > .col-left {
+    background: transparent;
+    padding: 0;
+    display: block;
+}
+
+.page1[data-layout="amina"] > .col-left .profile-block {
+    background: var(--purple);
+    color: white;
+    padding: 46px 30px 34px;
+    margin: 0 0 26px;
+    border-bottom: none;
+    border-radius: 0 0 22px 22px;
+}
+
+.page1[data-layout="amina"] > .col-left .profile-block .cv-name {
+    color: white;
+    font-family: "Comfortaa", "Segoe UI", sans-serif;
+    font-size: 32px;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+    margin-bottom: 10px;
+}
+
+.page1[data-layout="amina"] > .col-left .profile-block .cv-post {
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 1px;
+}
+
+.page1[data-layout="amina"] > .col-left .profile-block .cv-contacts {
+    margin-top: 14px;
+}
+
+.page1[data-layout="amina"] > .col-left .profile-block .cv-contact {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.page1[data-layout="amina"] > .col-left .profile-block .cv-contact-ico {
+    color: white;
+}
+
+.page1[data-layout="amina"] > .col-left .cv-sect {
+    margin: 20px 26px 0;
+}
+
+.page1[data-layout="amina"] > .col-left .cv-sect-hdr .lb {
+    display: inline-block;
+    background: var(--dark);
+    color: white;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    padding: 7px 20px;
+    border-radius: 20px;
+    margin: 0;
+    background-image: none;
+}
+
+.page1[data-layout="amina"] > .col-left .cv-sect-body {
+    margin-top: 12px;
+    padding-left: 4px;
+}
+
+.page1[data-layout="amina"] > .col-left .entry {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 12px;
+}
+
+.page1[data-layout="amina"] > .col-left .entry::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--heading);
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.page1[data-layout="amina"] > .col-left .entry .yr {
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.page1[data-layout="amina"] > .col-left .entry .deg {
+    color: var(--text);
+}
+
+.page1[data-layout="amina"] > .col-left .entry .org {
+    color: var(--text-muted);
+}
+
+/* Langues en pastilles arrondies plutôt que puces */
+.page1[data-layout="amina"] > .col-left #cv-sect-languages .ll {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin-top: 6px;
+}
+
+.page1[data-layout="amina"] > .col-left #cv-sect-languages .ll li {
+    border: 1.5px solid var(--heading);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 11px;
+    background: white;
+    list-style: none;
+}
+
+.page1[data-layout="amina"] > .col-left #cv-sect-languages .ll li::before {
+    display: none;
+}
+
+.page1[data-layout="amina"] > .col-right {
+    background: transparent;
+    padding: 46px 40px 40px;
+    margin-top: 0;
+}
+
+.page1[data-layout="amina"] > .col-right .cv-sect-hdr .rb {
+    background: none;
+    background-image: none;
+    color: var(--heading);
+    font-size: 15px;
+    letter-spacing: 0.8px;
+    padding: 0 0 0 44px;
+    position: relative;
+}
+
+.page1[data-layout="amina"] > .col-right .cv-sect-hdr .rb::before {
+    content: "▸▸▸";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--purple);
+    letter-spacing: -2px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.page1[data-layout="amina"] > .col-right #cv-sect-skills,
+.page1[data-layout="amina"] > .col-right #cv-sect-timeline {
+    margin-top: 22px;
+}
+
+.page1[data-layout="amina"] .proxym-logo-wrap {
+    top: 22px;
+    right: 26px;
+}
+
 /* ===== Colonnes par défaut (Classique) ===== */
 
 .col-left {
-    background: white;
+    background: var(--paper);
     color: var(--text);
     padding: 40px 32px 40px;
     display: flex;
@@ -87,14 +247,14 @@
     font-size: 26px;
     font-weight: 800;
     line-height: 1.15;
-    color: var(--purple);
+    color: var(--text);
     margin-bottom: 6px;
 }
 
 .profile-block .cv-post {
     font-size: 13px;
     font-weight: 700;
-    color: var(--dark);
+    color: var(--text);
     text-transform: uppercase;
     letter-spacing: .6px;
 }
@@ -111,7 +271,7 @@
 
 .cv-contact {
     font-size: 11px;
-    color: #555;
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 5px;

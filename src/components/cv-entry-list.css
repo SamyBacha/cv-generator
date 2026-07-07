@@ -4,7 +4,7 @@
 
 .entry .yr {
     font-size: 10.5px;
-    color: #999;
+    color: var(--text-muted);
     display: block;
     margin-bottom: 2px;
 }
@@ -19,7 +19,7 @@
 .entry .org {
     font-size: 11px;
     font-style: italic;
-    color: #666;
+    color: var(--text-muted);
     line-height: 1.4;
 }
 

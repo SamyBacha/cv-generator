@@ -1805,6 +1805,7 @@ export function initApp(data) {
       { panelId: "json-panel", btnId: "btn-json" },
       { panelId: "save-panel", btnId: "btn-save-group" },
       { panelId: "theme-panel", btnId: "btn-theme" },
+      { panelId: "template-panel", btnId: "btn-template" },
     ].forEach(({ panelId, btnId }) => {
       const panel = document.getElementById(panelId);
       const btn = document.getElementById(btnId);
@@ -1861,6 +1862,10 @@ const BUILTIN_THEMES = [
     yellow: "#facc2a",
     dark: "#2c3e50",
     text: "#2d2d2d",
+    textMuted: "#5c6478",
+    heading: "#1a237e",
+    link: "#1976d2",
+    paper: "#ffffff",
   },
   {
     id: "blue",
@@ -1870,6 +1875,10 @@ const BUILTIN_THEMES = [
     yellow: "#42a5f5",
     dark: "#1a3a5c",
     text: "#263238",
+    textMuted: "#546e7a",
+    heading: "#0d2c4f",
+    link: "#00838f",
+    paper: "#f4f9fd",
   },
   {
     id: "green",
@@ -1879,6 +1888,10 @@ const BUILTIN_THEMES = [
     yellow: "#8bc34a",
     dark: "#2e4a3e",
     text: "#2d3b2d",
+    textMuted: "#5f6f5a",
+    heading: "#1b3a1f",
+    link: "#00695c",
+    paper: "#f6faf3",
   },
   {
     id: "orange",
@@ -1888,6 +1901,10 @@ const BUILTIN_THEMES = [
     yellow: "#ffb74d",
     dark: "#4a2c1a",
     text: "#3e2723",
+    textMuted: "#8d6e63",
+    heading: "#4e342e",
+    link: "#1e88e5",
+    paper: "#fff8f2",
   },
   {
     id: "dark",
@@ -1897,6 +1914,10 @@ const BUILTIN_THEMES = [
     yellow: "#9e9e9e",
     dark: "#1a1a2e",
     text: "#212121",
+    textMuted: "#616161",
+    heading: "#263238",
+    link: "#26a69a",
+    paper: "#eeeff3",
   },
 ];
 
@@ -1934,16 +1955,28 @@ function applyThemeVars(theme) {
     r.style.setProperty("--yellow", theme.yellow);
     r.style.setProperty("--dark", theme.dark);
     r.style.setProperty("--text", theme.text);
+    r.style.setProperty("--text-muted", theme.textMuted || "#6a6a6a");
+    r.style.setProperty("--heading", theme.heading || theme.purple);
+    r.style.setProperty("--link", theme.link || theme.purple);
+    r.style.setProperty("--paper", theme.paper || "#ffffff");
   }
 }
 
 function clearInlineVars() {
   const r = document.documentElement;
-  ["--purple", "--purple-light", "--yellow", "--dark", "--text"].forEach(
-    (v) => {
-      r.style.removeProperty(v);
-    },
-  );
+  [
+    "--purple",
+    "--purple-light",
+    "--yellow",
+    "--dark",
+    "--text",
+    "--text-muted",
+    "--heading",
+    "--link",
+    "--paper",
+  ].forEach((v) => {
+    r.style.removeProperty(v);
+  });
 }
 
 function setTheme(id) {
@@ -1964,14 +1997,29 @@ function renderThemeList() {
     .map((t) => {
       const isCustom = !BUILTIN_THEMES.some((b) => b.id === t.id);
       const editBtn = isCustom
-        ? `<span class="theme-item-edit" onclick="event.stopPropagation();editCustomTheme('${t.id}')">✎</span>`
+        ? `<span class="theme-item-edit" title="Modifier" onclick="event.stopPropagation();editCustomTheme('${t.id}')">✎</span>`
         : "";
+      const dupBtn = `<span class="theme-item-edit" title="Dupliquer" onclick="event.stopPropagation();duplicateTheme('${t.id}')">⎘</span>`;
       return `<div class="theme-item${t.id === currentThemeId ? " active" : ""}" onclick="setTheme('${t.id}')">
         <span class="theme-dot" style="background:${t.purple}"></span>
-        <span>${t.name}</span>${editBtn}
+        <span class="theme-item-name">${t.name}</span>${editBtn}${dupBtn}
       </div>`;
     })
     .join("");
+}
+
+function duplicateTheme(id) {
+  const source = getAllThemes().find((t) => t.id === id);
+  if (!source) {
+    return;
+  }
+  const draft = {
+    ...source,
+    id: undefined,
+    name: source.name + " (copie)",
+  };
+  editingThemeId = null;
+  openCustomThemeEditor(draft);
 }
 
 function toggleThemePanel() {
@@ -2042,8 +2090,8 @@ function toggleTemplatePanel() {
 }
 
 function openCustomThemeEditor(theme) {
-  editingThemeId = theme ? theme.id : null;
-  document.getElementById("theme-editor-title").textContent = theme
+  editingThemeId = theme && theme.id ? theme.id : null;
+  document.getElementById("theme-editor-title").textContent = editingThemeId
     ? "Modifier le thème"
     : "Nouveau thème";
   document.getElementById("te-name").value = theme ? theme.name : "";
@@ -2054,7 +2102,20 @@ function openCustomThemeEditor(theme) {
   document.getElementById("te-yellow").value = theme ? theme.yellow : "#facc2a";
   document.getElementById("te-dark").value = theme ? theme.dark : "#2c3e50";
   document.getElementById("te-text").value = theme ? theme.text : "#2d2d2d";
-  document.getElementById("te-delete").style.display = theme ? "" : "none";
+  document.getElementById("te-text-muted").value = theme
+    ? theme.textMuted || "#6a6a6a"
+    : "#6a6a6a";
+  document.getElementById("te-heading").value = theme
+    ? theme.heading || theme.purple || "#3454e2"
+    : "#3454e2";
+  document.getElementById("te-link").value = theme
+    ? theme.link || theme.purple || "#3454e2"
+    : "#3454e2";
+  document.getElementById("te-paper").value = theme
+    ? theme.paper || "#ffffff"
+    : "#ffffff";
+  document.getElementById("te-delete").style.display =
+    theme && editingThemeId ? "" : "none";
   document.getElementById("theme-editor-modal").style.display = "flex";
 }
 
@@ -2078,6 +2139,10 @@ function saveCustomTheme() {
     yellow: document.getElementById("te-yellow").value,
     dark: document.getElementById("te-dark").value,
     text: document.getElementById("te-text").value,
+    textMuted: document.getElementById("te-text-muted").value,
+    heading: document.getElementById("te-heading").value,
+    link: document.getElementById("te-link").value,
+    paper: document.getElementById("te-paper").value,
   };
   const customs = getCustomThemes();
   const idx = customs.findIndex((t) => t.id === theme.id);
@@ -2212,6 +2277,7 @@ window.setCvTemplate = setCvTemplate;
 window.toggleTemplatePanel = toggleTemplatePanel;
 window.openCustomThemeEditor = openCustomThemeEditor;
 window.editCustomTheme = editCustomTheme;
+window.duplicateTheme = duplicateTheme;
 window.saveCustomTheme = saveCustomTheme;
 window.deleteCustomTheme = deleteCustomTheme;
 window.toggleProxymLogo = toggleProxymLogo;

@@ -581,6 +581,22 @@
         </div>
         <div class="sections-wrap">
           <button
+            id="btn-template"
+            class="toolbar-btn"
+            onclick="toggleTemplatePanel()"
+          >
+            🎴 Template ▾
+          </button>
+          <div
+            id="template-panel"
+            class="toolbar-action-panel"
+            style="display: none"
+          >
+            <div id="template-list"></div>
+          </div>
+        </div>
+        <div class="sections-wrap">
+          <button
             id="btn-theme"
             class="toolbar-btn"
             onclick="toggleThemePanel()"
@@ -736,6 +752,14 @@
               Le menu <strong>Sections ▾</strong> permet de masquer ou afficher
               chaque section du CV (formation, hobbies, projets perso…). Les
               sections masquées n'apparaissent pas à l'impression.
+            </dd>
+
+            <dt>🎴 Template ▾</dt>
+            <dd>
+              Choisit l'agencement global de la page 1 : nombre de colonnes,
+              emplacement du profil et des sections. Chaque template affiche
+              une miniature d'aperçu avant validation. Le choix est
+              sauvegardé avec le CV.
             </dd>
 
             <dt>🌐 Langue FR / EN</dt>

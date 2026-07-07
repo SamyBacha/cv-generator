@@ -3,6 +3,72 @@
     grid-template-columns: 35% 65%;
 }
 
+/* ===== Layouts pilotés par data-layout ===== */
+
+.page1[data-layout="two-col-mirror"] {
+    grid-template-columns: 65% 35%;
+}
+
+.page1[data-layout="two-col-mirror"] > .col-left {
+    grid-column: 2;
+}
+
+.page1[data-layout="two-col-mirror"] > .col-right {
+    grid-column: 1;
+    margin-top: 40px;
+    padding: 40px 38px 30px;
+}
+
+.page1[data-layout="two-col-mirror"] .proxym-logo-wrap {
+    right: auto;
+    left: 22px;
+}
+
+.page1[data-layout="banner"] {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+}
+
+.page1[data-layout="banner"] > .col-banner {
+    grid-column: 1 / -1;
+    background: white;
+    padding: 34px 40px 22px;
+    border-bottom: 3px solid var(--yellow);
+}
+
+.page1[data-layout="banner"] > .col-banner .profile-block {
+    border-bottom: none;
+    margin: 0;
+    padding: 0;
+}
+
+.page1[data-layout="banner"] > .col-banner .cv-contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    margin-top: 8px;
+}
+
+.page1[data-layout="banner"] > .col-left,
+.page1[data-layout="banner"] > .col-right {
+    background: white;
+    padding: 30px 34px;
+    margin-top: 0;
+}
+
+.page1[data-layout="mono"] {
+    display: block;
+}
+
+.page1[data-layout="mono"] > .col-mono {
+    background: white;
+    padding: 44px 48px 40px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+/* ===== Colonnes par défaut (Classique) ===== */
+
 .col-left {
     background: white;
     color: var(--text);

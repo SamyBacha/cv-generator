@@ -1,4 +1,5 @@
 import { applyStyles, defaultVisibility, linkify, t } from "./tools.js";
+import { getTemplate, DEFAULT_TEMPLATE } from "./templates/index.js";
 import "./cv-section.js";
 import "./cv-entry-list.js";
 import "./cv-simple-list.js";
@@ -20,86 +21,29 @@ export class CvPage1 extends HTMLElement {
       return;
     }
     const vis = d.visibility || defaultVisibility();
-
-    const hasLinks = d.personal.links?.length;
-    const hasProjects = d.personal_projects?.length;
     const lang = d.lang || "fr";
+    const template = getTemplate(d.template || DEFAULT_TEMPLATE);
+    this.dataset.layout = template.layout;
+
+    const columnsHtml = template.columns
+      .map((col) => {
+        const sectionsHtml = col.sections
+          .map((key) => renderSection(key, d, vis, lang, col.side))
+          .filter(Boolean)
+          .join("");
+        return `<div class="${col.class}">${sectionsHtml}</div>`;
+      })
+      .join("");
 
     this.innerHTML = `
-            <div class="col-left">
-                <div class="profile-block">
-                    <div class="cv-name" contenteditable="true" data-path="personal.name">${d.personal.name}</div>
-                    <div class="cv-post" contenteditable="true" data-path="personal.role">${d.personal.role}</div>
-                    <div class="cv-contacts">
-                        <div class="cv-contact${d.personal.contacts?.email ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">✉</span><span contenteditable="true" data-path="personal.contacts.email" data-plain>${linkify(d.personal.contacts?.email || "")}</span></div>
-                        <div class="cv-contact${d.personal.contacts?.phone ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">☎</span><span contenteditable="true" data-path="personal.contacts.phone" data-plain>${d.personal.contacts?.phone || ""}</span></div>
-                    </div>
-                    ${hasLinks ? `<cv-links data-for="links"></cv-links>` : ""}
-                </div>
-                <cv-section label="${t("education", lang)}"         vis-key="education"         visible="${vis.education}"><cv-entry-list  data-for="education"></cv-entry-list></cv-section>
-                <cv-section label="${t("teaching", lang)}"          vis-key="teaching"           visible="${vis.teaching}"> <cv-entry-list  data-for="teaching"></cv-entry-list></cv-section>
-                <cv-section label="${t("languages", lang)}"         vis-key="languages"          visible="${vis.languages}"><cv-simple-list data-for="languages"></cv-simple-list></cv-section>
-                <cv-section label="${t("hobbies", lang)}"           vis-key="hobbies"            visible="${vis.hobbies}">  <cv-simple-list data-for="hobbies"></cv-simple-list></cv-section>
-                ${
-                  d.softSkills?.length
-                    ? `
-                    <cv-section label="${t("soft_skills", lang)}" vis-key="soft_skills" visible="${vis.soft_skills !== false}"><cv-simple-list data-for="soft_skills"></cv-simple-list></cv-section>
-                `
-                    : ""
-                }
-                ${
-                  hasProjects
-                    ? `
-                    <cv-section label="${t("personal_projects", lang)}" vis-key="personal_projects" visible="${vis.personal_projects !== false}"><cv-simple-list data-for="personal_projects"></cv-simple-list></cv-section>
-                `
-                    : ""
-                }
-            </div>
-            <div class="proxym-logo-wrap">
-                <div class="proxym-logo"></div>
-                <button class="sect-eye" id="logo-eye" onclick="toggleProxymLogo()" title="Masquer/afficher le logo Proxym">⊙</button>
-            </div>
+      ${columnsHtml}
+      <div class="proxym-logo-wrap">
+        <div class="proxym-logo"></div>
+        <button class="sect-eye" id="logo-eye" onclick="toggleProxymLogo()" title="Masquer/afficher le logo Proxym">⊙</button>
+      </div>
+    `;
 
-            <div class="col-right">
-                <cv-section label="${t("about", lang)}"    vis-key="about"    visible="${vis.about}"    side="right"><cv-about></cv-about></cv-section>
-                <cv-section label="${t("skills", lang)}"   vis-key="skills"   visible="${vis.skills}"   side="right"><cv-skills></cv-skills></cv-section>
-                <cv-section label="${t("timeline", lang)}" vis-key="timeline" visible="${vis.timeline}" side="right"><cv-timeline></cv-timeline></cv-section>
-            </div>
-        `;
-
-    this.querySelector('cv-entry-list[data-for="education"]').data = {
-      entries: d.education,
-      pathPrefix: "education",
-    };
-    this.querySelector('cv-entry-list[data-for="teaching"]').data = {
-      entries: d.teaching,
-      pathPrefix: "teaching",
-    };
-    this.querySelector('cv-simple-list[data-for="languages"]').data = {
-      items: d.languages,
-      pathPrefix: "languages",
-    };
-    this.querySelector('cv-simple-list[data-for="hobbies"]').data = {
-      items: d.hobbies,
-      pathPrefix: "hobbies",
-    };
-    this.querySelector("cv-about").data = d.about;
-    this.querySelector("cv-skills").data = d.skills;
-    this.querySelector("cv-timeline").data = d.timeline;
-
-    if (hasLinks) {
-      this.querySelector('cv-links[data-for="links"]').data = d.personal.links;
-    }
-    if (d.softSkills?.length) {
-      this.querySelector('cv-simple-list[data-for="soft_skills"]').data = {
-        items: d.softSkills,
-        pathPrefix: "softSkills",
-      };
-    }
-    if (hasProjects) {
-      this.querySelector('cv-simple-list[data-for="personal_projects"]').data =
-        { items: d.personal_projects, pathPrefix: "personal_projects" };
-    }
+    bindSectionData(this, d);
 
     const tpl = document.getElementById("proxym-logo-tpl");
     if (tpl) {
@@ -126,6 +70,99 @@ export class CvPage1 extends HTMLElement {
       marker.appendChild(label);
       this.appendChild(marker);
     }
+  }
+}
+
+function renderSection(key, d, vis, lang, side) {
+  const sideAttr = side && side !== "left" ? ` side="${side}"` : "";
+  const label = t(key, lang);
+  switch (key) {
+    case "profile":
+      return renderProfileBlock(d);
+    case "about":
+      return `<cv-section label="${label}" vis-key="about" visible="${vis.about}"${sideAttr}><cv-about></cv-about></cv-section>`;
+    case "skills":
+      return `<cv-section label="${label}" vis-key="skills" visible="${vis.skills}"${sideAttr}><cv-skills></cv-skills></cv-section>`;
+    case "timeline":
+      return `<cv-section label="${label}" vis-key="timeline" visible="${vis.timeline}"${sideAttr}><cv-timeline></cv-timeline></cv-section>`;
+    case "education":
+      return `<cv-section label="${label}" vis-key="education" visible="${vis.education}"${sideAttr}><cv-entry-list data-for="education"></cv-entry-list></cv-section>`;
+    case "teaching":
+      return `<cv-section label="${label}" vis-key="teaching" visible="${vis.teaching}"${sideAttr}><cv-entry-list data-for="teaching"></cv-entry-list></cv-section>`;
+    case "languages":
+      return `<cv-section label="${label}" vis-key="languages" visible="${vis.languages}"${sideAttr}><cv-simple-list data-for="languages"></cv-simple-list></cv-section>`;
+    case "hobbies":
+      return `<cv-section label="${label}" vis-key="hobbies" visible="${vis.hobbies}"${sideAttr}><cv-simple-list data-for="hobbies"></cv-simple-list></cv-section>`;
+    case "soft_skills":
+      if (!d.softSkills?.length) {
+        return "";
+      }
+      return `<cv-section label="${label}" vis-key="soft_skills" visible="${vis.soft_skills !== false}"${sideAttr}><cv-simple-list data-for="soft_skills"></cv-simple-list></cv-section>`;
+    case "personal_projects":
+      if (!d.personal_projects?.length) {
+        return "";
+      }
+      return `<cv-section label="${label}" vis-key="personal_projects" visible="${vis.personal_projects !== false}"${sideAttr}><cv-simple-list data-for="personal_projects"></cv-simple-list></cv-section>`;
+    default:
+      return "";
+  }
+}
+
+function renderProfileBlock(d) {
+  const hasLinks = d.personal.links?.length;
+  return `
+    <div class="profile-block">
+      <div class="cv-name" contenteditable="true" data-path="personal.name">${d.personal.name}</div>
+      <div class="cv-post" contenteditable="true" data-path="personal.role">${d.personal.role}</div>
+      <div class="cv-contacts">
+        <div class="cv-contact${d.personal.contacts?.email ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">✉</span><span contenteditable="true" data-path="personal.contacts.email" data-plain>${linkify(d.personal.contacts?.email || "")}</span></div>
+        <div class="cv-contact${d.personal.contacts?.phone ? "" : " cv-contact-empty"}"><span class="cv-contact-ico">☎</span><span contenteditable="true" data-path="personal.contacts.phone" data-plain>${d.personal.contacts?.phone || ""}</span></div>
+      </div>
+      ${hasLinks ? `<cv-links data-for="links"></cv-links>` : ""}
+    </div>
+  `;
+}
+
+function bindSectionData(root, d) {
+  const setData = (selector, data) => {
+    const el = root.querySelector(selector);
+    if (el) {
+      el.data = data;
+    }
+  };
+  setData('cv-entry-list[data-for="education"]', {
+    entries: d.education,
+    pathPrefix: "education",
+  });
+  setData('cv-entry-list[data-for="teaching"]', {
+    entries: d.teaching,
+    pathPrefix: "teaching",
+  });
+  setData('cv-simple-list[data-for="languages"]', {
+    items: d.languages,
+    pathPrefix: "languages",
+  });
+  setData('cv-simple-list[data-for="hobbies"]', {
+    items: d.hobbies,
+    pathPrefix: "hobbies",
+  });
+  setData("cv-about", d.about);
+  setData("cv-skills", d.skills);
+  setData("cv-timeline", d.timeline);
+  if (d.personal.links?.length) {
+    setData('cv-links[data-for="links"]', d.personal.links);
+  }
+  if (d.softSkills?.length) {
+    setData('cv-simple-list[data-for="soft_skills"]', {
+      items: d.softSkills,
+      pathPrefix: "softSkills",
+    });
+  }
+  if (d.personal_projects?.length) {
+    setData('cv-simple-list[data-for="personal_projects"]', {
+      items: d.personal_projects,
+      pathPrefix: "personal_projects",
+    });
   }
 }
 

@@ -5,6 +5,12 @@ import {
   normalizeHref,
   renderLogoHtml,
 } from "./components/tools.js";
+import {
+  DEFAULT_TEMPLATE,
+  TEMPLATES,
+  templateKeys,
+  templateThumbnailSvg,
+} from "./components/templates/index.js";
 import { exportDocx } from "./docx-export.js";
 
 /* ===== ÉTAT ===== */
@@ -1979,6 +1985,62 @@ function toggleThemePanel() {
   }
 }
 
+/* ===== TEMPLATES ===== */
+function setCvTemplate(id) {
+  const template = TEMPLATES[id] ? id : DEFAULT_TEMPLATE;
+  CV_DATA.template = template;
+  if (editData) {
+    editData.template = template;
+  }
+  ["cv-page1", "cv-page2"].forEach((tag) => {
+    const el = document.querySelector("#viewer-panel " + tag);
+    if (el) {
+      el.data = CV_DATA;
+    }
+  });
+  cloneLogos();
+  bindViewerInputs();
+  renderTemplateList();
+}
+
+function renderTemplateList() {
+  const list = document.getElementById("template-list");
+  if (!list) {
+    return;
+  }
+  const currentKey = CV_DATA?.template || DEFAULT_TEMPLATE;
+  const themeColors = {
+    purple: getComputedStyle(document.documentElement)
+      .getPropertyValue("--purple")
+      .trim(),
+    yellow: getComputedStyle(document.documentElement)
+      .getPropertyValue("--yellow")
+      .trim(),
+  };
+  list.innerHTML = templateKeys()
+    .map((key) => {
+      const tpl = TEMPLATES[key];
+      const thumb = templateThumbnailSvg(key, themeColors);
+      const isActive = key === currentKey;
+      return `<div class="template-item${isActive ? " active" : ""}" onclick="setCvTemplate('${key}')" title="${tpl.desc}">
+        <div class="template-thumb">${thumb}</div>
+        <div class="template-name">${tpl.name}</div>
+      </div>`;
+    })
+    .join("");
+}
+
+function toggleTemplatePanel() {
+  const panel = document.getElementById("template-panel");
+  const btn = document.getElementById("btn-template");
+  const isOpen = panel.style.display !== "none";
+  panel.style.display = isOpen ? "none" : "";
+  btn.classList.toggle("active", !isOpen);
+  if (!isOpen) {
+    renderTemplateList();
+  }
+}
+
 function openCustomThemeEditor(theme) {
   editingThemeId = theme ? theme.id : null;
   document.getElementById("theme-editor-title").textContent = theme
@@ -2146,6 +2208,8 @@ window.loadBlank = loadBlank;
 window.toggleLang = toggleLang;
 window.setTheme = setTheme;
 window.toggleThemePanel = toggleThemePanel;
+window.setCvTemplate = setCvTemplate;
+window.toggleTemplatePanel = toggleTemplatePanel;
 window.openCustomThemeEditor = openCustomThemeEditor;
 window.editCustomTheme = editCustomTheme;
 window.saveCustomTheme = saveCustomTheme;

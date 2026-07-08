@@ -10,9 +10,16 @@ export class CvMission extends HTMLElement {
     const p = idx !== undefined ? `missions.${idx}` : null;
     const ce = (path) =>
       p ? `contenteditable="true" data-path="${p}.${path}"` : "";
+    const hidden = !!m.hidden;
+    this.classList.toggle("mission-hidden", hidden);
+    const eyeBtn =
+      p !== null
+        ? `<button class="sect-eye m-eye" onclick="event.stopPropagation();toggleMissionHidden(${idx})" title="Masquer/afficher la mission">${hidden ? "⊘" : "⊙"}</button>`
+        : "";
 
     this.innerHTML = `
             <div class="mission">
+                ${eyeBtn}
                 <div class="m-dates" ${ce("dates")}>${linkify(m.dates)}</div>
                 <div class="m-client">
                     <span class="m-logo-area${m.logo ? " has-logo" : ""}" ${p !== null ? `onclick="openLogoPopover(${idx}, this)"` : ""}>${renderLogoHtml(m.logo)}</span>

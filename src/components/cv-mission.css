@@ -1,7 +1,45 @@
 .mission {
+    position: relative;
     margin-bottom: 26px;
     padding-bottom: 22px;
     border-bottom: 1px solid #ececec;
+}
+
+.m-eye {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity .15s;
+    z-index: 2;
+}
+
+cv-mission:hover .m-eye,
+cv-mission.mission-hidden .m-eye {
+    opacity: 0.6;
+}
+
+cv-mission:hover .m-eye:hover {
+    opacity: 1;
+}
+
+cv-mission.mission-hidden .mission {
+    opacity: 0.35;
+}
+
+cv-mission.mission-hidden .mission > *:not(.m-eye) {
+    text-decoration: line-through;
+    text-decoration-color: rgba(0, 0, 0, .35);
+}
+
+@media print {
+    cv-mission.mission-hidden {
+        display: none !important;
+    }
+
+    .m-eye {
+        display: none !important;
+    }
 }
 
 .mission:last-child {

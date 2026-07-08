@@ -948,10 +948,11 @@ function renderMissionsBody() {
     editData.missions
       .map(
         (m, i) => `
-        <div class="e-mission" id="e-mission-${i}" data-drag-index="${i}" data-drag-key="missions">
+        <div class="e-mission${m.hidden ? " e-mission-hidden" : ""}" id="e-mission-${i}" data-drag-index="${i}" data-drag-key="missions">
             <div class="e-mission-header" onclick="toggleMission(${i})">
                 <span class="drag-handle" draggable="true" title="Réordonner" onclick="event.stopPropagation()">⠿</span>
                 <span><span class="e-chevron">▾</span> ${escHtml(m.client) || "<em>Nouvelle mission</em>"}</span>
+                <button class="e-vis-btn e-mission-eye${m.hidden ? " e-vis-off" : ""}" title="Masquer/afficher à l'impression" onclick="event.stopPropagation(); toggleMissionHidden(${i})">${m.hidden ? "⊘" : "⊙"}</button>
                 <button class="btn-remove" onclick="event.stopPropagation(); removeMission(${i})">🗑 Supprimer</button>
             </div>
             <div class="e-mission-body">
@@ -1144,6 +1145,34 @@ function addMission() {
 function removeMission(i) {
   editData.missions.splice(i, 1);
   rebuildSection("e-missions", renderMissionsBody);
+}
+
+function toggleMissionHidden(i) {
+  const target = editData.missions[i] || CV_DATA.missions?.[i];
+  if (!target) {
+    return;
+  }
+  const hidden = !target.hidden;
+  if (editData.missions[i]) {
+    editData.missions[i].hidden = hidden;
+  }
+  if (CV_DATA.missions?.[i]) {
+    CV_DATA.missions[i].hidden = hidden;
+  }
+  const missionEl = document.querySelectorAll("#viewer-panel cv-mission")[i];
+  if (missionEl) {
+    missionEl.render(CV_DATA.missions[i], i);
+  }
+  const editorEl = document.getElementById("e-mission-" + i);
+  if (editorEl) {
+    editorEl.classList.toggle("e-mission-hidden", hidden);
+    const btn = editorEl.querySelector(".e-mission-eye");
+    if (btn) {
+      btn.textContent = hidden ? "⊘" : "⊙";
+      btn.classList.toggle("e-vis-off", hidden);
+    }
+  }
+  bindViewerInputs();
 }
 
 function addTask(mi) {
@@ -2261,6 +2290,7 @@ window.addHobby = addHobby;
 window.removeHobby = removeHobby;
 window.addMission = addMission;
 window.removeMission = removeMission;
+window.toggleMissionHidden = toggleMissionHidden;
 window.addTask = addTask;
 window.removeTask = removeTask;
 window.addPersonalLink = addPersonalLink;
